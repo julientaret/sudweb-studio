@@ -1,13 +1,37 @@
-/* Blocs de contenu rendus par le CMS (images, lignes en colonnes). */
+/* Blocs de contenu rendus par le CMS (pages dynamiques). */
 
+/* Images : fluides, ne débordent jamais de leur colonne. */
 figure.block-image { margin:1.8rem 0; }
 figure.block-image img { max-width:100%; height:auto; border-radius:8px; display:block; }
 
-/* Lignes en colonnes (1 à 4), responsives. */
-.flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
-.flow-row.cols-1 { grid-template-columns:1fr; }
-.flow-row.cols-2 { grid-template-columns:repeat(2,1fr); }
-.flow-row.cols-3 { grid-template-columns:repeat(3,1fr); }
-.flow-row.cols-4 { grid-template-columns:repeat(4,1fr); }
+/* Richtext : on coupe proprement les mots/URLs trop longs ; médias, blocs de
+   code et tableaux restent contenus (scroll horizontal si besoin). */
+.rte { overflow-wrap:break-word; }
+.rte img, .rte video { max-width:100%; height:auto; }
+.rte pre { overflow-x:auto; }
+.rte table { display:block; max-width:100%; overflow-x:auto; }
+
+/* Lignes en colonnes — RESPONSIVE, mobile d'abord.
+   Tout est empilé sur petit écran, puis la grille se densifie avec la largeur.
+   minmax(0,1fr) + min-width:0 empêchent images et textes de faire déborder. */
+.flow-row {
+  display:grid;
+  gap:1.2rem;
+  margin:1.6rem 0;
+  grid-template-columns:minmax(0,1fr);
+}
+.flow-col { min-width:0; }
 .flow-col > :first-child { margin-top:0; }
-@media (max-width:640px) { .flow-row { grid-template-columns:1fr; } }
+
+/* ≥ 560px (grandes phones / tablettes) : 2 colonnes pour les lignes à 2, 3 ou 4. */
+@media (min-width:560px) {
+  .flow-row.cols-2,
+  .flow-row.cols-3,
+  .flow-row.cols-4 { grid-template-columns:repeat(2, minmax(0,1fr)); gap:1.6rem; }
+}
+
+/* ≥ 860px (desktop) : pleine densité pour 3 et 4 colonnes. */
+@media (min-width:860px) {
+  .flow-row.cols-3 { grid-template-columns:repeat(3, minmax(0,1fr)); }
+  .flow-row.cols-4 { grid-template-columns:repeat(4, minmax(0,1fr)); }
+}

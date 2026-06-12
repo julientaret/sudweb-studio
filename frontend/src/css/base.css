@@ -2,7 +2,7 @@
 
 :root { --txt:#1c2230; --muted:#5b6472; --accent:#2b8bff; --line:#e6e8ec; }
 * { box-sizing:border-box; }
-body { margin:0; font:17px/1.65 Georgia, 'Times New Roman', serif; color:var(--txt); background:#fff; }
+body { margin:0; font:17px/1.65 Georgia, 'Times New Roman', serif; color:var(--txt); background:#fff; overflow-wrap:break-word; }
 .wrap { max-width:720px; margin:0 auto; padding:0 1.2rem; }
 main.wrap { padding-top:3rem; padding-bottom:5rem; }
 
@@ -14,3 +14,10 @@ p { margin:0 0 1.1rem; }
 a { color:var(--accent); }
 ul, ol { margin:0 0 1.1rem 1.4rem; }
 .rte :last-child { margin-bottom:0; }
+
+/* Échelle typographique réduite sur petit écran (lisibilité mobile). */
+@media (max-width:560px) {
+  body { font-size:16px; }
+  h1 { font-size:1.8rem; }
+  h2 { font-size:1.4rem; }
+}
