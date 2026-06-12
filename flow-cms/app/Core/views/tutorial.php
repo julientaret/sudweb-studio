@@ -1,6 +1,7 @@
 <?php
 /** @var string $base */
 /** @var array<int, string> $enabledModules liste effective (Config 'modules.enabled') */
+/** @var bool $canMaintenance l'utilisateur détient-il admin.maintenance ? */
 
 /**
  * Sections du tutoriel : id => [titre onglet, HTML du panneau].
@@ -355,6 +356,63 @@ HTML],
             </select>
         </div>
 HTML],
+
+    'maintenance' => ['La maintenance', <<<HTML
+        <h2>Le mode maintenance</h2>
+        <p>Menu <strong>Maintenance</strong> (réservé à l'administrateur) : permet de
+        <strong>fermer temporairement le site public</strong> — pour une mise à jour, une refonte
+        en cours… Pendant ce temps, chaque visiteur voit une <strong>page « Site en maintenance »</strong>
+        au lieu du site. <strong>L'administration, elle, reste toujours accessible</strong> : vous
+        continuez à travailler normalement.</p>
+
+        <h3>Activer / désactiver</h3>
+        <p>Un simple bouton ouvre ou ferme le site. Un indicateur rappelle l'état courant
+        (<em>Site en ligne</em> ou <em>Site fermé</em>).</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — état du site</span>
+            <div class="demo-toggle" aria-hidden="true">
+                <span>Site fermé</span><span class="on">Site en ligne</span>
+            </div>
+        </div>
+
+        <h3>L'URL de contournement (bypass)</h3>
+        <p>Pour voir le site malgré la maintenance (vous, un client, un prestataire), Flow fournit une
+        <strong>URL secrète</strong> contenant un code (un « hash »). L'ouvrir vous laisse passer
+        <strong>et ajoute automatiquement votre adresse IP</strong> à la liste des accès autorisés :
+        vous n'avez plus besoin du lien ensuite, depuis la même connexion.</p>
+        <ul>
+            <li><strong>À partager avec précaution</strong> — toute personne ayant l'URL peut voir le
+                site fermé.</li>
+            <li><strong>Régénérer le code</strong> — un bouton crée une nouvelle URL et
+                <em>désactive l'ancienne</em>, si le lien a fuité ou par sécurité.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — URL de bypass</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">https://monsite.fr/?acces=2f9c…&nbsp;a47b</span>
+            </div>
+        </div>
+
+        <h3>Les adresses IP autorisées</h3>
+        <p>La liste des <strong>adresses IP</strong> qui contournent la maintenance se remplit toute
+        seule à chaque utilisation de l'URL de bypass. Vous pouvez aussi en
+        <strong>ajouter une à la main</strong> (l'IP du bureau, par exemple — votre IP actuelle est
+        pré-remplie pour aller plus vite) ou en <strong>retirer</strong> une.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — adresses autorisées</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">203.0.113.4 · Retirer</span>
+                <span class="demo-pill">+ Ajouter une IP</span>
+            </div>
+        </div>
+
+        <p class="muted">Astuce : pensez à <strong>désactiver la maintenance</strong> une fois vos
+        travaux terminés — sinon vos visiteurs (dont l'IP n'est pas listée) continueront de voir la
+        page de fermeture.</p>
+HTML],
 ];
 
 /**
@@ -377,6 +435,11 @@ $sections = array_filter(
         !isset($sectionModule[$id]) || in_array($sectionModule[$id], $enabledModules, true),
     ARRAY_FILTER_USE_KEY,
 );
+
+// Rubrique Maintenance : transverse (pas un module), réservée à l'admin.
+if (!($canMaintenance ?? false)) {
+    unset($sections['maintenance']);
+}
 
 $first = array_key_first($sections);
 ?>

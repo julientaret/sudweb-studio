@@ -122,6 +122,14 @@ final class Kernel
         $this->router->get('/admin/administration', [AdministrationController::class, 'index']);
         $this->router->post('/admin/administration/modules', [AdministrationController::class, 'saveModules']);
 
+        // Maintenance (fermeture du site public + bypass) — niveau Core, réservé
+        // à admin.maintenance. Voir App\Core\MaintenanceSettings.
+        $this->router->get('/admin/maintenance', [MaintenanceController::class, 'index']);
+        $this->router->post('/admin/maintenance/toggle', [MaintenanceController::class, 'toggle']);
+        $this->router->post('/admin/maintenance/regenerate', [MaintenanceController::class, 'regenerate']);
+        $this->router->post('/admin/maintenance/ip/add', [MaintenanceController::class, 'addIp']);
+        $this->router->post('/admin/maintenance/ip/remove', [MaintenanceController::class, 'removeIp']);
+
         $this->registry->bootAll($this->router);
         $this->router->dispatch(
             $_SERVER['REQUEST_METHOD'] ?? 'GET',

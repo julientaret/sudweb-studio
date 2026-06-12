@@ -50,6 +50,9 @@ $icon = static function (string $url): string {
     if (str_contains($url, '/administration')) {
         return $i('<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>');
     }
+    if (str_contains($url, '/maintenance')) {
+        return $i('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>');
+    }
     return $i('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>');
 };
 
@@ -276,6 +279,12 @@ $logoUrl = match (true) {
                 <?php $adminActive = $curr === '/admin/administration' || str_starts_with($curr, '/admin/administration/'); ?>
                 <a class="nav-item<?= $adminActive ? ' active' : '' ?>" href="<?= e($base . '/admin/administration') ?>">
                     <?= $icon('/administration') ?><span class="label">Administration</span>
+                </a>
+            <?php endif; ?>
+            <?php if ($user->can('admin.maintenance')): ?>
+                <?php $mtnActive = $curr === '/admin/maintenance' || str_starts_with($curr, '/admin/maintenance/'); ?>
+                <a class="nav-item<?= $mtnActive ? ' active' : '' ?>" href="<?= e($base . '/admin/maintenance') ?>">
+                    <?= $icon('/maintenance') ?><span class="label">Maintenance</span>
                 </a>
             <?php endif; ?>
         </nav>

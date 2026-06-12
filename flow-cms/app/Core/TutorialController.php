@@ -13,7 +13,8 @@ namespace App\Core;
  *
  * Les rubriques liées à un module ne s'affichent que si ce module est actif :
  * la liste effective (catalogue − désactivés dans l'admin) est passée à la vue,
- * qui filtre ses sections en conséquence.
+ * qui filtre ses sections en conséquence. La rubrique Maintenance, transverse et
+ * réservée à l'admin, n'apparaît que pour qui détient `admin.maintenance`.
  */
 final class TutorialController extends Controller
 {
@@ -22,6 +23,7 @@ final class TutorialController extends Controller
         $this->requireAuth();
         $this->renderPage([__DIR__ . '/views'], 'tutorial', 'Tutoriel', [
             'enabledModules' => (array) Config::get('modules.enabled', []),
+            'canMaintenance' => $this->auth->can('admin.maintenance'),
         ]);
     }
 }

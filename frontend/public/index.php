@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 use App\Core\Config;
 use App\Core\Kernel;
+use App\Core\MaintenanceSettings;
 
 // Racine du CMS (dossier voisin) : autoload PSR-4 + config + modules y vivent.
 $cmsRoot = dirname(__DIR__, 2) . '/flow-cms';
@@ -27,6 +28,11 @@ $cmsRoot = dirname(__DIR__, 2) . '/flow-cms';
 require $cmsRoot . '/vendor/autoload.php';
 
 $kernel = Kernel::boot($cmsRoot);
+
+// Mode maintenance (piloté depuis l'admin) : si actif, ferme le site public —
+// page de maintenance 503 — sauf bypass (jeton dans l'URL ou IP autorisée).
+// Posé avant toute résolution (redirections, statiques, pages dynamiques).
+(new MaintenanceSettings($cmsRoot))->enforce();
 
 // Thème du site public : ses templates surchargent ceux des modules (front_layout).
 Config::set('app.front_views', [dirname(__DIR__) . '/layouts']);
