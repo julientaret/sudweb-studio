@@ -50,6 +50,46 @@ Modules :
 - **Actualités** — [modules/actualites.md](modules/actualites.md)
 - **Avis Google** — [modules/google-reviews.md](modules/google-reviews.md)
 
+## Créer un nouveau module — checklist
+
+Quand on ajoute un module, plusieurs points doivent rester synchronisés. **Le
+plus oublié : l'installateur.**
+
+1. **Classe du module** — `app/Modules/<Nom>/<Nom>Module.php` implémentant
+   [`App\Core\Module`](../app/Core/Module.php) (routes, menu, migrations).
+2. **Catalogue** — ajouter `<Nom>` à `available` dans
+   [`config/modules.php`](../config/modules.php). C'est ce qui rend le module
+   visible **et** ce qui le fait prendre en charge par l'installateur (voir ci-dessous).
+3. **Métadonnées d'admin** — [`ModuleSettings`](../app/Core/ModuleSettings.php) :
+   libellé + description dans `INFO`, dépendances dans `DEPENDENCIES`, et `PROTECTED`
+   si le module est indispensable.
+4. **Permissions** — déclarer les permissions du module et les attribuer aux rôles
+   dans [`config/roles.php`](../config/roles.php).
+5. **Migrations** — fichiers SQL dans `app/Modules/<Nom>/migrations/`, retournés
+   par `migrations()`. Idempotents (le Migrator suit ce qui est déjà appliqué).
+6. **Installateur** — [`install.php`](../../install.php) à la racine. **Il est
+   piloté par les migrations** : il boote le registre (`bootAll()`) puis lance le
+   `Migrator` sur **tous les modules du catalogue**. Conséquence :
+   - dès que le module est dans `config/modules.php` (point 2), ses migrations sont
+     appliquées automatiquement par l'installateur — **rien à modifier dans
+     `install.php`** pour le schéma ;
+   - **en revanche**, si le module a besoin de **données initiales** au-delà du
+     schéma (compte/rôle par défaut, entrée de configuration, seed…), c'est à
+     `install.php` qu'il faut l'ajouter explicitement — l'installateur ne crée
+     aujourd'hui que la base, les migrations et le **premier compte admin**.
+   - Vérifier après coup qu'une **installation propre** (`php install.php`) mène à
+     un module fonctionnel sans étape manuelle.
+7. **Tutoriel** — rubrique dans [`views/tutorial.php`](../app/Core/views/tutorial.php),
+   reliée au module dans `$sectionModule` (n'apparaît que si le module est actif).
+8. **Doc** — fiche `docs/modules/<nom>.md` (template du brief §9) et ligne dans ce
+   README. *Definition of done* : la fiche est écrite et à jour (brief §1/§9).
+
+> Les **fonctions transverses** (niveau Core, hors catalogue — ex. Maintenance)
+> ne passent pas par les points 2/3/5 : pas de migration ni d'entrée de catalogue.
+> Mais elles peuvent, elles aussi, devoir initialiser un état au point 6 si elles
+> en ont besoin. Ce n'est pas le cas du mode maintenance (état `storage/*.json`
+> créé à la volée).
+
 ## Mise en route (dev)
 
 ```bash
