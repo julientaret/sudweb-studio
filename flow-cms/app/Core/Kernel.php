@@ -185,7 +185,7 @@ final class Kernel
         session_start();
     }
 
-    private function sendSecurityHeaders(): void
+    public function sendSecurityHeaders(): void
     {
         // brief §6 — posés dans le front controller.
         header('X-Frame-Options: DENY');
