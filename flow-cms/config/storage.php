@@ -8,10 +8,14 @@ use App\Core\Config;
  * Emplacement physique et URL publique des fichiers uploadés (images & documents).
  *
  * Par défaut (valeurs vides), uploads (médias) ET documents vivent dans le site
- * public, sous frontend/public/uploads et frontend/public/documents, servis à
- * {public_base_path}/uploads et {public_base_path}/documents — la MÊME URL depuis
- * l'admin et depuis le front, pour qu'un média ou un lien de page ne casse jamais
- * (voir MediaStorage et DocumentStorage). En dev, laissez tel quel.
+ * public, sous frontend/public/uploads et frontend/public/documents — la MÊME URL
+ * depuis l'admin et depuis le front, pour qu'un média ou un lien de page ne casse
+ * jamais (voir MediaStorage et DocumentStorage).
+ *
+ * L'URL est résolue en trois paliers : *_URL explicite ci-dessous (CDN…), sinon
+ * APP_URL + /uploads (URL absolue du site, recommandé — indépendant du nom du
+ * dossier d'installation), sinon le chemin auto-détecté {public_base_path}/uploads.
+ * En dev, laissez tel quel (renseignez APP_URL dans .env.local).
  *
  * En PRODUCTION, on peut déplacer le STOCKAGE hors du dossier flow-cms via
  * .env.local — pour que git/rsync et les déploiements ne touchent jamais aux
@@ -21,9 +25,9 @@ use App\Core\Config;
  *   DOCUMENTS_PATH=/var/data/flow/documents
  *
  * Deux cas pour l'URL :
- *  - Le dossier externe reste servi à la même URL (symlink depuis public/, ou
- *    Alias Apache / location Nginx) : laissez *_URL vide, l'URL demeure
- *    {base_path}/uploads — aucune autre config.
+ *  - Le dossier externe reste servi à la même URL (symlink depuis frontend/public,
+ *    ou Alias Apache / location Nginx) : laissez *_URL vide, l'URL est dérivée de
+ *    APP_URL (ou auto-détectée) — aucune autre config.
  *  - Le dossier est servi ailleurs (sous-domaine, CDN…) : fixez l'URL complète.
  *
  *   UPLOADS_URL=https://cdn.exemple.fr/uploads

@@ -33,7 +33,9 @@ final class Config
             return;
         }
 
-        self::loadEnv($basePath . '/.env.local');
+        // .env.local vit à la RACINE DU PROJET (parent de flow-cms), partagé par
+        // l'admin et le site public. Les fichiers de config restent dans flow-cms/config.
+        self::loadEnv(dirname($basePath) . '/.env.local');
         self::loadConfigDir($basePath . '/config');
 
         self::$booted = true;

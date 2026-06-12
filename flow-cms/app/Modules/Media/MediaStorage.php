@@ -29,12 +29,22 @@ final class MediaStorage
         return rtrim((string) Config::get('storage.public_dir', ''), '/') . '/uploads';
     }
 
-    /** Préfixe d'URL des uploads (sans slash final). */
+    /**
+     * Préfixe d'URL des uploads (sans slash final). Trois paliers, par priorité :
+     *   1. storage.uploads.url (UPLOADS_URL) — override explicite (CDN, autre domaine) ;
+     *   2. app.url (APP_URL) — base absolue du site : URLs médias absolues et
+     *      indépendantes du nom de dossier d'installation ;
+     *   3. app.public_base_path — chemin auto-détecté ({base}/uploads), zéro config.
+     */
     public static function baseUrl(): string
     {
         $url = (string) Config::get('storage.uploads.url', '');
         if ($url !== '') {
             return rtrim($url, '/');
+        }
+        $appUrl = (string) Config::get('app.url', '');
+        if ($appUrl !== '') {
+            return rtrim($appUrl, '/') . '/uploads';
         }
         return rtrim((string) Config::get('app.public_base_path', ''), '/') . '/uploads';
     }

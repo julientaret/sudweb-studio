@@ -1,37 +1,15 @@
-# BULLSHIT
+# Racine du projet flow/ (admin = flow-cms, site public = frontend).
+
+# OS / éditeurs
 ._*
 .DS_Store
 .idea/
-.cursorrules
 .vscode/
-prepros-6.config
-config.codekit*
 
-# ENV
+# Secrets propres au serveur — jamais versionnés. Le modèle .env.example l'est.
 /.env.local
 
-# GENERATED
+# Généré
 node_modules/
 vendor/
 dist/
-cache/*.ben
-cache/images/*
-composer.lock
-package-lock.json
-
-# CMS Folder
-/public/*
-/documents/*
-/images/*
-/admin/shop/facture/*
-/admin/shop/data-client/*
-/admin/.htaccess
-
-# KEEP index
-!/public/index.php
-!/public/.htaccess
-!/images/index.php
-!/images/no-images.jpg
-!/documents/index.php
-!/admin/shop/facture/index.php
-!/admin/shop/data-client/index.php

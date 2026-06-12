@@ -30,12 +30,21 @@ final class DocumentStorage
         return rtrim((string) Config::get('storage.public_dir', ''), '/') . '/documents';
     }
 
-    /** Préfixe d'URL des documents (sans slash final). */
+    /**
+     * Préfixe d'URL des documents (sans slash final). Trois paliers, par priorité :
+     *   1. storage.documents.url (DOCUMENTS_URL) — override explicite (CDN…) ;
+     *   2. app.url (APP_URL) — base absolue du site ;
+     *   3. app.public_base_path — chemin auto-détecté, zéro config.
+     */
     public static function baseUrl(): string
     {
         $url = (string) Config::get('storage.documents.url', '');
         if ($url !== '') {
             return rtrim($url, '/');
+        }
+        $appUrl = (string) Config::get('app.url', '');
+        if ($appUrl !== '') {
+            return rtrim($appUrl, '/') . '/documents';
         }
         return rtrim((string) Config::get('app.public_base_path', ''), '/') . '/documents';
     }

@@ -7,6 +7,13 @@ use App\Core\Config;
 /**
  * Configuration générale de l'application.
  */
+
+// URL absolue du site public (frontend), depuis .env.local — ex.
+// https://www.monsite.com (sans slash final). Sert de base aux URLs absolues :
+// médias et documents (voir MediaStorage/DocumentStorage), liens dans les mails…
+// Vide → les URLs médias retombent sur le chemin auto-détecté ({base_path}/uploads).
+$appUrl = rtrim((string) Config::env('APP_URL', (string) Config::env('HTTP', '')), '/');
+
 return [
     // Nom du site, affiché sur le front public.
     'site_name' => 'Flow',
@@ -22,8 +29,12 @@ return [
     //   "..."  → forcé (ex. "/flow-cms") si l'auto-détection ne convient pas.
     'base_path' => null,
 
-    // URL publique complète (depuis .env.local), utile pour les liens absolus (mails…).
-    'base_url' => Config::env('HTTP', 'http://localhost/'),
+    // URL absolue du site public (APP_URL). Base des URLs médias/documents et
+    // des liens absolus. Vide en l'absence de config.
+    'url' => $appUrl,
+
+    // Alias historique de 'url' pour les liens absolus (mails…).
+    'base_url' => $appUrl !== '' ? $appUrl : 'http://localhost/',
 
     // Anti-brute-force (brief §6) : seuil et fenêtre glissante (secondes).
     'login_max_attempts'   => 5,
