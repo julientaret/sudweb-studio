@@ -2,6 +2,10 @@
 ._*
 .DS_Store
 
+# Build des assets : dépendances Node uniquement. Les sorties de public/assets
+# (site.css, site.js, img/*.webp) SONT versionnées (le serveur n'a pas Node).
+/node_modules/
+
 # Données utilisateur (déplacées depuis flow-cms) : uploads médias et documents.
 # Jamais versionnés… mais on garde la structure et la protection (.htaccess).
 /public/uploads/*

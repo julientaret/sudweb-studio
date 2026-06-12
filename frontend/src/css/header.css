@@ -1,0 +1,8 @@
+/* En-tête du site (includes/header.php). */
+
+.site-header { border-bottom:1px solid var(--line); }
+.site-header .wrap { padding-top:1.2rem; padding-bottom:1.2rem; display:flex; align-items:baseline; justify-content:space-between; gap:1.5rem; }
+.site-brand { font-family:system-ui, sans-serif; font-weight:700; font-size:1.2rem; color:var(--txt); text-decoration:none; }
+.site-nav { font-family:system-ui, sans-serif; font-size:.95rem; display:flex; gap:1.2rem; }
+.site-nav a { color:var(--muted); text-decoration:none; }
+.site-nav a:hover { color:var(--txt); }

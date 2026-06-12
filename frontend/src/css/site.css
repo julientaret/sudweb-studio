@@ -1,0 +1,15 @@
+/*
+ * Point d'entrée CSS du site public.
+ *
+ * Ce fichier ne fait qu'IMPORTER les partials : Lightning CSS les fusionne en un
+ * seul public/assets/site.css minifié (`npm run build` / `npm run watch`). Une
+ * seule requête HTTP en prod, code organisé par zone en dev.
+ *
+ * L'ordre compte (cascade) : base d'abord, puis composants.
+ * Pour ajouter une zone : créez src/css/<zone>.css et ajoutez son @import ici.
+ */
+
+@import "base.css";
+@import "header.css";
+@import "footer.css";
+@import "blocks.css";

@@ -1,0 +1,13 @@
+/* Blocs de contenu rendus par le CMS (images, lignes en colonnes). */
+
+figure.block-image { margin:1.8rem 0; }
+figure.block-image img { max-width:100%; height:auto; border-radius:8px; display:block; }
+
+/* Lignes en colonnes (1 à 4), responsives. */
+.flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
+.flow-row.cols-1 { grid-template-columns:1fr; }
+.flow-row.cols-2 { grid-template-columns:repeat(2,1fr); }
+.flow-row.cols-3 { grid-template-columns:repeat(3,1fr); }
+.flow-row.cols-4 { grid-template-columns:repeat(4,1fr); }
+.flow-col > :first-child { margin-top:0; }
+@media (max-width:640px) { .flow-row { grid-template-columns:1fr; } }

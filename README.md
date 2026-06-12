@@ -196,6 +196,30 @@ fonctionne et corresponde à `APP_URL`) :
   `php -S localhost:8000 -t frontend/public` (mais sans le préfixe `/flow` ;
   pensez à aligner `APP_URL=http://localhost:8000`).
 
+### 5.1 Build des assets du frontend
+
+Les CSS/JS/images du site public sont compilés par une petite chaîne
+(esbuild + Lightning CSS + sharp). Node n'est requis qu'en **dev** : les sorties
+de `public/assets` sont versionnées (le serveur de prod n'a pas Node).
+
+```bash
+cd frontend
+npm install
+npm run build     # src/ → public/assets/  (CSS bundle+minify, JS, images→WebP)
+npm run watch     # rebuild à chaque modification de src/
+```
+
+| Source | Sortie | Outil |
+|--------|--------|-------|
+| `src/css/site.css` (+ `@import` de partials) | `public/assets/site.css` | Lightning CSS (bundle, autoprefix, minify) |
+| `src/js/site.js` | `public/assets/site.js` | esbuild (bundle, minify) |
+| `src/img/*.{png,jpg}` | `public/assets/img/*.webp` | sharp |
+
+> Le CSS s'organise en partials (`base.css`, `header.css`, `footer.css`…) importés
+> par `site.css` ; ils sont fusionnés en un seul fichier servi. La conversion WebP
+> ici ne concerne que les **images de design** committées ; les médias uploadés
+> sont déjà convertis par le CMS (module Media).
+
 ---
 
 ## 6. Modules
