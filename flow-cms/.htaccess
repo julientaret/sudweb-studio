@@ -1,0 +1,29 @@
+# Flow — accès par le dossier du projet (brief §2).
+#
+# Idéalement, le vhost pointe sa racine sur public/. Quand ce n'est pas possible
+# (hébergement mutualisé, accès direct au dossier comme http://host/flow-cms/),
+# ce .htaccess renvoie TOUTES les requêtes dans public/ : on atterrit sur l'outil
+# et tout le reste (app/, config/, storage/…) demeure hors du contenu servi.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Empêche d'exposer directement le segment /public dans l'URL.
+    RewriteCond %{THE_REQUEST} \s/+public/ [NC]
+    RewriteRule ^public/(.*)$ $1 [R=301,L]
+
+    # Sert les fichiers réels de public/ (assets, uploads) et route le reste vers
+    # public/index.php via le .htaccess de public/.
+    RewriteRule ^$ public/ [L]
+    RewriteCond %{REQUEST_URI} !^/?public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Filet si mod_rewrite est absent : ne jamais servir les fichiers sensibles en
+# clair (credentials). NB : on ne bloque PAS *.php ici, car cette règle cascade
+# dans public/ et couperait index.php.
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.env|^\.|\.(sql|lock)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>

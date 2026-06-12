@@ -1,0 +1,483 @@
+<?php
+/** @var string $base */
+/** @var array<int, string> $enabledModules liste effective (Config 'modules.enabled') */
+
+/**
+ * Sections du tutoriel : id => [titre onglet, HTML du panneau].
+ *
+ * Chaque panneau mêle explications et petits APERÇUS illustratifs (champs factices,
+ * désactivés et masqués des lecteurs d'écran) pour montrer concrètement de quoi on
+ * parle. Le premier panneau est ouvert par défaut (actif posé côté serveur), donc
+ * la page reste utilisable même sans JS.
+ */
+$sections = [
+    'dashboard' => ['Tableau de bord', <<<HTML
+        <h2>Le tableau de bord</h2>
+        <p>C'est l'écran d'accueil (<a href="{$base}/admin">/admin</a>). Il regroupe des
+        <strong>cartes d'accès rapide</strong> vers les sections auxquelles vous avez droit, et une
+        <strong>visionneuse</strong> qui fait défiler les images de la bibliothèque.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — cartes d'accès rapide</span>
+            <div class="demo-cards" aria-hidden="true">
+                <span class="demo-card">📄 Pages</span>
+                <span class="demo-card">🖼️ Médias</span>
+                <span class="demo-card">👤 Utilisateurs</span>
+            </div>
+        </div>
+
+        <p class="muted">Astuce : le logo en haut de la barre latérale ramène toujours ici.</p>
+HTML],
+
+    'pages' => ['Les pages', <<<HTML
+        <h2>Les pages</h2>
+        <p>Menu <strong>Pages</strong> : la liste de vos pages, leur statut et leur adresse.
+        Cliquez sur <em>+ Nouvelle page</em> pour ouvrir l'éditeur. Il a deux parties : les
+        <strong>réglages</strong> (titre, slug, statut) en haut, puis le <strong>contenu</strong> en dessous.</p>
+
+        <h3>Réglages</h3>
+        <ul>
+            <li><strong>Titre &amp; slug</strong> — le slug est l'adresse de la page (<code>/mon-titre</code>).
+                Laissez-le vide pour le générer automatiquement depuis le titre.</li>
+            <li><strong>Statut</strong> — un interrupteur <em>Brouillon / Publiée</em>. Seules les pages
+                publiées sont visibles du public.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — réglages</span>
+            <label>Titre de la page</label>
+            <input type="text" value="Notre histoire" disabled aria-hidden="true" tabindex="-1">
+            <label>Statut</label>
+            <div class="demo-toggle" aria-hidden="true">
+                <span>Brouillon</span><span class="on">Publiée</span>
+            </div>
+        </div>
+
+        <h3>Les lignes</h3>
+        <p>Le contenu d'une page est une pile de <strong>lignes</strong>, empilées de haut en bas. Chaque
+        ligne est une bande horizontale qu'on découpe en <strong>1 à 4 colonnes</strong> côte à côte
+        (boutons <em>1 · 2 · 3 · 4</em> en haut de la ligne). Exemple courant : deux colonnes pour poser
+        un texte à gauche et une image à droite.</p>
+        <ul>
+            <li><strong>Ajouter</strong> une ligne : bouton <em>+ Ajouter une ligne</em> sous le contenu.</li>
+            <li><strong>Réordonner</strong> : saisissez la ligne par sa poignée (⠿) et glissez-la
+                au-dessus ou en dessous d'une autre.</li>
+            <li><strong>Changer le nombre de colonnes</strong> : cliquez 1, 2, 3 ou 4. Si vous réduisez,
+                rien n'est perdu : le contenu des colonnes retirées passe dans la dernière conservée.</li>
+            <li><strong>Sur mobile</strong>, les colonnes s'empilent automatiquement.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — une ligne de 2 colonnes</span>
+            <div class="demo-row" aria-hidden="true">
+                <div class="demo-col"><span class="demo-block">Titre</span><span class="demo-block">Texte</span></div>
+                <div class="demo-col"><span class="demo-block">Image</span></div>
+            </div>
+        </div>
+
+        <h3>Les blocs</h3>
+        <p>Dans une colonne, le contenu se construit avec des <strong>blocs</strong>, ajoutés via les
+        boutons <em>+ Titre / + Texte / + Image</em> au bas de la colonne. On en empile autant que voulu.</p>
+        <ul>
+            <li><strong>Titre</strong> — un intertitre (niveaux 1 à 3) pour structurer la page.</li>
+            <li><strong>Texte</strong> — un éditeur enrichi : gras, italique, souligné, listes, liens,
+                citation, titres, alignement et couleur. Pour les paragraphes.</li>
+            <li><strong>Image</strong> — choisie dans la bibliothèque via une fenêtre de vignettes ;
+                un texte alternatif facultatif la décrit.</li>
+            <li><strong>Déplacer</strong> : chaque bloc a une poignée (⠿) ; glissez-le dans sa colonne
+                ou vers une autre colonne, même d'une autre ligne.</li>
+            <li><strong>Supprimer</strong> : le lien <em>Supprimer</em> en haut du bloc.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — ajouter un bloc</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">+ Titre</span>
+                <span class="demo-pill">+ Texte</span>
+                <span class="demo-pill">+ Image</span>
+            </div>
+        </div>
+
+        <p class="muted">N'oubliez pas d'<strong>Enregistrer</strong> en bas de l'éditeur.</p>
+HTML],
+
+    'agenda' => ['L\'agenda', <<<HTML
+        <h2>L'agenda</h2>
+        <p>Menu <strong>Agenda</strong> : vos <strong>événements</strong> (rendez-vous, portes ouvertes,
+        expositions…). Chaque événement a sa propre adresse publique <code>/agenda/mon-evenement</code>.
+        Cliquez sur <em>+ Nouvel événement</em> pour ouvrir l'éditeur.</p>
+
+        <h3>Réglages</h3>
+        <ul>
+            <li><strong>Titre &amp; slug</strong> — comme pour une page : le slug est l'adresse, laissé vide
+                il se génère depuis le titre.</li>
+            <li><strong>Date de début</strong> — obligatoire. <strong>Date de fin</strong> — facultative, pour
+                un événement qui s'étale sur plusieurs jours. Sur le site, on lit alors « Du … au … ».</li>
+            <li><strong>Image vignette</strong> — une image de la bibliothèque, choisie dans la même fenêtre
+                de vignettes que les blocs image. Elle illustre l'événement en haut de sa page.</li>
+            <li><strong>Statut</strong> — interrupteur <em>Brouillon / Publié</em> : seuls les événements
+                publiés sont visibles du public.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — réglages d'un événement</span>
+            <label>Titre de l'événement</label>
+            <input type="text" value="Portes ouvertes 2026" disabled aria-hidden="true" tabindex="-1">
+            <div class="demo-dates" aria-hidden="true">
+                <div><label>Date de début</label><input type="text" value="12/06/2026" disabled tabindex="-1"></div>
+                <div><label>Date de fin</label><input type="text" value="14/06/2026" disabled tabindex="-1"></div>
+            </div>
+            <label>Image vignette</label>
+            <div class="demo-thumb" aria-hidden="true">
+                <span class="demo-thumb-box">🖼️</span>
+                <span class="demo-pill">Choisir une image</span>
+            </div>
+        </div>
+
+        <h3>Le contenu</h3>
+        <p>Sous les réglages, le contenu se compose <strong>exactement comme une page</strong> : des
+        <strong>lignes</strong> découpées en colonnes, remplies de <strong>blocs</strong> (Titre, Texte,
+        Image). Reportez-vous à la rubrique <strong>Les pages</strong> pour le détail des lignes et des blocs —
+        le fonctionnement est identique.</p>
+
+        <p class="muted">Les événements récemment modifiés apparaissent aussi dans
+        <strong>Dernières modifications</strong> du tableau de bord, marqués d'une étiquette « Événement ».</p>
+HTML],
+
+    'actualites' => ['Les actualités', <<<HTML
+        <h2>Les actualités</h2>
+        <p>Menu <strong>Actualités</strong> : vos <strong>articles d'actualité</strong> (annonces,
+        nouveautés, communiqués…). Chaque actualité a sa propre adresse publique
+        <code>/actualites/mon-article</code>. Cliquez sur <em>+ Nouvelle actualité</em> pour ouvrir l'éditeur.</p>
+
+        <h3>Réglages</h3>
+        <ul>
+            <li><strong>Titre &amp; slug</strong> — comme pour une page : le slug est l'adresse, laissé vide
+                il se génère depuis le titre.</li>
+            <li><strong>Date de publication</strong> — obligatoire, pré-remplie au jour même. C'est la date
+                affichée sur le site (« Publié le … ») et qui ordonne la liste.</li>
+            <li><strong>Image vignette</strong> — une image de la bibliothèque, choisie dans la même fenêtre
+                de vignettes que les blocs image. Elle illustre l'actualité en haut de sa page.</li>
+            <li><strong>Statut</strong> — interrupteur <em>Brouillon / Publiée</em> : seules les actualités
+                publiées sont visibles du public.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — réglages d'une actualité</span>
+            <label>Titre de l'actualité</label>
+            <input type="text" value="Rentrée 2026 : ce qui change" disabled aria-hidden="true" tabindex="-1">
+            <label>Date de publication</label>
+            <input type="text" value="12/06/2026" disabled aria-hidden="true" tabindex="-1">
+            <label>Image vignette</label>
+            <div class="demo-thumb" aria-hidden="true">
+                <span class="demo-thumb-box">🖼️</span>
+                <span class="demo-pill">Choisir une image</span>
+            </div>
+        </div>
+
+        <h3>Le contenu</h3>
+        <p>Sous les réglages, le contenu se compose <strong>exactement comme une page</strong> : des
+        <strong>lignes</strong> découpées en colonnes, remplies de <strong>blocs</strong> (Titre, Texte,
+        Image). Reportez-vous à la rubrique <strong>Les pages</strong> pour le détail des lignes et des blocs —
+        le fonctionnement est identique.</p>
+
+        <p class="muted">Les actualités récemment modifiées apparaissent aussi dans
+        <strong>Dernières modifications</strong> du tableau de bord, marquées d'une étiquette « Actualité ».</p>
+HTML],
+
+    'google_reviews' => ['Les avis Google', <<<HTML
+        <h2>Les avis Google</h2>
+        <p>Menu <strong>Avis Google</strong> : récupère les avis laissés sur la fiche Google de
+        l'établissement et permet de choisir, un par un, lesquels afficher sur le site. L'affichage se
+        fait via un <strong>bloc « Avis Google »</strong> à poser dans le contenu d'une page (voir la
+        rubrique <strong>Les pages</strong>).</p>
+
+        <h3>Synchroniser</h3>
+        <p>Le bouton <strong>Synchroniser les 5 derniers avis</strong> va chercher chez Google les
+        <strong>5 avis les plus récents</strong> et les ajoute à la liste, sans jamais créer de doublon.
+        On ne récupère que les 5 derniers à chaque fois : la liste se complète donc au fil des
+        synchronisations successives.</p>
+        <ul>
+            <li><strong>Une synchronisation par jour</strong> : une fois lancée, le bouton se grise
+                jusqu'au lendemain. C'est volontaire (les avis bougent peu et chaque appel a un coût).</li>
+            <li><strong>Curation conservée</strong> : un avis que vous avez masqué le reste après une
+                nouvelle synchronisation.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — synchronisation</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">⟳ Synchroniser les 5 derniers avis</span>
+            </div>
+        </div>
+
+        <h3>Afficher ou masquer un avis</h3>
+        <p>Chaque avis de la liste porte un bouton <strong>Afficher / Masquer</strong> : vous décidez
+        ainsi ce que voient les visiteurs. Pratique pour écarter un avis hors sujet ou ne garder que les
+        plus parlants. Seuls les avis « Affichés » apparaissent dans le bloc sur le site.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — un avis dans la liste</span>
+            <div class="demo-review" aria-hidden="true">
+                <div class="demo-review-head">
+                    <strong>Marie L.</strong>
+                    <span class="demo-stars">★★★★★</span>
+                    <span class="demo-chip on">Affiché</span>
+                </div>
+                <p>« Accueil au top et travail soigné, je recommande vivement. »</p>
+            </div>
+        </div>
+
+        <p class="muted">Le choix de l'établissement Google est réglé une fois pour toutes par
+        <strong>Sud Web Studio</strong> ; côté gestion du site, vous n'avez qu'à synchroniser et choisir
+        les avis à mettre en avant.</p>
+HTML],
+
+    'media' => ['Les médias', <<<HTML
+        <h2>Les médias</h2>
+        <p>Menu <strong>Médias</strong> : la bibliothèque d'images partagée par tout le site. C'est ici
+        qu'on téléverse et qu'on organise les visuels utilisés par les pages.</p>
+
+        <h3>Téléverser</h3>
+        <p>Glissez <strong>une ou plusieurs images d'un coup</strong> sur la zone d'envoi (ou cliquez-la
+        pour les choisir). Chaque image s'envoie avec sa propre <strong>barre de progression</strong>, puis
+        passe au vert une fois terminée — la liste se met à jour automatiquement à la fin.</p>
+        <p>À l'arrivée, Flow <strong>ré-encode</strong> l'image (sécurité) et génère automatiquement
+        plusieurs tailles (vignette, moyenne, grande) ainsi qu'une version <strong>WebP</strong> plus légère.
+        Si une image est refusée (mauvais type ou trop lourde, 5 Mo max), elle passe en rouge avec le motif,
+        sans bloquer les autres.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — envoi</span>
+            <div class="demo-drop" aria-hidden="true">⤓ Glissez vos images ici, ou cliquez pour téléverser</div>
+        </div>
+
+        <h3>Les dossiers</h3>
+        <p>Les dossiers servent à <strong>ranger</strong> la bibliothèque par thème, au lieu d'une seule
+        liste qui s'allonge sans fin. C'est purement du classement visuel.</p>
+        <ul>
+            <li><strong>Créer</strong> un dossier (ex. « Accueil », « Équipe », « Produits »), puis y
+                déposer des images.</li>
+            <li><strong>Filtrer</strong> : cliquez un dossier pour n'afficher que ses images.</li>
+            <li><strong>Déplacer</strong> une image d'un dossier à l'autre ne change <em>ni son adresse,
+                ni les pages qui l'utilisent</em> : tout est référencé par identifiant.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — dossiers</span>
+            <div class="demo-folders" aria-hidden="true">
+                <span class="demo-folder">📁 Accueil</span>
+                <span class="demo-folder">📁 Équipe</span>
+                <span class="demo-folder">📁 Produits</span>
+            </div>
+        </div>
+
+        <h3>Recadrer (crop)</h3>
+        <p>Le recadrage permet de <strong>découper</strong> une image : garder un visage, obtenir un
+        format carré pour une vignette, retirer un bord… Vous tracez sur l'image la zone à conserver,
+        et Flow en produit une <strong>nouvelle version</strong>.</p>
+        <ul>
+            <li><strong>L'original est toujours préservé</strong> : un crop ne l'écrase jamais, on peut
+                revenir en arrière.</li>
+            <li>Après recadrage, toutes les déclinaisons (vignette, moyenne, grande, WebP) sont
+                <strong>régénérées</strong> à partir du résultat.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — zone de recadrage</span>
+            <div class="demo-crop" aria-hidden="true"><span class="demo-crop-sel"></span></div>
+        </div>
+
+        <p class="muted">Rappel : les pages pointent vers l'image par identifiant, jamais par URL — déplacer
+        ou régénérer une image ne casse donc aucune page.</p>
+HTML],
+
+    'documents' => ['Les documents', <<<HTML
+        <h2>Les documents</h2>
+        <p>Menu <strong>Documents</strong> : la bibliothèque des fichiers à proposer sur le site —
+        <strong>PDF, Word, Excel, PowerPoint, OpenDocument, texte</strong> (plaquettes, formulaires,
+        menus, comptes rendus…). On les téléverse ici une fois, puis on réutilise leur lien partout.</p>
+
+        <h3>Téléverser</h3>
+        <p>Glissez <strong>un ou plusieurs fichiers d'un coup</strong> sur la zone d'envoi (ou cliquez-la
+        pour les choisir). Chaque fichier s'envoie avec sa propre <strong>barre de progression</strong>.
+        Si un fichier est refusé (type non autorisé ou trop lourd, 20 Mo max), il passe en rouge sans
+        bloquer les autres.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — envoi</span>
+            <div class="demo-drop" aria-hidden="true">⤓ Glissez vos documents ici, ou cliquez pour téléverser</div>
+        </div>
+
+        <h3>Réutiliser un document</h3>
+        <p>Chaque document a un bouton <strong>« Copier le lien »</strong> : il copie son adresse, que vous
+        collez ensuite dans un <strong>lien de texte</strong> d'une page, un bouton ou un e-mail. Le
+        <strong>libellé</strong> sert d'intitulé clair (« Plaquette 2026 ») indépendant du nom du fichier.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — une carte document</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">Ouvrir</span>
+                <span class="demo-pill">Copier le lien</span>
+            </div>
+        </div>
+
+        <h3>Les dossiers</h3>
+        <p>Comme pour les médias, les dossiers servent à <strong>ranger</strong> la bibliothèque par thème.
+        Déplacer un document d'un dossier à l'autre <em>ne change pas son lien</em> : les pages qui
+        l'utilisent continuent de fonctionner.</p>
+
+        <p class="muted">Sécurité : Flow vérifie le type réel de chaque fichier et l'enregistre sous un nom
+        assaini. Seuls les types bureautiques de la liste sont acceptés.</p>
+HTML],
+
+    'users' => ['Les utilisateurs', <<<HTML
+        <h2>Les utilisateurs</h2>
+        <p>Menu <strong>Utilisateurs</strong> (selon vos droits) : création des comptes et attribution
+        des rôles.</p>
+
+        <ul>
+            <li><strong>Rôles</strong> — chaque compte a un rôle qui détermine ses permissions
+                (éditer du contenu, publier, téléverser des médias, gérer les comptes).</li>
+            <li><strong>Bonne pratique</strong> — un rédacteur écrit sans publier ; un référent gère le
+                contenu et les médias ; l'administrateur a tout accès.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — fiche utilisateur</span>
+            <label>Nom</label>
+            <input type="text" value="Jeanne Dupont" disabled aria-hidden="true" tabindex="-1">
+            <label>Adresse e-mail</label>
+            <input type="email" value="jeanne@exemple.fr" disabled aria-hidden="true" tabindex="-1">
+            <label>Rôle</label>
+            <select disabled aria-hidden="true" tabindex="-1">
+                <option>Rédacteur</option>
+            </select>
+        </div>
+HTML],
+];
+
+/**
+ * Module dont dépend chaque rubrique. Une rubrique n'apparaît que si son module
+ * est actif (désactivable depuis l'onglet Administration). Les rubriques de
+ * niveau Core (tableau de bord) et Users (toujours actif) n'ont pas de
+ * dépendance et restent toujours visibles.
+ */
+$sectionModule = [
+    'pages'          => 'Pages',
+    'agenda'         => 'Agenda',
+    'actualites'     => 'Actualites',
+    'google_reviews' => 'GoogleReviews',
+    'media'          => 'Media',
+    'documents'      => 'Documents',
+];
+$sections = array_filter(
+    $sections,
+    static fn (string $id): bool =>
+        !isset($sectionModule[$id]) || in_array($sectionModule[$id], $enabledModules, true),
+    ARRAY_FILTER_USE_KEY,
+);
+
+$first = array_key_first($sections);
+?>
+<div class="tuto-head">
+    <h1>Tutoriel</h1>
+    <p class="muted">Choisissez une rubrique à gauche pour afficher son guide.</p>
+</div>
+
+<div class="tuto-layout">
+    <nav class="tuto-nav" data-tuto-nav aria-label="Rubriques du tutoriel">
+        <?php foreach ($sections as $id => [$label, $_]): ?>
+            <button type="button" class="tuto-tab<?= $id === $first ? ' active' : '' ?>" data-tab="<?= e($id) ?>">
+                <?= e($label) ?>
+            </button>
+        <?php endforeach; ?>
+    </nav>
+
+    <div class="tuto-panels">
+        <?php foreach ($sections as $id => [$_, $html]): ?>
+            <section class="card tuto-panel<?= $id === $first ? ' active' : '' ?>" data-panel="<?= e($id) ?>">
+                <?= $html ?>
+            </section>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<style>
+    .tuto-head { margin-bottom:1.6rem; }
+    .tuto-head h1 { margin:0 0 .35rem; }
+    .tuto-head .muted { color:var(--muted); margin:0; }
+
+    .tuto-layout { display:flex; gap:1.4rem; align-items:flex-start; }
+    .tuto-nav { display:flex; flex-direction:column; gap:.3rem; flex:0 0 230px; position:sticky; top:1rem; }
+    .tuto-tab { margin:0; text-align:left; padding:.7rem .9rem; border-radius:11px; background:transparent;
+                color:var(--muted); font-weight:600; font-size:.92rem; box-shadow:none;
+                transition:background .15s, color .15s; }
+    .tuto-tab:hover { background:var(--bg); color:var(--txt); filter:none; box-shadow:none; }
+    .tuto-tab.active { background:var(--accent-soft); color:var(--accent-600); }
+
+    .tuto-panels { flex:1; min-width:0; }
+    .tuto-panel { display:none; }
+    .tuto-panel.active { display:block; }
+    .tuto-panel h2 { margin:0 0 .8rem; font-size:1.15rem; }
+    .tuto-panel h3 { margin:1.5rem 0 .5rem; font-size:1rem; color:var(--accent-600); }
+    .tuto-panel p { margin:0 0 .8rem; line-height:1.6; }
+    .tuto-panel p:last-child { margin-bottom:0; }
+    .tuto-panel ul { margin:.2rem 0 .9rem; padding-left:1.2rem; }
+    .tuto-panel li { margin:.4rem 0; line-height:1.55; }
+    .tuto-panel code { background:var(--bg); padding:.1rem .4rem; border-radius:5px; font-size:.85em; }
+    .tuto-panel a { color:var(--accent-600); }
+
+    /* Aperçus illustratifs (champs factices). */
+    .demo { margin:1.1rem 0; padding:1rem 1.1rem; border:1px dashed #cfd3e6; border-radius:13px; background:var(--bg); }
+    .demo-tag { display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+                color:var(--muted); background:#fff; border:1px solid var(--line); border-radius:6px;
+                padding:.15rem .5rem; margin-bottom:.8rem; }
+    .demo label { font-size:.8rem; }
+    .demo input:disabled, .demo select:disabled { background:#fff; opacity:1; color:var(--txt); cursor:default; -webkit-text-fill-color:var(--txt); }
+    .demo-toggle { display:inline-flex; gap:.3rem; padding:.25rem; background:#fff; border:1px solid var(--line); border-radius:11px; }
+    .demo-toggle span { padding:.4rem .95rem; border-radius:8px; font-weight:600; font-size:.82rem; color:var(--muted); }
+    .demo-toggle span.on { background:#e7f6ec; color:#1c6b3a; }
+    .demo-bar { display:flex; gap:.4rem; flex-wrap:wrap; }
+    .demo-pill { padding:.35rem .75rem; border-radius:8px; background:var(--accent-soft); color:var(--accent-600);
+                 font-size:.82rem; font-weight:600; }
+    .demo-cards { display:flex; gap:.5rem; flex-wrap:wrap; }
+    .demo-card { padding:.55rem .9rem; border-radius:11px; background:#fff; border:1px solid var(--line);
+                 font-size:.85rem; font-weight:600; }
+    .demo-drop { border:1.5px dashed #cfd3e6; border-radius:12px; padding:1.1rem; text-align:center;
+                 color:var(--muted); background:#fff; font-size:.85rem; }
+    .demo-folders { display:flex; gap:.45rem; flex-wrap:wrap; }
+    .demo-folder { padding:.3rem .75rem; border-radius:20px; background:#fff; border:1px solid var(--line); font-size:.8rem; }
+    /* Aperçu agenda : dates côte à côte + vignette. */
+    .demo-dates { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin:.2rem 0 .3rem; }
+    .demo-thumb { display:flex; align-items:center; gap:.7rem; }
+    .demo-thumb-box { display:grid; place-items:center; width:54px; height:54px; font-size:1.4rem;
+                      background:#fff; border:1px solid var(--line); border-radius:9px; }
+    @media (max-width:520px) { .demo-dates { grid-template-columns:1fr; } }
+    /* Aperçu d'une ligne en colonnes. */
+    .demo-row { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+    .demo-col { display:flex; flex-direction:column; gap:.5rem; padding:.6rem; background:#fff;
+                border:1px dashed var(--line); border-radius:9px; min-height:60px; }
+    .demo-block { padding:.5rem .7rem; border-radius:7px; background:var(--accent-soft); color:var(--accent-600);
+                  font-size:.82rem; font-weight:600; text-align:center; }
+    /* Aperçu avis Google. */
+    .demo-review { background:#fff; border:1px solid var(--line); border-radius:11px; padding:.8rem .9rem; }
+    .demo-review p { margin:.5rem 0 0; font-size:.88rem; color:var(--txt); }
+    .demo-review-head { display:flex; align-items:center; gap:.6rem; }
+    .demo-stars { color:#f5a623; letter-spacing:.05em; }
+    .demo-chip { margin-left:auto; font-size:.72rem; font-weight:700; padding:.15rem .55rem; border-radius:6px;
+                 background:var(--bg); color:var(--muted); }
+    .demo-chip.on { background:#e7f6ec; color:#1c6b3a; }
+    /* Aperçu de recadrage. */
+    .demo-crop { position:relative; height:150px; border-radius:10px; overflow:hidden;
+                 background:linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 50%, #818cf8 100%); }
+    .demo-crop-sel { position:absolute; left:22%; top:18%; width:46%; height:58%;
+                     border:2px dashed #fff; border-radius:4px; box-shadow:0 0 0 9999px rgba(11,13,18,.32); }
+
+    @media (max-width:760px) {
+        .tuto-layout { flex-direction:column; }
+        .tuto-nav { flex:1 1 auto; width:100%; position:static; flex-direction:row; flex-wrap:wrap; }
+    }
+</style>
+
+<script src="<?= e($base . '/assets/js/tutorial.js') ?>"></script>

@@ -1,0 +1,26 @@
+# Flow — front controller unique (brief §2).
+# Toute requête qui ne correspond pas à un fichier réel est routée vers index.php.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Taille d'upload (médias 5 Mo, documents 20 Mo) : la limite PHP par défaut
+# (souvent 2 Mo) est plus basse que nos plafonds applicatifs. On la relève ici
+# pour mod_php ; sous php-fpm/CGI, c'est public/.user.ini qui prend le relais.
+# (Sans effet sous `php -S` : passer -d upload_max_filesize=25M -d post_max_size=28M.)
+<IfModule mod_php.c>
+    php_value upload_max_filesize 25M
+    php_value post_max_size 28M
+</IfModule>
+
+# Sécurité uploads (brief §5) : l'exécution PHP est désactivée via
+# public/uploads/.htaccess (et non ici, sinon index.php ne tournerait plus).
+
+# Ne pas servir les fichiers cachés.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

@@ -1,0 +1,20 @@
+# Flow — site public : accès par le dossier du projet.
+#
+# Idéalement le vhost pointe sa racine sur frontend/public/. Quand ce n'est pas
+# possible (accès direct au dossier, ex. http://host/frontend/), ce .htaccess
+# renvoie TOUTES les requêtes dans public/ : on atterrit sur le front controller
+# et tout le reste (layouts/, includes/, config/) demeure hors du contenu servi.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Empêche d'exposer directement le segment /public dans l'URL.
+    RewriteCond %{THE_REQUEST} \s/+public/ [NC]
+    RewriteRule ^public/(.*)$ $1 [R=301,L]
+
+    # Sert les fichiers réels de public/ (assets) et route le reste vers
+    # public/index.php via le .htaccess de public/.
+    RewriteRule ^$ public/ [L]
+    RewriteCond %{REQUEST_URI} !^/?public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

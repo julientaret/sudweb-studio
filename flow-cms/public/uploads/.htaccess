@@ -1,0 +1,34 @@
+# Sécurité uploads (brief §5).
+# Aucune exécution de script dans ce dossier : un payload planqué dans une image
+# ne doit jamais pouvoir tourner. Combiné au re-encodage GD côté Media.
+#
+# NB : on n'utilise PAS php_admin_flag ici — cette directive est interdite en
+# .htaccess (réservée à la conf vhost) et provoquerait un HTTP 500 sur tout le
+# dossier sous mod_php. La protection passe par le refus des extensions
+# exécutables (universel) et la coupure des handlers.
+
+# Refus direct de toute extension exécutable connue (sert les images normalement).
+<IfModule mod_authz_core.c>
+    <FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|phps|pht|phar|cgi|pl|py|sh|asp|aspx|jsp)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|phps|pht|phar|cgi|pl|py|sh|asp|aspx|jsp)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Coupe les handlers/types exécutables (php-fpm et autres).
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .phps .pht .phar .pl .py .cgi
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .phps .pht .phar
+
+# php_flag (autorisé en .htaccess, contrairement à php_admin_flag) : ceinture
+# supplémentaire si mod_php est chargé.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>

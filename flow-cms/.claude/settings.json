@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "sentry-skills@sentry-skills": true
+  }
+}

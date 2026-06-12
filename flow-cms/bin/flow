@@ -1,0 +1,101 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Flow CLI (brief §2 & §5).
+ *
+ * Commandes :
+ *   migrate                         applique les migrations en attente
+ *   user:create <email> <pass> [role] [name]   crée un compte
+ *
+ * (regen-media viendra avec le module Media — brief §5.)
+ */
+
+use App\Core\Auth;
+use App\Core\Kernel;
+use App\Core\Migrator;
+use App\Modules\Media\MediaProcessor;
+use App\Modules\Media\MediaRepository;
+use App\Modules\Users\UserRepository;
+
+$basePath = dirname(__DIR__);
+require $basePath . '/vendor/autoload.php';
+
+$kernel = Kernel::boot($basePath);
+// Démarre les modules pour collecter leurs routes/migrations (sans session ni HTTP).
+$kernel->registry()->bootAll($kernel->router());
+
+$argv = $_SERVER['argv'];
+$command = $argv[1] ?? 'help';
+
+try {
+    switch ($command) {
+        case 'migrate':
+            $migrator = new Migrator($basePath);
+            $applied = $migrator->run($kernel->registry());
+            if ($applied === []) {
+                fwrite(STDOUT, "Aucune migration en attente.\n");
+            } else {
+                fwrite(STDOUT, "Migrations appliquées :\n");
+                foreach ($applied as $name) {
+                    fwrite(STDOUT, "  - {$name}\n");
+                }
+            }
+            break;
+
+        case 'user:create':
+            $email = $argv[2] ?? null;
+            $password = $argv[3] ?? null;
+            $role = $argv[4] ?? 'admin';
+            $name = $argv[5] ?? '';
+            if ($email === null || $password === null) {
+                fwrite(STDERR, "Usage : bin/flow user:create <email> <password> [role] [name]\n");
+                exit(1);
+            }
+            $repo = new UserRepository();
+            if ($repo->findByEmail($email) !== null) {
+                fwrite(STDERR, "Un compte existe déjà avec cet e-mail.\n");
+                exit(1);
+            }
+            $id = $repo->create($email, password_hash($password, Auth::hashAlgo()), $name, $role);
+            fwrite(STDOUT, "Compte #{$id} créé : {$email} ({$role}).\n");
+            break;
+
+        case 'media:regen':
+            // Reparcourt media et reconstruit WebP + déclinaisons (brief §5).
+            // Indispensable après l'ajout/la modification d'un preset.
+            $repo = new MediaRepository();
+            $processor = new MediaProcessor();
+            $ok = 0;
+            $fail = 0;
+            foreach ($repo->all() as $media) {
+                if ($processor->regenerate($media)) {
+                    $ok++;
+                    fwrite(STDOUT, "  ✓ {$media->filename}\n");
+                } else {
+                    $fail++;
+                    fwrite(STDERR, "  ✗ original manquant : {$media->filename}\n");
+                }
+            }
+            fwrite(STDOUT, "Régénération terminée : {$ok} ok, {$fail} en échec.\n");
+            break;
+
+        case 'help':
+        default:
+            fwrite(STDOUT, <<<TXT
+            Flow CLI
+
+            Usage :
+              bin/flow migrate
+              bin/flow user:create <email> <password> [role] [name]
+              bin/flow media:regen
+
+            TXT);
+            break;
+    }
+} catch (\Throwable $e) {
+    fwrite(STDERR, 'Erreur : ' . $e->getMessage() . "\n");
+    exit(1);
+}

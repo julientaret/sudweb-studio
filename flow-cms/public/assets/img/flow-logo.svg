@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Flow">
+  <defs>
+    <linearGradient id="flow" x1="14" y1="82" x2="82" y2="14" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6a3ad8"/>
+      <stop offset="0.45" stop-color="#2b8bff"/>
+      <stop offset="1" stop-color="#37c6f0"/>
+    </linearGradient>
+  </defs>
+  <!-- Stem -->
+  <rect x="26" y="16" width="15" height="60" rx="7.5" fill="url(#flow)"/>
+  <!-- Top arm -->
+  <path d="M33.5 16 H74 a7.5 7.5 0 0 1 0 15 H33.5 Z" fill="url(#flow)"/>
+  <!-- Middle arm -->
+  <path d="M33.5 39 H66 a7 7 0 0 1 0 14 H33.5 Z" fill="url(#flow)"/>
+  <!-- Teardrop foot -->
+  <circle cx="33.5" cy="73" r="8.6" fill="url(#flow)"/>
+</svg>

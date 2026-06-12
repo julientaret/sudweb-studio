@@ -1,0 +1,37 @@
+# OS / éditeurs
+._*
+.DS_Store
+.idea/
+.vscode/
+prepros-6.config
+config.codekit*
+
+# Environnement (constantes propres au serveur)
+.env.local
+
+# Généré (Composer à la racine uniquement, pas les libs front vendorisées)
+node_modules/
+/vendor/
+dist/
+
+# Libs front auto-hébergées (Cropper.js, Quill…) : versionnées.
+!/public/assets/vendor/
+
+# Uploads & storage : fichiers de données, jamais versionnés…
+/public/uploads/*
+/public/documents/*
+/storage/logs/*
+/storage/cache/*
+/storage/modules.json
+/storage/google_reviews.json
+
+# …mais on garde la structure et les protections.
+!/public/uploads/.gitkeep
+!/public/uploads/.htaccess
+!/public/documents/.gitkeep
+!/public/documents/.htaccess
+!/storage/logs/.gitkeep
+!/storage/cache/.gitkeep
+
+# Scanner / analyse
+.scannerwork/

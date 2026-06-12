@@ -1,0 +1,30 @@
+# Flow — racine du projet.
+#
+# Deux applications cohabitent ici :
+#   - l'admin (CMS) dans /flow-cms — possède son propre .htaccess, on le laisse faire ;
+#   - le site public dans /frontend — servi ICI à la racine (/flow/...), sans
+#     exposer le segment /frontend dans l'URL.
+#
+# Résultat : http://host/flow/        → site public
+#            http://host/flow/flow-cms → admin
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # L'admin gère ses propres requêtes (flow-cms/.htaccess route vers public/).
+    RewriteRule ^flow-cms($|/) - [L]
+
+    # Racine du site public → son front controller.
+    RewriteRule ^$ frontend/public/index.php [L]
+
+    # Le reste : on sert les fichiers réels du site public (assets) et on route
+    # tout le reste (slugs de pages) via frontend/public/ (qui finit sur index.php).
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ frontend/public/$1 [L]
+</IfModule>
+
+# Filet si mod_rewrite est absent : la racine redirige vers le site public.
+<IfModule !mod_rewrite.c>
+    DirectoryIndex index.php
+</IfModule>

@@ -1,0 +1,14 @@
+# Flow — front controller unique du site public (frontend).
+# Toute requête qui ne correspond pas à un fichier réel est routée vers index.php.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Ne pas servir les fichiers cachés.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

@@ -1,0 +1,121 @@
+/*
+ * Éditeur de blocs (page-builder) — styles partagés par les modules de contenu
+ * (Pages, Agenda…). Chargé en feuille externe (CSP `style-src 'self'`).
+ * Couvre : champs, toggle de statut, lignes/colonnes, cartes de blocs, barre
+ * d'ajout, champ image, modale de sélection média et harmonisation de Quill.
+ */
+.section-title { margin:1.6rem 0 .8rem; font-size:1.1rem; }
+.muted { color:var(--muted); font-size:.9rem; }
+/* Toggle de statut (radios stylées en contrôle segmenté). */
+.status-toggle { display:inline-flex; gap:.3rem; padding:.25rem; background:var(--bg);
+                 border:1px solid var(--line); border-radius:11px; }
+.status-toggle input { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.status-toggle .toggle-opt { margin:0; padding:.45rem 1rem; border-radius:8px; cursor:pointer;
+                             font-weight:600; font-size:.85rem; color:var(--muted);
+                             transition:background .15s, color .15s, box-shadow .15s; }
+.status-toggle #status-draft:checked + .toggle-opt { background:#fdf0d5; color:#8a5a00; }
+.status-toggle #status-pub:checked + .toggle-opt { background:#e7f6ec; color:#1c6b3a; }
+.status-toggle input:focus-visible + .toggle-opt { outline:2px solid var(--accent); outline-offset:1px; }
+#rows { display:flex; flex-direction:column; gap:1rem; }
+.row { border:1px solid var(--line); border-radius:10px; background:#fafbfc; }
+.row.dragging { opacity:.5; }
+.row-head { display:flex; align-items:center; gap:.6rem; padding:.5rem .8rem; border-bottom:1px solid var(--line); }
+.row-handle { cursor:grab; color:var(--muted); user-select:none; font-size:.85rem; }
+.col-counts { display:flex; gap:.25rem; }
+.col-counts .col-count { margin:0; padding:.25rem .55rem; background:#eef2ff; color:var(--accent); border-radius:6px; }
+.col-counts .col-count.active { background:var(--accent); color:#fff; }
+.row-remove { margin-left:auto; font-size:.85rem; }
+.row-cols { display:grid; gap:.8rem; padding:.8rem; }
+.row[data-cols="1"] .row-cols { grid-template-columns:1fr; }
+.row[data-cols="2"] .row-cols { grid-template-columns:repeat(2,1fr); }
+.row[data-cols="3"] .row-cols { grid-template-columns:repeat(3,1fr); }
+.row[data-cols="4"] .row-cols { grid-template-columns:repeat(4,1fr); }
+.col { background:#fff; border:1px dashed var(--line); border-radius:8px; padding:.6rem; min-height:80px; }
+.col.drag-over { border-color:var(--accent); background:#f5f8ff; }
+.col-blocks { display:flex; flex-direction:column; gap:.6rem; min-height:30px; }
+.block-card { border:1px solid var(--line); border-radius:8px; background:#fff; }
+.block-card.dragging { opacity:.5; }
+.block-head { display:flex; align-items:center; gap:.5rem; padding:.4rem .6rem; border-bottom:1px solid var(--line); background:#fafbfc; border-radius:8px 8px 0 0; }
+.block-head strong { flex:1; font-size:.85rem; }
+.drag-handle { cursor:grab; color:var(--muted); user-select:none; }
+.block-body { padding:.6rem; }
+.block-body label:first-child { margin-top:0; }
+.col-add { margin-top:.8rem; padding-top:.7rem; border-top:1px dashed var(--line); }
+.col-add-label { display:block; font-size:.72rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:.04em; color:var(--muted); margin-bottom:.5rem; }
+.col-add-grid { display:flex; flex-wrap:wrap; gap:.5rem; }
+.col-add button.add-block { flex:1 1 80px; }
+.col-add button.add-block { display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:.35rem; margin:0; padding:.65rem .4rem; font-size:.78rem; font-weight:600;
+    background:#fff; color:var(--txt); border:1px solid var(--line); border-radius:10px;
+    box-shadow:none; transition:.15s; }
+.col-add button.add-block:hover { border-color:var(--accent); color:var(--accent);
+    background:#f5f8ff; box-shadow:none; transform:translateY(-1px); }
+.add-block-icon { display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:8px; background:#eef2ff; color:var(--accent); }
+.add-block:hover .add-block-icon { background:var(--accent); color:#fff; }
+.add-block-icon svg { width:17px; height:17px; }
+button.ghost { background:#eef2ff; color:var(--accent); }
+#add-row { width:100%; background:#f5f8ff; color:var(--accent); border:2px dashed var(--accent);
+    box-shadow:none; font-weight:600; }
+#add-row:hover { background:#eaf1ff; filter:none; box-shadow:none; }
+.form-actions-row { display:flex; align-items:stretch; gap:.9rem; }
+.form-actions-row button[type=submit] { border:1px solid transparent; }
+.form-actions-row .btn-secondary { padding:.7rem 1.2rem; }
+/* Éditeur richtext (Quill) harmonisé avec les champs de Flow :
+   barre d'outils + zone fusionnées en un seul champ arrondi, accent au focus. */
+.ql-toolbar.ql-snow, .ql-container.ql-snow { border-color:var(--line); }
+.ql-toolbar.ql-snow { background:#fafbfc; border-radius:11px 11px 0 0; padding:.5rem .6rem; }
+.ql-container.ql-snow { border-top:0; border-radius:0 0 11px 11px; background:#fff;
+    font:inherit; color:var(--txt); transition:border-color .15s, box-shadow .15s; }
+.quill-editor.ql-container { min-height:110px; }
+.ql-editor { min-height:110px; font-size:.95rem; }
+.ql-editor.ql-blank::before { color:#a7adc0; font-style:normal; }
+/* Boutons de la barre d'outils aux couleurs de l'accent. */
+.ql-snow.ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-picker-label:hover, .ql-snow .ql-picker-label.ql-active { color:var(--accent); }
+.ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.ql-snow .ql-picker-label:hover .ql-stroke, .ql-snow .ql-picker-label.ql-active .ql-stroke { stroke:var(--accent); }
+.ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill { fill:var(--accent); }
+/* Focus : bordure + halo accent comme les inputs, sur toute la zone. */
+.block-body:has(.ql-editor:focus) .ql-toolbar.ql-snow,
+.block-body:has(.ql-editor:focus) .ql-container.ql-snow { border-color:var(--accent); }
+.block-body:has(.ql-editor:focus) .ql-container.ql-snow { box-shadow:0 0 0 4px rgba(43,139,255,.15); }
+.link.danger, .block-remove, .row-remove { color:#b91c1c; }
+
+/* Champ image (bloc image ou vignette) : aperçu + boutons (sélection via la modale). */
+.image-field { display:flex; align-items:center; gap:.7rem; }
+.image-preview { width:84px; height:84px; flex:0 0 auto; border:1px solid var(--line);
+                 border-radius:8px; overflow:hidden; background:#f5f6f8; display:grid; place-items:center; }
+.image-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+.image-preview.empty .hint { font-size:.78rem; text-align:center; padding:.2rem; }
+.image-field-actions { display:flex; flex-direction:column; gap:.35rem; align-items:flex-start; }
+.image-field-actions button { margin:0; }
+.image-choose { padding:.35rem .7rem; background:#eef2ff; color:var(--accent); }
+.image-clear { padding:.35rem .7rem; background:#fdecec; color:#b91c1c; box-shadow:none; }
+.image-clear:hover { background:#f9d7d7; filter:none; box-shadow:none; }
+
+/* Modale de sélection d'image (vignettes de la bibliothèque). */
+.media-modal[hidden] { display:none; }
+.media-modal { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
+.media-modal-backdrop { position:absolute; inset:0; background:rgba(17,20,30,.55); }
+.media-modal-panel { position:relative; z-index:1; width:min(760px,100%); max-height:82vh; display:flex;
+                     flex-direction:column; background:#fff; border-radius:12px; box-shadow:0 18px 50px rgba(0,0,0,.3); }
+.media-modal-head { display:flex; align-items:center; justify-content:space-between;
+                    padding:.8rem 1.1rem; border-bottom:1px solid var(--line); }
+.media-modal-head strong { font-size:1rem; }
+.media-modal-close { font-size:1.4rem; line-height:1; padding:0 .3rem; }
+.media-modal-filters { display:flex; flex-wrap:wrap; gap:.4rem; padding:.7rem 1.1rem;
+                       border-bottom:1px solid var(--line); }
+.media-filter { margin:0; padding:.35rem .75rem; border-radius:8px; background:var(--bg); color:var(--muted);
+                font-size:.82rem; font-weight:600; box-shadow:none; cursor:pointer; }
+.media-filter:hover { filter:none; box-shadow:none; color:var(--txt); }
+.media-filter.active { background:var(--accent-soft); color:var(--accent-600); }
+.media-filter-count { opacity:.65; font-weight:700; }
+.media-modal-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr));
+                    gap:.6rem; padding:1rem; overflow:auto; }
+.media-pick[hidden] { display:none; }
+.media-pick { margin:0; padding:0; border:2px solid transparent; border-radius:9px; overflow:hidden;
+              background:none; box-shadow:none; cursor:pointer; aspect-ratio:1/1; }
+.media-pick img { width:100%; height:100%; object-fit:cover; display:block; }
+.media-pick:hover { border-color:var(--accent); }
