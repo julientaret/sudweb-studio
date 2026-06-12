@@ -17,19 +17,15 @@ dist/
 # Libs front auto-hébergées (Cropper.js, Quill…) : versionnées.
 !/public/assets/vendor/
 
-# Uploads & storage : fichiers de données, jamais versionnés…
-/public/uploads/*
-/public/documents/*
+# Données utilisateur : jamais versionnées.
+# (uploads médias ET documents vivent désormais dans frontend/public — voir le
+# .gitignore du frontend ; ici ne reste que le storage interne.)
 /storage/logs/*
 /storage/cache/*
 /storage/modules.json
 /storage/google_reviews.json
 
-# …mais on garde la structure et les protections.
-!/public/uploads/.gitkeep
-!/public/uploads/.htaccess
-!/public/documents/.gitkeep
-!/public/documents/.htaccess
+# …mais on garde la structure.
 !/storage/logs/.gitkeep
 !/storage/cache/.gitkeep
 

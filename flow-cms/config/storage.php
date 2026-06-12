@@ -7,9 +7,11 @@ use App\Core\Config;
 /**
  * Emplacement physique et URL publique des fichiers uploadés (images & documents).
  *
- * Par défaut (valeurs vides), tout vit sous public/ : public/uploads et
- * public/documents, servis aux URLs {base_path}/uploads et {base_path}/documents.
- * En dev, laissez tel quel.
+ * Par défaut (valeurs vides), uploads (médias) ET documents vivent dans le site
+ * public, sous frontend/public/uploads et frontend/public/documents, servis à
+ * {public_base_path}/uploads et {public_base_path}/documents — la MÊME URL depuis
+ * l'admin et depuis le front, pour qu'un média ou un lien de page ne casse jamais
+ * (voir MediaStorage et DocumentStorage). En dev, laissez tel quel.
  *
  * En PRODUCTION, on peut déplacer le STOCKAGE hors du dossier flow-cms via
  * .env.local — pour que git/rsync et les déploiements ne touchent jamais aux
@@ -28,8 +30,9 @@ use App\Core\Config;
  *   DOCUMENTS_URL=https://cdn.exemple.fr/documents
  *
  * IMPORTANT (sécurité) : la coupure d'exécution de scripts vit dans les .htaccess
- * de public/uploads et public/documents. Si vous déplacez le stockage, recopiez
- * ces .htaccess (ou la règle équivalente du vhost) dans le nouveau dossier.
+ * de frontend/public/uploads et frontend/public/documents. Si vous déplacez le
+ * stockage, recopiez ces .htaccess (ou la règle équivalente du vhost) dans le
+ * nouveau dossier.
  */
 return [
     'uploads' => [

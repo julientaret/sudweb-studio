@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Media;
 
 use App\Core\Config;
-use App\Core\Kernel;
 use GdImage;
 use RuntimeException;
 
@@ -26,10 +25,7 @@ final class MediaProcessor
 
     public function __construct()
     {
-        $path = (string) Config::get('storage.uploads.path', '');
-        $this->uploadsDir = $path !== ''
-            ? rtrim($path, '/')
-            : Kernel::instance()->basePath() . '/public/uploads';
+        $this->uploadsDir = MediaStorage::diskDir();
     }
 
     /**

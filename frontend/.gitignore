@@ -1,0 +1,12 @@
+# OS / éditeurs
+._*
+.DS_Store
+
+# Données utilisateur (déplacées depuis flow-cms) : uploads médias et documents.
+# Jamais versionnés… mais on garde la structure et la protection (.htaccess).
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/.htaccess
+/public/documents/*
+!/public/documents/.gitkeep
+!/public/documents/.htaccess

@@ -31,6 +31,20 @@ final class Kernel
         $urlBase = $this->resolveUrlBasePath();
         Config::set('app.base_path', $urlBase);
 
+        // Le site public (frontend) est un dossier voisin du CMS. Les fichiers
+        // uploadés vivent dans frontend/public (servis avec le site public), et
+        // sont référencés à la base d'URL du site — la MÊME depuis l'admin et
+        // depuis le front, pour que les médias d'une page ne cassent jamais.
+        //
+        //  - storage.public_dir    : dossier servi du frontend (chemin disque) ;
+        //  - app.public_base_path  : base d'URL du site public. Côté front c'est
+        //    app.base_path ; côté admin, c'est app.base_path sans le segment du
+        //    dossier CMS (ex. /flow/flow-cms → /flow).
+        Config::set('storage.public_dir', dirname($this->basePath) . '/frontend/public');
+        $cmsDir = basename($this->basePath);
+        $publicBase = preg_replace('#/' . preg_quote($cmsDir, '#') . '$#', '', $urlBase);
+        Config::set('app.public_base_path', $publicBase ?? $urlBase);
+
         $this->router = new Router($urlBase);
         $this->blocks = new BlockRegistry();
 

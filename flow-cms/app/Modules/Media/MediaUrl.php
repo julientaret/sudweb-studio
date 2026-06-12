@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Media;
 
 use App\Core\Config;
-use App\Core\Kernel;
 
 /**
  * Construction des URLs publiques d'un média (brief §5).
@@ -55,22 +54,14 @@ final class MediaUrl
         if (!$bust) {
             return $url;
         }
-        $path = (string) Config::get('storage.uploads.path', '');
-        $dir = $path !== ''
-            ? rtrim($path, '/')
-            : Kernel::instance()->basePath() . '/public/uploads';
-        $abs = $dir . '/' . $relPath;
+        $abs = MediaStorage::diskDir() . '/' . $relPath;
         $v = is_file($abs) ? filemtime($abs) : null;
         return $v ? $url . '?v=' . $v : $url;
     }
 
-    /** Préfixe d'URL des uploads : storage.uploads.url, sinon {base_path}/uploads. */
+    /** Préfixe d'URL des uploads (site public). Voir MediaStorage. */
     private static function base(): string
     {
-        $url = (string) Config::get('storage.uploads.url', '');
-        if ($url !== '') {
-            return rtrim($url, '/');
-        }
-        return rtrim((string) Config::get('app.base_path', ''), '/') . '/uploads';
+        return MediaStorage::baseUrl();
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Documents;
 
-use App\Core\Config;
-
 /**
  * Construction du lien public d'un document.
  *
@@ -21,13 +19,9 @@ final class DocumentUrl
         return self::base() . '/' . $document->filename;
     }
 
-    /** Préfixe d'URL des documents : storage.documents.url, sinon {base_path}/documents. */
+    /** Préfixe d'URL des documents (site public). Voir DocumentStorage. */
     private static function base(): string
     {
-        $url = (string) Config::get('storage.documents.url', '');
-        if ($url !== '') {
-            return rtrim($url, '/');
-        }
-        return rtrim((string) Config::get('app.base_path', ''), '/') . '/documents';
+        return DocumentStorage::baseUrl();
     }
 }

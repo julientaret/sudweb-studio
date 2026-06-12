@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Documents;
 
 use App\Core\Config;
-use App\Core\Kernel;
 use RuntimeException;
 
 /**
@@ -14,7 +13,7 @@ use RuntimeException;
  * Pendant « non-image » de MediaProcessor : aucun re-encodage possible (ce ne sont
  * pas des images), donc la sécurité repose sur une DOUBLE liste blanche —
  * extension ET type réel (finfo) — plus la coupure de l'exécution de scripts sur
- * public/documents/ (.htaccess) et le refus de tout ce qui n'est pas un véritable
+ * frontend/public/documents/ (.htaccess) et le refus de tout ce qui n'est pas un véritable
  * upload HTTP (is_uploaded_file, vérifié par le contrôleur).
  *
  * Comme pour les médias, le fichier est renommé systématiquement (slug + hash
@@ -26,10 +25,7 @@ final class DocumentProcessor
 
     public function __construct()
     {
-        $path = (string) Config::get('storage.documents.path', '');
-        $this->documentsDir = $path !== ''
-            ? rtrim($path, '/')
-            : Kernel::instance()->basePath() . '/public/documents';
+        $this->documentsDir = DocumentStorage::diskDir();
     }
 
     /**
