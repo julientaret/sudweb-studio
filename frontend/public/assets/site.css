@@ -5,11 +5,16 @@ body { margin:0; font:17px/1.65 Georgia, 'Times New Roman', serif; color:var(--t
 
 /* En-tête / pied de page */
 .site-header { border-bottom:1px solid var(--line); }
-.site-header .wrap { padding-top:1.2rem; padding-bottom:1.2rem; }
+.site-header .wrap { padding-top:1.2rem; padding-bottom:1.2rem; display:flex; align-items:baseline; justify-content:space-between; gap:1.5rem; }
 .site-brand { font-family:system-ui, sans-serif; font-weight:700; font-size:1.2rem; color:var(--txt); text-decoration:none; }
+.site-nav { font-family:system-ui, sans-serif; font-size:.95rem; display:flex; gap:1.2rem; }
+.site-nav a { color:var(--muted); text-decoration:none; }
+.site-nav a:hover { color:var(--txt); }
 main.wrap { padding-top:3rem; padding-bottom:5rem; }
 .site-footer { border-top:1px solid var(--line); color:var(--muted); font-family:system-ui, sans-serif; font-size:.9rem; }
 .site-footer .wrap { padding-top:1.5rem; padding-bottom:2rem; }
+.site-social { display:flex; gap:1rem; }
+.site-social a { color:var(--muted); }
 
 /* Typographie de contenu */
 h1,h2,h3 { font-family:system-ui, sans-serif; line-height:1.25; }

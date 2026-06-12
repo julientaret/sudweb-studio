@@ -8,16 +8,11 @@ declare(strict_types=1);
  * Servie à la racine du site (ex. /flow/) par le front controller, qui résout
  * frontend/static/index.php avant toute page dynamique du CMS.
  *
- * Modèle pour toute nouvelle page statique : poser un fichier
- * frontend/static/<slug>.php, définir $title, puis encadrer le contenu par les
- * partials header/footer (qui apportent <head>, CSS et navigation communs).
- * Exemple : frontend/static/contact.php sera servi sur /flow/contact.
+ * Pour créer une nouvelle page, copier frontend/static/_template.php.
  */
 
-use App\Core\Config;
-
 $title = 'Accueil';
-$base  = rtrim((string) Config::get('app.base_path', ''), '/');
+$description = '';
 
 require dirname(__DIR__) . '/includes/header.php';
 ?>

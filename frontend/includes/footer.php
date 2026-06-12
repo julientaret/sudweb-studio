@@ -2,16 +2,25 @@
 /**
  * Pied de page commun et fermeture du document HTML du site public.
  *
- * @var string $siteName  nom du site (optionnel, défaut depuis la config)
+ * Valeurs de gabarit (copyright, liens sociaux) issues de la config centralisée
+ * frontend/config/site.php, via site().
  */
 
-use App\Core\Config;
+require_once __DIR__ . '/helpers.php';
 
-$siteName = $siteName ?? (string) Config::get('app.site_name', 'Flow');
+$copyright = (string) (site('footer', [])['copyright'] ?? site('name', 'Flow'));
+$social = site('social', []);
 ?>
     <footer class="site-footer">
         <div class="wrap">
-            <p>&copy; <?= date('Y') ?> <?= e($siteName) ?></p>
+            <p>&copy; <?= date('Y') ?> <?= e($copyright) ?></p>
+            <?php if ($social): ?>
+            <p class="site-social">
+                <?php foreach ($social as $label => $url): ?>
+                <a href="<?= e($url) ?>" rel="noopener"><?= e($label) ?></a>
+                <?php endforeach; ?>
+            </p>
+            <?php endif; ?>
         </div>
     </footer>
 </body>
