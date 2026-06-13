@@ -436,6 +436,50 @@ HTML],
         travaux terminés — sinon vos visiteurs (dont l'IP n'est pas listée) continueront de voir la
         page de fermeture.</p>
 HTML],
+
+    'stats' => ['Les statistiques', <<<HTML
+        <h2>Les statistiques de visite</h2>
+        <p>Menu <strong>Statistiques</strong> : un tableau de bord de la fréquentation de votre site
+        public — combien de pages sont vues, par combien de visiteurs, d'où ils viennent et avec quel
+        type d'appareil. Le tout <strong>respectueux de la vie privée</strong> : aucun cookie, aucun
+        service tiers (pas de Google Analytics), donc <strong>aucun bandeau de consentement</strong> à
+        afficher.</p>
+
+        <h3>Ce que vous voyez</h3>
+        <ul>
+            <li><strong>Pages vues</strong> et <strong>visiteurs uniques</strong> sur la période choisie ;</li>
+            <li><strong>Mois en cours</strong> : un graphique jour par jour, du 1er à aujourd'hui ;</li>
+            <li><strong>Fréquentation par jour</strong> sur la période (7 jours, 30 jours, 90 jours, 12 mois) ;</li>
+            <li><strong>Pages les plus vues</strong> et <strong>sources de trafic</strong> (sites qui vous envoient des visiteurs) ;</li>
+            <li><strong>Appareils</strong> : part d'ordinateurs, mobiles et tablettes.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — période</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">7 jours</span>
+                <span class="demo-pill">30 jours</span>
+                <span class="demo-pill">90 jours</span>
+                <span class="demo-pill">12 mois</span>
+            </div>
+        </div>
+
+        <h3>Qui est compté ?</h3>
+        <p>Seuls vos <strong>vrais visiteurs</strong>. Sont automatiquement écartés : les
+        <strong>robots</strong> (Google, réseaux sociaux, outils d'analyse…) et <strong>vous-même</strong>
+        lorsque vous êtes connecté à l'administration. Vous pouvez aussi faire exclure l'adresse de votre
+        bureau (réglage technique, côté Sud Web Studio).</p>
+
+        <h3>Visiteurs uniques : une estimation honnête</h3>
+        <p>Faute de cookie de pistage, le décompte des visiteurs uniques est <strong>volontairement
+        approximatif</strong> : il reconnaît un visiteur au cours d'une même journée, mais repart de zéro
+        le lendemain (impossible de vous suivre dans le temps). C'est le prix — assumé — du respect de la
+        vie privée, et c'est largement suffisant pour suivre les tendances.</p>
+
+        <p class="muted">Confidentialité : aucune donnée permettant d'identifier une personne n'est
+        conservée (ni adresse IP en clair, ni navigateur). Les statistiques sont
+        <strong>effacées automatiquement</strong> au-delà de quelques mois.</p>
+HTML],
 ];
 
 /**
@@ -452,6 +496,7 @@ $sectionModule = [
     'google_reviews' => 'GoogleReviews',
     'media'          => 'Media',
     'documents'      => 'Documents',
+    'stats'          => 'Stats',
 ];
 $sections = array_filter(
     $sections,

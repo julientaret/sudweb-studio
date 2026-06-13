@@ -20,6 +20,7 @@ use App\Core\Migrator;
 use App\Modules\Contact\ContactRepository;
 use App\Modules\Media\MediaProcessor;
 use App\Modules\Media\MediaRepository;
+use App\Modules\Stats\StatsRepository;
 use App\Modules\Users\UserRepository;
 
 $basePath = dirname(__DIR__);
@@ -97,6 +98,19 @@ try {
             fwrite(STDOUT, "Purge des demandes antérieures au {$cutoff} : {$deleted} supprimée(s).\n");
             break;
 
+        case 'stats:purge':
+            // RGPD : supprime les vues de pages au-delà du délai de conservation
+            // (config/stats.php → retention_months). À planifier en cron.
+            $months = (int) Config::get('stats.retention_months', 0);
+            if ($months <= 0) {
+                fwrite(STDOUT, "Purge désactivée (retention_months = 0).\n");
+                break;
+            }
+            $cutoff = date('Y-m-d', strtotime('-' . $months . ' months') ?: time());
+            $deleted = (new StatsRepository())->purgeOlderThan($cutoff);
+            fwrite(STDOUT, "Purge des vues antérieures au {$cutoff} : {$deleted} supprimée(s).\n");
+            break;
+
         case 'help':
         default:
             fwrite(STDOUT, <<<TXT
@@ -107,6 +121,7 @@ try {
               bin/flow user:create <email> <password> [role] [name]
               bin/flow media:regen
               bin/flow contact:purge
+              bin/flow stats:purge
 
             TXT);
             break;

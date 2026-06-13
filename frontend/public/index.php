@@ -65,6 +65,13 @@ if ($redirect !== null) {
     return;
 }
 
+// --- Mesure d'audience (module Stats) ---------------------------------------
+// Enregistre la vue de page (statique OU dynamique), après le filtre des
+// redirections. Server-side, RGPD-clean : sans cookie ni service tiers, IP/UA
+// jamais stockés en clair. No-op si le module est désactivé ; best-effort (ne
+// casse jamais le rendu — cf. StatsCollector::record).
+\App\Modules\Stats\StatsCollector::record($slug);
+
 // --- 2) Page statique ? (alias déclaré, sinon convention <slug>.php) ---------
 
 $target = ($config['routes'] ?? [])[$slug] ?? ($slug === '' ? 'index' : $slug);

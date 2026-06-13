@@ -51,6 +51,7 @@ final class ModuleSettings
         'GoogleReviews' => ['Avis Google', 'Import des avis Google de l\'établissement et bloc d\'affichage.'],
         'Contact'    => ['Contact', 'Formulaire public, demandes en base et notification e-mail au propriétaire.'],
         'LegalPages' => ['Pages légales', 'Mentions légales, politique de confidentialité et autres pages juridiques, éditées au texte riche.'],
+        'Stats'      => ['Statistiques', 'Mesure d\'audience légère du site public, sans cookie ni service tiers (RGPD).'],
     ];
 
     private string $statePath;

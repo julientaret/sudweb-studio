@@ -24,5 +24,6 @@ return [
         'GoogleReviews',
         'Contact',
         'LegalPages',
+        'Stats',
     ],
 ];
