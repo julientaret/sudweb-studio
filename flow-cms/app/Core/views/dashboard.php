@@ -2,6 +2,7 @@
 /** @var array<int, array{label:string, url:string}> $cards */
 /** @var array<int, array{title:string,status:string,published:bool,updatedAt:string,editUrl:string,kind:string,badge:string}> $recent */
 /** @var array<int, \App\Modules\Media\Media> $gallery */
+/** @var array{label:string, series:array<int, array{date:string,label:string,views:int,uniques:int}>, views:int, uniques:int, max:int}|null $stats */
 /** @var \App\Modules\Users\User|null $user */
 /** @var string $base */
 
@@ -97,6 +98,32 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
 <div data-hidden-cells hidden>
     <?php foreach ($hidden as $c) { $cell($c, false); } ?>
 </div>
+
+<?php if ($stats !== null): ?>
+    <section class="dash-stats card">
+        <div class="dst-head">
+            <div>
+                <h2 class="dst-title">Audience — <?= e($stats['label']) ?></h2>
+                <p class="dst-sub muted"><?= e(number_format($stats['views'], 0, ',', ' ')) ?> pages vues ·
+                    <?= e(number_format($stats['uniques'], 0, ',', ' ')) ?> visiteurs uniques ce mois-ci</p>
+            </div>
+            <a class="dst-link" href="<?= e($base . '/admin/stats') ?>">Voir toutes les stats →</a>
+        </div>
+        <?php if ($stats['max'] === 0): ?>
+            <p class="muted" style="margin:.4rem 0 0;">Aucune visite enregistrée ce mois-ci pour l'instant.</p>
+        <?php else: ?>
+            <div class="dst-chart">
+                <?php foreach ($stats['series'] as $d): ?>
+                    <?php $h = $d['views'] > 0 ? max(3, (int) round($d['views'] / $stats['max'] * 100)) : 0; ?>
+                    <div class="dst-col" title="<?= e($d['date'] . ' — ' . $d['views'] . ' vues, ' . $d['uniques'] . ' visiteurs uniques') ?>">
+                        <div class="dst-bar-wrap"><div class="dst-bar" style="height:<?= e((string) $h) ?>%;"></div></div>
+                        <span class="dst-label"><?= e($d['label']) ?></span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </section>
+<?php endif; ?>
 
 <div class="dash-bottom<?= $gallery === [] ? ' single' : '' ?>">
     <section class="dash-recent card">
@@ -271,6 +298,21 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
               cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.4); transition:background .15s; }
     .dg-dot:hover { filter:none; box-shadow:0 1px 2px rgba(0,0,0,.4); background:rgba(255,255,255,.8); }
     .dg-dot.active { background:#fff; }
+
+    /* Widget audience du mois (lien vers le module Stats). */
+    .dash-stats { margin-top:2rem; }
+    .dst-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; }
+    .dst-title { margin:0; font-size:1.1rem; }
+    .dst-sub { margin:.25rem 0 0; font-size:.85rem; }
+    .dst-link { flex:0 0 auto; align-self:center; padding:.45rem .9rem; font-size:.85rem; font-weight:600;
+                text-decoration:none; color:var(--accent-600); background:var(--accent-soft);
+                border:1px solid transparent; border-radius:10px; transition:border-color .15s; }
+    .dst-link:hover { border-color:var(--accent); }
+    .dst-chart { display:flex; align-items:flex-end; gap:3px; height:120px; margin-top:1rem; overflow-x:auto; }
+    .dst-col { flex:1 0 12px; display:flex; flex-direction:column; align-items:center; gap:.3rem; min-width:12px; }
+    .dst-bar-wrap { display:flex; align-items:flex-end; height:96px; width:100%; }
+    .dst-bar { width:100%; background:var(--grad); border-radius:4px 4px 0 0; min-height:3px; }
+    .dst-label { font-size:.6rem; color:var(--muted); }
 </style>
 
 <script src="<?= e($base . '/assets/js/dashboard.js') ?>"></script>

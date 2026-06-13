@@ -27,6 +27,7 @@ final class DashboardController extends Controller
             'hidden'  => $hidden,
             'recent'  => $this->recentContent(),
             'gallery' => $this->galleryImages(),
+            'stats'   => $this->statsWidget(),
             'user'    => $this->auth->user(),
             'csrf'    => \App\Core\Csrf::token(),
         ]);
@@ -224,5 +225,38 @@ final class DashboardController extends Controller
             return [];
         }
         return array_slice((new \App\Modules\Media\MediaRepository())->all(), 0, 12);
+    }
+
+    /**
+     * Aperçu d'audience du mois en cours pour le widget de l'accueil —
+     * uniquement si le module Stats est actif ET que l'utilisateur a la
+     * permission stats.view. null => pas de widget affiché.
+     *
+     * @return array{label:string, series:array<int, array{date:string,label:string,views:int,uniques:int}>, views:int, uniques:int, max:int}|null
+     */
+    private function statsWidget(): ?array
+    {
+        $enabled = (array) Config::get('modules.enabled', []);
+        if (!in_array('Stats', $enabled, true) || !$this->auth->can('stats.view')) {
+            return null;
+        }
+
+        $series = \App\Modules\Stats\StatsModule::currentMonthSeries();
+        $views = 0;
+        $uniques = 0;
+        $max = 0;
+        foreach ($series as $d) {
+            $views += $d['views'];
+            $uniques += $d['uniques'];
+            $max = max($max, $d['views']);
+        }
+
+        return [
+            'label'   => \App\Modules\Stats\StatsModule::frenchMonthLabel(),
+            'series'  => $series,
+            'views'   => $views,
+            'uniques' => $uniques,
+            'max'     => $max,
+        ];
     }
 }

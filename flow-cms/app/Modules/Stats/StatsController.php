@@ -43,8 +43,8 @@ final class StatsController extends Controller
             'totalViews'     => $this->repo->totalViews($since),
             'uniqueVisitors' => $this->repo->uniqueVisitors($since),
             'daily'          => $this->fillDailySeries($this->repo->viewsByDay($since), $days),
-            'month'          => $this->currentMonthSeries(),
-            'monthLabel'     => $this->frenchMonthLabel(),
+            'month'          => StatsModule::currentMonthSeries($this->repo),
+            'monthLabel'     => StatsModule::frenchMonthLabel(),
             'topPages'       => $this->repo->topPages($since, 10),
             'topReferers'    => $this->repo->topReferers($since, 10),
             'devices'        => $this->repo->deviceBreakdown($since),
@@ -73,39 +73,6 @@ final class StatsController extends Controller
             ];
         }
         return $series;
-    }
-
-    /**
-     * Série quotidienne du mois EN COURS (du 1er à aujourd'hui), pour le petit
-     * graphique mensuel. Les jours sans vue valent 0.
-     *
-     * @return array<int, array{date: string, label: string, views: int, uniques: int}>
-     */
-    private function currentMonthSeries(): array
-    {
-        $byDay = $this->repo->viewsByDay(date('Y-m-01'));
-        $today = (int) date('j');
-        $series = [];
-        for ($day = 1; $day <= $today; $day++) {
-            $date = date('Y-m-') . sprintf('%02d', $day);
-            $series[] = [
-                'date'    => $date,
-                'label'   => (string) $day,
-                'views'   => $byDay[$date]['views'] ?? 0,
-                'uniques' => $byDay[$date]['uniques'] ?? 0,
-            ];
-        }
-        return $series;
-    }
-
-    /** Libellé « mois année » en français (sans dépendre de la locale serveur). */
-    private function frenchMonthLabel(): string
-    {
-        $months = [
-            1 => 'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
-        ];
-        return ($months[(int) date('n')] ?? '') . ' ' . date('Y');
     }
 
     /**
