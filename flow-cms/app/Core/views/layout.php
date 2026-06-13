@@ -114,6 +114,10 @@ $logoUrl = match (true) {
         .icon-btn:hover { color:#fff; border-color:#fff; background:rgba(255,255,255,.25); box-shadow:none; }
         .icon-btn svg { width:18px; height:18px; }
         .content { flex:1; width:100%; max-width:1500px; margin:0 auto; padding:28px 32px 56px; }
+        .admin-foot { padding:18px 32px; border-top:1px solid var(--line); color:var(--muted);
+                      font-size:.82rem; text-align:center; }
+        .admin-foot a { color:var(--accent-600); text-decoration:none; font-weight:600; }
+        .admin-foot a:hover { text-decoration:underline; }
 
         /* ---- Composants partagés (utilisés par les vues) ---- */
         h1 { font-size:1.6rem; font-weight:700; letter-spacing:-.02em; margin:0 0 1.3rem; }
@@ -280,6 +284,10 @@ $logoUrl = match (true) {
         <main class="content">
             <?= $content ?>
         </main>
+        <footer class="admin-foot">
+            Flow CMS — Copyright
+            <a href="https://sudweb-studio.com" target="_blank" rel="noopener">Sud Web Studio</a>
+        </footer>
     </div>
 </body>
 <?php endif; ?>

@@ -67,7 +67,26 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
      data-save-url="<?= e($base . '/admin/dashboard/layout') ?>"
      data-csrf="<?= e($csrf) ?>">
     <?php foreach ($cards as $c) { $cell($c, false); } ?>
-    <?php $cell(['label' => 'Tutoriel', 'url' => '/admin/tutoriel'], true); ?>
+</div>
+
+<?php // Ligne d'aide : tutoriel + accès au support (non personnalisable). ?>
+<div class="dash-help">
+    <a class="dash-card dash-card--tuto" href="<?= e($base . '/admin/tutoriel') ?>">
+        <span class="dash-ic"><?= admin_icon('/admin/tutoriel') ?></span>
+        <span class="dash-body">
+            <strong>Tutoriel</strong>
+            <span class="dash-desc">Prendre en main les différentes parties du CMS.</span>
+        </span>
+        <span class="dash-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="dash-card dash-card--support" href="mailto:contact@sudweb-studio.com?subject=<?= e(rawurlencode('Problème sur Flow CMS')) ?>">
+        <span class="dash-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg></span>
+        <span class="dash-body">
+            <strong>Un problème ?</strong>
+            <span class="dash-desc">Contacter le support Sud Web Studio.</span>
+        </span>
+        <span class="dash-arrow" aria-hidden="true">→</span>
+    </a>
 </div>
 
 <div class="dash-add" data-dash-add hidden>
@@ -183,6 +202,16 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
     .dash-card--tuto .dash-desc { color:rgba(255,255,255,.88); }
     .dash-card--tuto .dash-arrow { color:#fff; }
     .dash-card--tuto:hover .dash-arrow { color:#fff; }
+    /* Ligne d'aide sous la grille : tutoriel + support, côte à côte. */
+    .dash-help { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-top:1.1rem; }
+    @media (max-width:560px) { .dash-help { grid-template-columns:1fr; } }
+    /* Bouton support : orange, pour le distinguer du tutoriel (bleu). */
+    .dash-card--support { background:linear-gradient(135deg,#ff9d42 0%,#f4640f 100%); border-color:transparent; color:#fff; }
+    .dash-card--support:hover { border-color:transparent; }
+    .dash-card--support .dash-ic { background:rgba(255,255,255,.22); color:#fff; }
+    .dash-card--support .dash-desc { color:rgba(255,255,255,.9); }
+    .dash-card--support .dash-arrow { color:#fff; }
+    .dash-card--support:hover .dash-arrow { color:#fff; }
     @media (max-width:900px) { .dash-grid { grid-template-columns:repeat(2, 1fr); } }
     @media (max-width:560px) { .dash-grid { grid-template-columns:1fr; } .dash-cell.span-2 { grid-column:auto; } }
     .dash-card { position:relative; display:flex; gap:1rem; align-items:flex-start; padding:1.2rem 1.25rem;

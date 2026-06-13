@@ -513,8 +513,14 @@ if (!($canMaintenance ?? false)) {
 $first = array_key_first($sections);
 ?>
 <div class="tuto-head">
-    <h1>Tutoriel</h1>
-    <p class="muted">Choisissez une rubrique à gauche pour afficher son guide.</p>
+    <div class="tuto-head-text">
+        <h1>Tutoriel</h1>
+        <p class="muted">Choisissez une rubrique à gauche pour afficher son guide.</p>
+    </div>
+    <a class="tuto-support" href="mailto:contact@sudweb-studio.com?subject=<?= e(rawurlencode('Problème sur Flow CMS')) ?>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
+        Un problème ? Contacter le support
+    </a>
 </div>
 
 <div class="tuto-layout">
@@ -536,9 +542,17 @@ $first = array_key_first($sections);
 </div>
 
 <style>
-    .tuto-head { margin-bottom:1.6rem; }
+    .tuto-head { margin-bottom:1.6rem; display:flex; justify-content:space-between;
+                 align-items:center; gap:1rem; flex-wrap:wrap; }
     .tuto-head h1 { margin:0 0 .35rem; }
     .tuto-head .muted { color:var(--muted); margin:0; }
+    /* Bouton support (orange) — même action que sur le tableau de bord. */
+    .tuto-support { display:inline-flex; align-items:center; gap:.5rem; padding:.6rem 1rem;
+                    border-radius:11px; text-decoration:none; font-weight:600; font-size:.9rem;
+                    color:#fff; background:linear-gradient(135deg,#ff9d42 0%,#f4640f 100%);
+                    box-shadow:var(--shadow-sm); white-space:nowrap; }
+    .tuto-support:hover { filter:brightness(1.05); }
+    .tuto-support svg { width:18px; height:18px; }
 
     .tuto-layout { display:flex; gap:1.4rem; align-items:flex-start; }
     .tuto-nav { display:flex; flex-direction:column; gap:.3rem; flex:0 0 230px; position:sticky; top:1rem; }
