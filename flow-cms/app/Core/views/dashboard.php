@@ -8,47 +8,29 @@
 
 $display = $user !== null ? ($user->name !== '' ? $user->name : $user->email) : '';
 
-// Icône (SVG trait) + description selon la section. Les icônes restent alignées
-// sur celles de la barre latérale (layout.php).
+// Icône + description selon la section. L'icône vient de la source unique
+// partagée avec la barre latérale (helpers.php → admin_icon) ; seule la
+// description courte est propre au tableau de bord. L'ordre des tests suit
+// admin_icon (pages-legales avant pages : sous-chaîne commune).
 $meta = static function (string $url): array {
-    $svg = static fn (string $p): string =>
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
-        . 'stroke-linecap="round" stroke-linejoin="round">' . $p . '</svg>';
+    $desc = match (true) {
+        str_contains($url, 'pages-legales')  => 'Mentions légales, confidentialité… au texte riche.',
+        str_contains($url, 'pages')          => 'Créer, modifier et publier les pages du site.',
+        str_contains($url, 'agenda')         => 'Gérer les événements datés et leur page publique.',
+        str_contains($url, 'actualites')     => 'Rédiger et publier les articles d’actualité.',
+        str_contains($url, 'google-reviews') => 'Importer et choisir les avis affichés sur le site.',
+        str_contains($url, 'contact')        => 'Consulter les demandes reçues via le formulaire.',
+        str_contains($url, 'media')          => 'Téléverser et organiser la bibliothèque d’images.',
+        str_contains($url, 'documents')      => 'Téléverser et réutiliser les documents (PDF, Word…).',
+        str_contains($url, 'users')          => 'Gérer les comptes et leurs rôles.',
+        str_contains($url, 'stats')          => 'Suivre la fréquentation du site (sans cookie, RGPD).',
+        str_contains($url, 'administration') => 'Activer ou désactiver les modules du site.',
+        str_contains($url, 'maintenance')    => 'Fermer temporairement le site public.',
+        str_contains($url, 'tutoriel')       => 'Prendre en main les différentes parties du CMS.',
+        default                              => 'Ouvrir cette section.',
+    };
 
-    if (str_contains($url, '/pages')) {
-        return [
-            $svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
-            'Créer, modifier et publier les pages du site.',
-        ];
-    }
-    if (str_contains($url, '/media')) {
-        return [
-            $svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'),
-            'Téléverser et organiser la bibliothèque d’images.',
-        ];
-    }
-    if (str_contains($url, '/documents')) {
-        return [
-            $svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/>'),
-            'Téléverser et réutiliser les documents (PDF, Word…).',
-        ];
-    }
-    if (str_contains($url, '/users')) {
-        return [
-            $svg('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
-            'Gérer les comptes et leurs rôles.',
-        ];
-    }
-    if (str_contains($url, '/tutoriel')) {
-        return [
-            $svg('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
-            'Prendre en main les différentes parties du CMS.',
-        ];
-    }
-    return [
-        $svg('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>'),
-        'Ouvrir cette section.',
-    ];
+    return [admin_icon($url), $desc];
 };
 ?>
 <?php
