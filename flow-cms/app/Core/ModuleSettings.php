@@ -44,6 +44,7 @@ final class ModuleSettings
         'Agenda'     => ['Agenda', 'Événements datés avec page publique /agenda/….'],
         'Actualites' => ['Actualités', 'Articles d\'actualité avec page publique /actualites/….'],
         'GoogleReviews' => ['Avis Google', 'Import des avis Google de l\'établissement et bloc d\'affichage.'],
+        'Contact'    => ['Contact', 'Formulaire public, demandes en base et notification e-mail au propriétaire.'],
     ];
 
     private string $statePath;

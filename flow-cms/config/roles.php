@@ -26,6 +26,7 @@ return [
     'manager' => [
         'content.*', 'media.*', 'documents.*', 'users.manage',
         'googlereviews.view', 'googlereviews.sync', 'googlereviews.manage',
+        'contacts.view', 'contacts.delete',
     ],
 
     // Rédacteur : édite du contenu, téléverse médias et documents, ne publie pas.

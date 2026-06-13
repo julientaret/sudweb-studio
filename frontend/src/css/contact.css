@@ -1,0 +1,62 @@
+/*
+ * Page de contact : formulaire public + messages de succès/erreur.
+ * Réutilise les variables du design (base.css) : --accent, --line, --muted.
+ */
+
+.contact-form { max-width: 620px; margin-top: 1.5rem; }
+.contact-form label {
+  display: block;
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+  margin: 1rem 0 .35rem;
+}
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: .7rem .8rem;
+  font: inherit;
+  color: var(--txt);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+}
+.contact-form textarea { resize: vertical; }
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.cf-consent { display: flex; gap: .6rem; align-items: flex-start; margin-top: 1.2rem; }
+.cf-consent input { margin-top: .35rem; flex: 0 0 auto; }
+.cf-consent label { font-weight: 400; margin: 0; line-height: 1.45; }
+
+.btn-submit {
+  margin-top: 1.4rem;
+  padding: .8rem 1.6rem;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.btn-submit:hover { background: color-mix(in srgb, var(--accent) 85%, #000); }
+
+.cf-note { margin-top: 1rem; font-size: .9rem; color: var(--muted); }
+
+/* Honeypot : hors écran, jamais affiché ni focusable visuellement. */
+.cf-hp { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Bandeaux de retour après envoi. */
+.form-alert { margin-top: 1.4rem; padding: .9rem 1.1rem; border-radius: 10px; border: 1px solid; }
+.form-alert p { margin: 0; }
+.form-alert ul { margin: .4rem 0 0; padding-left: 1.2rem; }
+.form-alert--ok { background: #e7f6ec; border-color: #a8d5b9; color: #1c6b3a; }
+.form-alert--error { background: #fdecec; border-color: #f1c4c4; color: #a3271f; }

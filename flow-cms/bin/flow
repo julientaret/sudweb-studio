@@ -14,8 +14,10 @@ declare(strict_types=1);
  */
 
 use App\Core\Auth;
+use App\Core\Config;
 use App\Core\Kernel;
 use App\Core\Migrator;
+use App\Modules\Contact\ContactRepository;
 use App\Modules\Media\MediaProcessor;
 use App\Modules\Media\MediaRepository;
 use App\Modules\Users\UserRepository;
@@ -82,6 +84,19 @@ try {
             fwrite(STDOUT, "Régénération terminée : {$ok} ok, {$fail} en échec.\n");
             break;
 
+        case 'contact:purge':
+            // RGPD : supprime les demandes de contact au-delà du délai de
+            // conservation (config/contact.php → retention_months).
+            $months = (int) Config::get('contact.retention_months', 0);
+            if ($months <= 0) {
+                fwrite(STDOUT, "Purge désactivée (retention_months = 0).\n");
+                break;
+            }
+            $cutoff = date('Y-m-d H:i:s', strtotime('-' . $months . ' months') ?: time());
+            $deleted = (new ContactRepository())->purgeOlderThan($cutoff);
+            fwrite(STDOUT, "Purge des demandes antérieures au {$cutoff} : {$deleted} supprimée(s).\n");
+            break;
+
         case 'help':
         default:
             fwrite(STDOUT, <<<TXT
@@ -91,6 +106,7 @@ try {
               bin/flow migrate
               bin/flow user:create <email> <password> [role] [name]
               bin/flow media:regen
+              bin/flow contact:purge
 
             TXT);
             break;

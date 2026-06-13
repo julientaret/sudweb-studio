@@ -35,6 +35,7 @@ Fondations posées :
 | `App\Core\AdministrationController` | Onglet Administration (`/admin/administration`, permission `admin.modules`, rôle admin seul) : choix des modules disponibles pour les autres utilisateurs | [app/Core/AdministrationController.php](../app/Core/AdministrationController.php) |
 | `App\Core\MaintenanceController` | Onglet Maintenance (`/admin/maintenance`, permission `admin.maintenance`, rôle admin seul) : ferme le site public, gère l'URL de bypass et les IP autorisées — voir [maintenance.md](maintenance.md) | [app/Core/MaintenanceController.php](../app/Core/MaintenanceController.php) |
 | `App\Core\MaintenanceSettings` | État du mode maintenance (`storage/maintenance.json`) + garde-fou `enforce()` posé dans le front controller public | [app/Core/MaintenanceSettings.php](../app/Core/MaintenanceSettings.php) |
+| `App\Core\Mailer` | Envoi d'e-mails HTML via `mail()` (zéro dépendance) : en-têtes MIME, anti-injection d'en-têtes, From maîtrisé + Reply-To — utilisé par le module Contact | [app/Core/Mailer.php](../app/Core/Mailer.php) |
 
 Fonctions transverses (niveau Core, hors catalogue de modules) :
 
@@ -49,6 +50,7 @@ Modules :
 - **Agenda** — [modules/agenda.md](modules/agenda.md)
 - **Actualités** — [modules/actualites.md](modules/actualites.md)
 - **Avis Google** — [modules/google-reviews.md](modules/google-reviews.md)
+- **Contact** — [modules/contact.md](modules/contact.md)
 
 ## Créer un nouveau module — checklist
 

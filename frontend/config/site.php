@@ -29,8 +29,8 @@ return [
      * sinon laissée telle quelle (lien externe).
      */
     'nav' => [
-        // 'Accueil' => '/',
-        // 'Contact' => '/contact',
+        'Accueil' => '/',
+        'Contact' => '/contact',
     ],
 
     // Pied de page.

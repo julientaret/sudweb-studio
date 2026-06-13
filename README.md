@@ -237,6 +237,7 @@ dans [`flow-cms/docs/modules/`](flow-cms/docs/modules/).
 | **Agenda** | Événements |
 | **Actualités** | Articles / news |
 | **GoogleReviews** | Affichage des avis Google Places |
+| **Contact** | Formulaire public (RGPD), demandes en base + admin, notification e-mail |
 
 ---
 
@@ -246,6 +247,7 @@ dans [`flow-cms/docs/modules/`](flow-cms/docs/modules/).
 php flow-cms/bin/flow migrate                                  # applique les migrations
 php flow-cms/bin/flow user:create <email> <pass> [role] [nom]  # crée un compte
 php flow-cms/bin/flow media:regen                              # régénère les déclinaisons d'images
+php flow-cms/bin/flow contact:purge                            # purge RGPD des demandes de contact expirées
 php flow-cms/bin/flow help
 ```
 
