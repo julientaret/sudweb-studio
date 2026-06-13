@@ -23,5 +23,6 @@ return [
         'Actualites',
         'GoogleReviews',
         'Contact',
+        'LegalPages',
     ],
 ];

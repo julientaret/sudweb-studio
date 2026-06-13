@@ -186,6 +186,29 @@ HTML],
         <strong>Dernières modifications</strong> du tableau de bord, marquées d'une étiquette « Actualité ».</p>
 HTML],
 
+    'legal_pages' => ['Les pages légales', <<<HTML
+        <h2>Les pages légales</h2>
+        <p>Menu <strong>Pages légales</strong> : vos <strong>pages juridiques</strong> (mentions légales,
+        politique de confidentialité, CGU, cookies…). Deux pages existent déjà « pour commencer » ;
+        vous pouvez en <strong>ajouter</strong> autant que nécessaire avec <em>+ Nouvelle page</em>.</p>
+        <p>Chaque page a sa propre adresse publique à la racine du site, d'après son slug :
+        <code>/mentions-legales</code>, <code>/politique-de-confidentialite</code>… — pratique pour
+        les liens du pied de page.</p>
+
+        <h3>Réglages</h3>
+        <ul>
+            <li><strong>Titre &amp; slug</strong> — le slug est l'adresse de la page ; laissé vide,
+                il se génère depuis le titre.</li>
+            <li><strong>Statut</strong> — interrupteur <em>Brouillon / Publiée</em> : seules les pages
+                publiées sont visibles du public (une page en brouillon renvoie une 404).</li>
+        </ul>
+
+        <h3>Le contenu</h3>
+        <p>Le contenu s'écrit dans un <strong>éditeur de texte riche</strong> (gras, titres, listes,
+        liens, citations…) : pas de blocs ni de colonnes, juste du texte mis en forme — l'idéal pour
+        de la prose juridique. La mise en forme est volontairement bornée pour rester propre et sûre.</p>
+HTML],
+
     'google_reviews' => ['Les avis Google', <<<HTML
         <h2>Les avis Google</h2>
         <p>Menu <strong>Avis Google</strong> : récupère les avis laissés sur la fiche Google de
@@ -425,6 +448,7 @@ $sectionModule = [
     'pages'          => 'Pages',
     'agenda'         => 'Agenda',
     'actualites'     => 'Actualites',
+    'legal_pages'    => 'LegalPages',
     'google_reviews' => 'GoogleReviews',
     'media'          => 'Media',
     'documents'      => 'Documents',

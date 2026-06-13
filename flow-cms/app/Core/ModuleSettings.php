@@ -45,6 +45,7 @@ final class ModuleSettings
         'Actualites' => ['Actualités', 'Articles d\'actualité avec page publique /actualites/….'],
         'GoogleReviews' => ['Avis Google', 'Import des avis Google de l\'établissement et bloc d\'affichage.'],
         'Contact'    => ['Contact', 'Formulaire public, demandes en base et notification e-mail au propriétaire.'],
+        'LegalPages' => ['Pages légales', 'Mentions légales, politique de confidentialité et autres pages juridiques, éditées au texte riche.'],
     ];
 
     private string $statePath;

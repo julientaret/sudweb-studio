@@ -238,6 +238,7 @@ dans [`flow-cms/docs/modules/`](flow-cms/docs/modules/).
 | **Actualités** | Articles / news |
 | **GoogleReviews** | Affichage des avis Google Places |
 | **Contact** | Formulaire public (RGPD), demandes en base + admin, notification e-mail |
+| **Pages légales** | Pages juridiques (mentions légales, confidentialité…) éditées au texte riche |
 
 ---
 

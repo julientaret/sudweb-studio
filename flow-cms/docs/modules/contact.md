@@ -91,8 +91,8 @@ persistée** en base (l'e-mail est une notification, pas la source de vérité).
 - **Limitation de conservation** : purge automatique au-delà de `retention_months`
   (défaut **12 mois**), via `bin/flow contact:purge` (cron conseillé) et de façon
   **opportuniste** à l'ouverture de la liste admin.
-- **Information** : note sous le formulaire + page
-  [`/politique-de-confidentialite`](../../../frontend/static/politique-de-confidentialite.php).
+- **Information** : note sous le formulaire + page `/politique-de-confidentialite`,
+  désormais gérée par le module [Pages légales](legal-pages.md) (éditable dans l'admin).
 - **Droits** (accès, rectification, effacement) : l'admin peut consulter et
   **supprimer** une demande à tout moment.
 
