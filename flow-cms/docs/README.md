@@ -27,11 +27,13 @@ Fondations posées :
 | `App\Core\Auth` | Login, sessions, anti-brute-force, `can()` | [app/Core/Auth.php](../app/Core/Auth.php) |
 | `App\Core\Migrator` | Migrations SQL idempotentes | [app/Core/Migrator.php](../app/Core/Migrator.php) |
 | `App\Core\ModuleRegistry` | Scanne et démarre les modules | [app/Core/ModuleRegistry.php](../app/Core/ModuleRegistry.php) |
-| `App\Core\BlockRegistry` | Registre des blocs (contrat posé) | [app/Core/BlockRegistry.php](../app/Core/BlockRegistry.php) |
+| `App\Core\BlockRegistry` | Registre des blocs (type → instance, libellés auto-décrits via `Block::label()`). Blocs de base (`heading`, `richtext`) enregistrés par le Kernel ; blocs additionnels par leur module (Media → `image`, GoogleReviews → `google_reviews`) | [app/Core/BlockRegistry.php](../app/Core/BlockRegistry.php) |
+| `App\Core\Blocks\*` | Blocs de contenu de base (niveau Core) : `HeadingBlock`, `RichtextBlock` — toujours disponibles, sans dépendance à un module | [app/Core/Blocks/](../app/Core/Blocks/) |
 | `App\Core\BlockContent` | Base commune « contenu » du page-builder (build/normalise/rendu/éditeur) partagée par les modules de contenu | [app/Core/BlockContent.php](../app/Core/BlockContent.php) |
+| `App\Core\DeltaRenderer` | Rendu serveur d'un Delta Quill en HTML borné (prose, zéro dépendance) — partagé par tout module éditant du texte riche | [app/Core/DeltaRenderer.php](../app/Core/DeltaRenderer.php) |
 | `App\Core\DashboardController` | Accueil admin (`/admin`) : accès rapide + dernières modifs de contenu (Pages + Agenda + Actualités, agrégées) + visionneuse galerie | [app/Core/DashboardController.php](../app/Core/DashboardController.php) |
 | `App\Core\TutorialController` | Page tutoriel (`/admin/tutoriel`) : prise en main du CMS (tableau de bord, pages, agenda, médias, utilisateurs) | [app/Core/TutorialController.php](../app/Core/TutorialController.php) |
-| `App\Core\ModuleSettings` | Activation des modules pilotée depuis l'admin : catalogue (`config/modules.php` → `available`) − désactivés (`storage/modules.json`), dépendances en cascade, `Users` protégé | [app/Core/ModuleSettings.php](../app/Core/ModuleSettings.php) |
+| `App\Core\ModuleSettings` | Activation des modules pilotée depuis l'admin : catalogue (`config/modules.php` → `available`) − désactivés (`storage/modules.json`), `Users` protégé. Modules **indépendants** (`DEPENDENCIES` vide) ; le mécanisme de cascade reste disponible | [app/Core/ModuleSettings.php](../app/Core/ModuleSettings.php) |
 | `App\Core\AdministrationController` | Onglet Administration (`/admin/administration`, permission `admin.modules`, rôle admin seul) : choix des modules disponibles pour les autres utilisateurs | [app/Core/AdministrationController.php](../app/Core/AdministrationController.php) |
 | `App\Core\MaintenanceController` | Onglet Maintenance (`/admin/maintenance`, permission `admin.maintenance`, rôle admin seul) : ferme le site public, gère l'URL de bypass et les IP autorisées — voir [maintenance.md](maintenance.md) | [app/Core/MaintenanceController.php](../app/Core/MaintenanceController.php) |
 | `App\Core\MaintenanceSettings` | État du mode maintenance (`storage/maintenance.json`) + garde-fou `enforce()` posé dans le front controller public | [app/Core/MaintenanceSettings.php](../app/Core/MaintenanceSettings.php) |
@@ -64,13 +66,21 @@ plus oublié : l'installateur.**
    [`config/modules.php`](../config/modules.php). C'est ce qui rend le module
    visible **et** ce qui le fait prendre en charge par l'installateur (voir ci-dessous).
 3. **Métadonnées d'admin** — [`ModuleSettings`](../app/Core/ModuleSettings.php) :
-   libellé + description dans `INFO`, dépendances dans `DEPENDENCIES`, et `PROTECTED`
-   si le module est indispensable.
-4. **Permissions** — déclarer les permissions du module et les attribuer aux rôles
+   libellé + description dans `INFO`, et `PROTECTED` si le module est indispensable.
+   **Viser l'indépendance** : un module ne devrait dépendre d'aucun autre. Le
+   transverse passe par le Core (page-builder, blocs de base, `DeltaRenderer`) ou
+   se dégrade proprement quand un module fournisseur est absent (cf. le bloc
+   `image`/la vignette qui disparaissent si Media est off). `DEPENDENCIES` reste
+   disponible pour une dépendance dure inévitable, mais doit rester vide par défaut.
+4. **Blocs de page (le cas échéant)** — un module qui fournit un bloc l'enregistre
+   dans son `boot()` via `Kernel::blocks()->register(...)` ; le bloc implémente
+   [`App\Core\Block`](../app/Core/Block.php) (dont `label()`). Il n'apparaît dans
+   les éditeurs que lorsque le module est actif — aucune table de libellés à tenir.
+5. **Permissions** — déclarer les permissions du module et les attribuer aux rôles
    dans [`config/roles.php`](../config/roles.php).
-5. **Migrations** — fichiers SQL dans `app/Modules/<Nom>/migrations/`, retournés
+6. **Migrations** — fichiers SQL dans `app/Modules/<Nom>/migrations/`, retournés
    par `migrations()`. Idempotents (le Migrator suit ce qui est déjà appliqué).
-6. **Installateur** — [`install.php`](../../install.php) à la racine. **Il est
+7. **Installateur** — [`install.php`](../../install.php) à la racine. **Il est
    piloté par les migrations** : il boote le registre (`bootAll()`) puis lance le
    `Migrator` sur **tous les modules du catalogue**. Conséquence :
    - dès que le module est dans `config/modules.php` (point 2), ses migrations sont
@@ -82,9 +92,9 @@ plus oublié : l'installateur.**
      aujourd'hui que la base, les migrations et le **premier compte admin**.
    - Vérifier après coup qu'une **installation propre** (`php install.php`) mène à
      un module fonctionnel sans étape manuelle.
-7. **Tutoriel** — rubrique dans [`views/tutorial.php`](../app/Core/views/tutorial.php),
+8. **Tutoriel** — rubrique dans [`views/tutorial.php`](../app/Core/views/tutorial.php),
    reliée au module dans `$sectionModule` (n'apparaît que si le module est actif).
-8. **Doc** — fiche `docs/modules/<nom>.md` (template du brief §9) et ligne dans ce
+9. **Doc** — fiche `docs/modules/<nom>.md` (template du brief §9) et ligne dans ce
    README. *Definition of done* : la fiche est écrite et à jour (brief §1/§9).
 
 > Les **fonctions transverses** (niveau Core, hors catalogue — ex. Maintenance)

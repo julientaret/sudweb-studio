@@ -3,6 +3,7 @@
 /** @var string $error */
 /** @var array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,form:string}>>}> $rows */
 /** @var array<int, array{type:string,label:string,form:string}> $templates */
+/** @var bool $mediaEnabled */
 /** @var array<int, \App\Modules\Media\Media> $media */
 /** @var array<int, \App\Modules\Media\MediaFolder> $folders */
 /** @var ?\App\Modules\Media\Media $thumb */
@@ -108,6 +109,7 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
             </div>
         </div>
 
+        <?php if ($mediaEnabled): ?>
         <label>Image vignette (bibliothèque média)</label>
         <div class="image-field" data-input="thumbnail-id">
             <?php if ($thumb !== null): ?>
@@ -121,6 +123,7 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
                 <button type="button" class="image-clear"<?= $thumb !== null ? '' : ' hidden' ?>>Retirer</button>
             </div>
         </div>
+        <?php endif; ?>
 
         <label for="slug">Slug (URL) — laisser vide pour générer depuis le titre</label>
         <input type="text" id="slug" name="slug" value="<?= e($event->slug ?? '') ?>" placeholder="ex. portes-ouvertes-2026">
@@ -173,8 +176,11 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
     <template id="tpl-<?= e($t['type']) ?>"><?= $blockCard('__KEY__', $t['type'], $t['label'], $t['form']) ?></template>
 <?php endforeach; ?>
 
-<!-- Modale partagée de sélection d'image (partial Core, piloté par le JS) -->
+<!-- Modale partagée de sélection d'image (partial Core, piloté par le JS).
+     Présente seulement si le module Media est actif. -->
+<?php if ($mediaEnabled): ?>
 <?= partial('partials/media_modal', ['media' => $media, 'folders' => $folders]) ?>
+<?php endif; ?>
 
 <style>
     #title { margin-bottom:1.2rem; }

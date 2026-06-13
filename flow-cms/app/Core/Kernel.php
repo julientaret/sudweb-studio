@@ -48,6 +48,13 @@ final class Kernel
         $this->router = new Router($urlBase);
         $this->blocks = new BlockRegistry();
 
+        // Blocs de contenu de base (niveau Core) : toujours disponibles pour tout
+        // module qui utilise le page-builder, indépendamment des modules activés.
+        // Les blocs additionnels (image → Media, avis → GoogleReviews) sont
+        // enregistrés par leur module dans boot().
+        $this->blocks->register(new \App\Core\Blocks\HeadingBlock());
+        $this->blocks->register(new \App\Core\Blocks\RichtextBlock());
+
         // Modules effectifs : catalogue (config/modules.php) filtré par l'état
         // choisi dans l'admin (storage/modules.json, onglet Administration). La
         // liste est publiée dans la config pour le code qui teste 'modules.enabled'.

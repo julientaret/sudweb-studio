@@ -6,15 +6,15 @@ namespace App\Modules\LegalPages;
 
 use App\Core\Config;
 use App\Core\Controller;
-use App\Modules\Pages\DeltaRenderer;
+use App\Core\DeltaRenderer;
 
 /**
  * Pages légales — back-office (CRUD avec éditeur de texte riche) et rendu front.
  *
- * Le contenu est un Delta Quill (JSON), borné à la sauvegarde (mêmes règles que
- * App\Modules\Pages\Blocks\RichtextBlock) et rendu en HTML par DeltaRenderer.
- * Permissions dans l'espace commun « content » (content.edit / content.publish,
- * brief §3/§7). Voir docs/modules/legal-pages.md.
+ * Module indépendant : le contenu est un Delta Quill (JSON), borné à la sauvegarde
+ * (mêmes règles que App\Core\Blocks\RichtextBlock) et rendu en HTML par le
+ * App\Core\DeltaRenderer partagé. Permissions dans l'espace commun « content »
+ * (content.edit / content.publish, brief §3/§7). Voir docs/modules/legal-pages.md.
  */
 final class LegalPageController extends Controller
 {

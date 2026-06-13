@@ -28,12 +28,17 @@ final class ModuleSettings
     /**
      * Dépendances inter-modules : un module n'est actif que si toutes ses
      * dépendances le sont (désactivation en cascade sinon).
+     *
+     * Volontairement vide : chaque module est indépendant. Les fonctionnalités
+     * transverses sont soit fournies par le Core (page-builder, blocs de base,
+     * DeltaRenderer), soit dégradées proprement quand le module fournisseur est
+     * absent (p. ex. le choix d'image disparaît si Media est désactivé, sans
+     * rendre Pages/Actualités/Agenda indisponibles). Le mécanisme de cascade
+     * reste en place si une dépendance dure devait réapparaître un jour.
+     *
+     * @var array<string, array<int, string>>
      */
-    public const DEPENDENCIES = [
-        'Pages'      => ['Media'],
-        'Agenda'     => ['Pages', 'Media'],
-        'Actualites' => ['Pages', 'Media'],
-    ];
+    public const DEPENDENCIES = [];
 
     /** Libellés et descriptions affichés dans l'onglet Administration. */
     public const INFO = [

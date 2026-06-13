@@ -153,15 +153,21 @@ final class PageController extends Controller
 
     private function renderEditor(?Page $page, string $error = ''): void
     {
+        // Media est optionnel : si le module est désactivé, le bloc image n'est pas
+        // enregistré et la modale de sélection n'est pas affichée. On ne requête la
+        // bibliothèque que lorsque Media est actif (table absente sinon).
+        $mediaEnabled = module_enabled('Media');
+
         $this->renderPage($this->views(), 'editor', $page ? 'Modifier la page' : 'Nouvelle page', [
-            'page'       => $page,
-            'error'      => $error,
-            'notice'     => (string) $this->input('notice', ''),
-            'rows'       => BlockContent::editorRows($page?->content ?? [], PagesModule::BLOCK_LABELS),
-            'templates'  => BlockContent::templates(PagesModule::BLOCK_LABELS),
-            'media'      => (new MediaRepository())->all(),
-            'folders'    => (new MediaFolderRepository())->all(),
-            'canPublish' => $this->auth->can('content.publish'),
+            'page'         => $page,
+            'error'        => $error,
+            'notice'       => (string) $this->input('notice', ''),
+            'rows'         => BlockContent::editorRows($page?->content ?? []),
+            'templates'    => BlockContent::templates(),
+            'mediaEnabled' => $mediaEnabled,
+            'media'        => $mediaEnabled ? (new MediaRepository())->all() : [],
+            'folders'      => $mediaEnabled ? (new MediaFolderRepository())->all() : [],
+            'canPublish'   => $this->auth->can('content.publish'),
         ]);
     }
 

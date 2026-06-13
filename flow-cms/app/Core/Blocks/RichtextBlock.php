@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Blocks;
+namespace App\Core\Blocks;
 
 use App\Core\Block;
-use App\Modules\Pages\DeltaRenderer;
+use App\Core\DeltaRenderer;
 
 /**
  * Bloc texte riche (statique), édité avec Quill (brief §8).
+ *
+ * Bloc de contenu de base (niveau Core) : l'éditeur de texte est toujours
+ * disponible, sans dépendance à un module particulier.
  *
  * data : { delta: {ops:[...]} }. On stocke le Delta, jamais du HTML ; le rendu
  * front passe par le DeltaRenderer borné.
@@ -18,6 +21,11 @@ final class RichtextBlock implements Block
     public function type(): string
     {
         return 'richtext';
+    }
+
+    public function label(): string
+    {
+        return 'Texte';
     }
 
     public function render(array $data): string

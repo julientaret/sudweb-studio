@@ -34,6 +34,20 @@ if (!function_exists('partial')) {
     }
 }
 
+if (!function_exists('module_enabled')) {
+    /**
+     * Indique si un module est actif pour cette requête (liste effective publiée
+     * au boot dans `modules.enabled`). Permet aux modules de contenu de dégrader
+     * proprement une fonctionnalité optionnelle — p. ex. masquer le choix d'image
+     * si Media est désactivé — sans en dépendre.
+     */
+    function module_enabled(string $name): bool
+    {
+        $enabled = (array) \App\Core\Config::get('modules.enabled', []);
+        return in_array($name, $enabled, true);
+    }
+}
+
 if (!function_exists('slug')) {
     /**
      * Translittère une chaîne en slug minuscule sûr pour un nom de fichier/URL.

@@ -45,7 +45,14 @@ Déclarées dans `MediaModule::boot()`.
 
 ## Blocs fournis
 
-Aucun pour l'instant. Le futur bloc `gallery` (module Pages) référencera des `media.id`.
+Le bloc **`image`** ([`Blocks/ImageBlock.php`](../../app/Modules/Media/Blocks/ImageBlock.php)),
+enregistré dans `MediaModule::boot()` via `Kernel::blocks()`. Il référence un média
+par **ID** (jamais par URL) et rend un `<picture>` WebP avec repli sur l'original.
+Comme il est fourni par Media, il n'apparaît dans les éditeurs (Pages, Actualités,
+Agenda) **que lorsque Media est actif** — les autres modules ne dépendent donc pas
+de Media : le bloc disparaît simplement s'il est désactivé.
+
+À venir : un bloc `gallery` référençant plusieurs `media.id`.
 
 ## Permissions
 

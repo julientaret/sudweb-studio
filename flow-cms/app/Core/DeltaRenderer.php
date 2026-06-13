@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Pages;
+namespace App\Core;
 
 /**
  * Rendu d'un Delta Quill en HTML, côté serveur (brief §8).
+ *
+ * Infrastructure de contenu partagée (niveau Core) : réutilisable par tout module
+ * qui édite du texte riche (Pages, Actualités, Agenda, Pages légales…) sans créer
+ * de dépendance inter-modules.
  *
  * On stocke le Delta (JSON), pas du HTML brut. Le HTML est produit ici en
  * n'émettant QUE des balises autorisées (prose bornée) : pas de HTML arbitraire

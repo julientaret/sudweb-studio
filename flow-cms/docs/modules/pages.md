@@ -38,15 +38,18 @@ Déclarées dans `PagesModule::boot()`.
 
 ## Blocs fournis
 
-Enregistrés dans `boot()` via `Kernel::blocks()`. Forms d'édition : les champs
+Aucun bloc n'appartient en propre au module Pages : il **consomme** le page-builder
+partagé. Les blocs de base (`heading`, `richtext`) sont fournis par le Core et
+enregistrés par le Kernel ; le bloc `image` est fourni par le module **Media** et
+n'apparaît dans l'éditeur que si Media est actif. Forms d'édition : les champs
 utilisent le jeton `__KEY__`, substitué par l'éditeur (clé de bloc) — ce qui
 permet l'ajout dynamique et le réordonnancement.
 
-| Type | Statique/dynamique | `data` |
-|------|--------------------|--------|
-| `heading`  | statique  | `text`, `level` (1\|2\|3) |
-| `richtext` | statique  | `delta` (Delta Quill, voir §8) |
-| `image`    | dynamique | `media_id`, `alt` (rend `<picture>` WebP + repli original) |
+| Type | Fourni par | Statique/dynamique | `data` |
+|------|------------|--------------------|--------|
+| `heading`  | Core | statique  | `text`, `level` (1\|2\|3) |
+| `richtext` | Core | statique  | `delta` (Delta Quill, voir §8) |
+| `image`    | Media | dynamique | `media_id`, `alt` (rend `<picture>` WebP + repli original) |
 
 ## Permissions
 
@@ -66,9 +69,9 @@ statut retombe en brouillon côté serveur).
 - **Quill** vendorisé ([`public/assets/vendor/quill/`](../../public/assets/vendor/quill/)),
   bridé à la prose : gras, italique, liens, titres h2/h3, listes.
 - **On stocke le Delta (JSON), pas du HTML.** Le HTML front est produit par
-  [`DeltaRenderer`](../../app/Modules/Pages/DeltaRenderer.php), qui n'émet que les
-  balises autorisées et échappe tout le texte → **pas de HTML Purifier, zéro
-  dépendance préservé**.
+  [`DeltaRenderer`](../../app/Core/DeltaRenderer.php) (niveau Core, partagé), qui
+  n'émet que les balises autorisées et échappe tout le texte → **pas de HTML
+  Purifier, zéro dépendance préservé**.
 - L'éditeur ([`pages-editor.js`](../../public/assets/js/pages-editor.js)) gère
   ajout/suppression, **drag & drop** (poignée), init Quill, et sérialise l'ordre
   (`block_order`) + les Delta à la sauvegarde. JS externe (CSP `default-src 'self'`).
@@ -97,11 +100,14 @@ passe chaque bloc par `Block::sanitize()`, génère les `id` et reconstruit le J
 
 ## Notes / pièges
 
-- **Dépendance inter-modules** : le bloc `image` lit la bibliothèque Media
-  (référence par ID). Media doit être activé pour l'utiliser pleinement.
+- **Module indépendant** : Pages ne dépend d'aucun autre module. Le bloc `image`
+  est une **option** fournie par Media (référence par ID) : si Media est désactivé,
+  le bloc disparaît simplement de l'éditeur et la modale n'est pas chargée — Pages
+  reste pleinement utilisable (titres, texte riche).
 - **Sélection d'image** : le bloc `image` n'a pas de `<select>` mais un **aperçu +
   bouton** qui ouvre une **modale de vignettes** partagée (un seul `#media-modal`
-  pour tout l'éditeur, alimenté côté serveur par `MediaRepository::all()`). Le clic
+  pour tout l'éditeur, rendu uniquement si Media est actif, alimenté côté serveur
+  par `MediaRepository::all()`). Le clic
   sur une vignette réinjecte l'ID et l'aperçu via `createElement`/`textContent`
   (jamais d'`innerHTML` → aucune évasion d'attribut possible).
 - **Page d'accueil** : `/` redirige encore vers l'admin (route par défaut du

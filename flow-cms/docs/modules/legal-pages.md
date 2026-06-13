@@ -72,11 +72,11 @@ Aucune clé propre.
 ## Notes / pièges
 
 - **Texte riche borné** : on stocke le Delta, jamais du HTML. Le rendu front passe
-  par [`App\Modules\Pages\DeltaRenderer`](../../app/Modules/Pages/DeltaRenderer.php)
+  par [`App\Core\DeltaRenderer`](../../app/Core/DeltaRenderer.php)
   (gras, italique, souligné, barré, couleur de palette, liens sûrs, titres h2/h3,
   listes, citation, code, alignement — tout le reste est ignoré, texte échappé).
-  C'est une **classe utilitaire autoloadée** : pas de dépendance dure au module
-  Pages (réutilisée même si Pages est désactivé). La palette de l'éditeur
+  C'est une **classe du Core**, partagée par tout module éditant du texte riche :
+  Pages légales est donc **indépendant** (aucune dépendance à Pages). La palette de l'éditeur
   ([`public/assets/js/legal-editor.js`](../../public/assets/js/legal-editor.js))
   doit rester alignée sur `DeltaRenderer::ALLOWED_COLORS`.
 - **Éditeur** : Quill, assets déjà embarqués (`public/assets/vendor/quill/`).

@@ -24,6 +24,11 @@ final class ReviewsBlock implements Block
         return 'google_reviews';
     }
 
+    public function label(): string
+    {
+        return 'Avis Google';
+    }
+
     public function render(array $data): string
     {
         $limit   = $this->normalizeLimit($data['limit'] ?? self::DEFAULT_LIMIT);

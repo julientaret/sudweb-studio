@@ -46,9 +46,10 @@ Aucune route front : l'affichage passe exclusivement par le bloc.
   live). Données : `{ "title": string, "limit": int }` (6 par défaut, 20 max).
   Rend les avis `is_visible = 1`, du plus récent au plus ancien. Markup neutre
   (classes `gr-*`) stylé par le thème.
-- Le libellé éditeur est déclaré dans `PagesModule::BLOCK_LABELS` ; si le module
-  est désactivé, le bloc disparaît simplement de l'éditeur et du rendu
-  (`BlockContent` filtre sur le registre).
+- Le libellé éditeur est porté par le bloc lui-même (`Block::label()`), enregistré
+  dans `GoogleReviewsModule::boot()` ; si le module est désactivé, le bloc disparaît
+  simplement de l'éditeur et du rendu (l'éditeur construit son catalogue depuis le
+  registre).
 
 ## Permissions
 

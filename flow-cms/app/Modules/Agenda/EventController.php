@@ -10,15 +10,15 @@ use App\Core\Controller;
 use App\Modules\Media\MediaFolderRepository;
 use App\Modules\Media\MediaRepository;
 use App\Modules\Media\MediaUrl;
-use App\Modules\Pages\PagesModule;
 
 /**
  * Agenda — back-office (CRUD + éditeur de blocs) et rendu front.
  *
- * Le champ « contenu » réutilise le page-builder partagé (App\Core\BlockContent
- * + blocs enregistrés par Pages) : Agenda dépend donc du module Pages pour ses
- * blocs et de Media pour l'image vignette. Permissions dans l'espace commun
- * « content » (brief §3/§7). Voir docs/modules/agenda.md.
+ * Module indépendant : le champ « contenu » réutilise le page-builder partagé
+ * (App\Core\BlockContent + blocs de base du Core). L'image vignette est une
+ * option qui s'appuie sur Media : si Media est désactivé, le choix de vignette
+ * disparaît mais le module reste pleinement utilisable. Permissions dans l'espace
+ * commun « content » (brief §3/§7). Voir docs/modules/agenda.md.
  */
 final class EventController extends Controller
 {
@@ -164,7 +164,9 @@ final class EventController extends Controller
             return;
         }
 
-        $thumb = $event->thumbnailId !== null ? (new MediaRepository())->find($event->thumbnailId) : null;
+        $thumb = $event->thumbnailId !== null && module_enabled('Media')
+            ? (new MediaRepository())->find($event->thumbnailId)
+            : null;
         $this->renderFront($event->title, $event, BlockContent::render($event->content), $thumb);
     }
 
@@ -187,6 +189,9 @@ final class EventController extends Controller
      */
     private function resolveThumbnail(): ?int
     {
+        if (!module_enabled('Media')) {
+            return null;
+        }
         $id = (int) $this->input('thumbnail_id', '0');
         if ($id <= 0) {
             return null;
@@ -218,20 +223,23 @@ final class EventController extends Controller
 
     private function renderEditor(?Event $event, string $error = ''): void
     {
-        $thumb = $event?->thumbnailId !== null && $event !== null
+        // Vignette via Media : option dégradée proprement si le module est absent.
+        $mediaEnabled = module_enabled('Media');
+        $thumb = $mediaEnabled && $event !== null && $event->thumbnailId !== null
             ? (new MediaRepository())->find($event->thumbnailId)
             : null;
 
         $this->renderPage($this->views(), 'editor', $event ? 'Modifier l\'événement' : 'Nouvel événement', [
-            'event'      => $event,
-            'error'      => $error,
-            'notice'     => (string) $this->input('notice', ''),
-            'rows'       => BlockContent::editorRows($event?->content ?? [], PagesModule::BLOCK_LABELS),
-            'templates'  => BlockContent::templates(PagesModule::BLOCK_LABELS),
-            'media'      => (new MediaRepository())->all(),
-            'folders'    => (new MediaFolderRepository())->all(),
-            'thumb'      => $thumb,
-            'canPublish' => $this->auth->can('content.publish'),
+            'event'        => $event,
+            'error'        => $error,
+            'notice'       => (string) $this->input('notice', ''),
+            'rows'         => BlockContent::editorRows($event?->content ?? []),
+            'templates'    => BlockContent::templates(),
+            'mediaEnabled' => $mediaEnabled,
+            'media'        => $mediaEnabled ? (new MediaRepository())->all() : [],
+            'folders'      => $mediaEnabled ? (new MediaFolderRepository())->all() : [],
+            'thumb'        => $thumb,
+            'canPublish'   => $this->auth->can('content.publish'),
         ]);
     }
 

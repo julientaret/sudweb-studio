@@ -12,9 +12,10 @@ namespace App\Core;
  * normalisation du contenu stocké, rendu front HTML et modèle de vue de
  * l'éditeur. Aucune duplication par module : un seul endroit pour le contrat §4.
  *
- * Le registre des blocs est partagé (Kernel::blocks()) ; les libellés affichés
- * dans l'éditeur sont fournis par l'appelant (map type => label), car ils
- * relèvent du module qui enregistre les blocs.
+ * Le registre des blocs est partagé (Kernel::blocks()) ; chaque bloc porte son
+ * propre libellé (Block::label()), si bien que l'éditeur construit son catalogue
+ * directement depuis le registre, sans table de libellés ni dépendance entre
+ * modules de contenu.
  */
 final class BlockContent
 {
@@ -106,12 +107,12 @@ final class BlockContent
      * est amorcé avec une ligne d'une colonne vide.
      *
      * @param array<int, mixed>          $content
-     * @param array<string, string>      $labels  type => libellé affiché
      * @return array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,form:string}>>}>
      */
-    public static function editorRows(array $content, array $labels): array
+    public static function editorRows(array $content): array
     {
         $registry = Kernel::instance()->blocks();
+        $labels = $registry->labels();
 
         $card = static function (array $block) use ($registry, $labels): ?array {
             $type = (string) ($block['type'] ?? '');
@@ -161,18 +162,16 @@ final class BlockContent
 
     /**
      * Gabarits vides par type de bloc pour l'éditeur (gardent __KEY__ pour le JS).
+     * Le catalogue (type => libellé, ordre d'enregistrement) vient du registre :
+     * seuls les blocs effectivement disponibles sont proposés.
      *
-     * @param array<string, string> $labels type => libellé affiché (ordre conservé)
      * @return array<int, array{type:string,label:string,form:string}>
      */
-    public static function templates(array $labels): array
+    public static function templates(): array
     {
         $registry = Kernel::instance()->blocks();
         $templates = [];
-        foreach ($labels as $type => $label) {
-            if (!$registry->has($type)) {
-                continue;
-            }
+        foreach ($registry->labels() as $type => $label) {
             $templates[] = [
                 'type'  => $type,
                 'label' => $label,

@@ -28,6 +28,22 @@ final class BlockRegistry
         return isset($this->blocks[$type]);
     }
 
+    /**
+     * Catalogue des blocs disponibles : type => libellé, dans l'ordre
+     * d'enregistrement. L'éditeur s'en sert pour proposer les blocs ; un module
+     * désactivé n'ayant pas enregistré son bloc, celui-ci en est absent.
+     *
+     * @return array<string, string>
+     */
+    public function labels(): array
+    {
+        $labels = [];
+        foreach ($this->blocks as $type => $block) {
+            $labels[$type] = $block->label();
+        }
+        return $labels;
+    }
+
     public function get(string $type): Block
     {
         if (!isset($this->blocks[$type])) {

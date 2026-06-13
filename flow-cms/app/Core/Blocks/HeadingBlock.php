@@ -2,18 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Blocks;
+namespace App\Core\Blocks;
 
 use App\Core\Block;
 
 /**
  * Bloc titre (statique). data : { text, level (1|2|3) }.
+ *
+ * Bloc de contenu de base (niveau Core) : toujours disponible pour tout module
+ * qui utilise le page-builder, sans dépendance inter-modules.
  */
 final class HeadingBlock implements Block
 {
     public function type(): string
     {
         return 'heading';
+    }
+
+    public function label(): string
+    {
+        return 'Titre';
     }
 
     public function render(array $data): string

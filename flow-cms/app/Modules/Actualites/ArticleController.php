@@ -10,15 +10,15 @@ use App\Core\Controller;
 use App\Modules\Media\MediaFolderRepository;
 use App\Modules\Media\MediaRepository;
 use App\Modules\Media\MediaUrl;
-use App\Modules\Pages\PagesModule;
 
 /**
  * Actualités — back-office (CRUD + éditeur de blocs) et rendu front.
  *
- * Le champ « contenu » réutilise le page-builder partagé (App\Core\BlockContent
- * + blocs enregistrés par Pages) : Actualités dépend donc du module Pages pour
- * ses blocs et de Media pour l'image vignette. Permissions dans l'espace commun
- * « content » (brief §3/§7). Voir docs/modules/actualites.md.
+ * Module indépendant : le champ « contenu » réutilise le page-builder partagé
+ * (App\Core\BlockContent + blocs de base du Core). L'image vignette est une
+ * option qui s'appuie sur Media : si Media est désactivé, le choix de vignette
+ * disparaît mais le module reste pleinement utilisable. Permissions dans l'espace
+ * commun « content » (brief §3/§7). Voir docs/modules/actualites.md.
  */
 final class ArticleController extends Controller
 {
@@ -150,7 +150,9 @@ final class ArticleController extends Controller
             return;
         }
 
-        $thumb = $article->thumbnailId !== null ? (new MediaRepository())->find($article->thumbnailId) : null;
+        $thumb = $article->thumbnailId !== null && module_enabled('Media')
+            ? (new MediaRepository())->find($article->thumbnailId)
+            : null;
         $this->renderFront($article->title, $article, BlockContent::render($article->content), $thumb);
     }
 
@@ -173,6 +175,9 @@ final class ArticleController extends Controller
      */
     private function resolveThumbnail(): ?int
     {
+        if (!module_enabled('Media')) {
+            return null;
+        }
         $id = (int) $this->input('thumbnail_id', '0');
         if ($id <= 0) {
             return null;
@@ -204,20 +209,23 @@ final class ArticleController extends Controller
 
     private function renderEditor(?Article $article, string $error = ''): void
     {
-        $thumb = $article?->thumbnailId !== null && $article !== null
+        // Vignette via Media : option dégradée proprement si le module est absent.
+        $mediaEnabled = module_enabled('Media');
+        $thumb = $mediaEnabled && $article !== null && $article->thumbnailId !== null
             ? (new MediaRepository())->find($article->thumbnailId)
             : null;
 
         $this->renderPage($this->views(), 'editor', $article ? 'Modifier l\'actualité' : 'Nouvelle actualité', [
-            'article'    => $article,
-            'error'      => $error,
-            'notice'     => (string) $this->input('notice', ''),
-            'rows'       => BlockContent::editorRows($article?->content ?? [], PagesModule::BLOCK_LABELS),
-            'templates'  => BlockContent::templates(PagesModule::BLOCK_LABELS),
-            'media'      => (new MediaRepository())->all(),
-            'folders'    => (new MediaFolderRepository())->all(),
-            'thumb'      => $thumb,
-            'canPublish' => $this->auth->can('content.publish'),
+            'article'      => $article,
+            'error'        => $error,
+            'notice'       => (string) $this->input('notice', ''),
+            'rows'         => BlockContent::editorRows($article?->content ?? []),
+            'templates'    => BlockContent::templates(),
+            'mediaEnabled' => $mediaEnabled,
+            'media'        => $mediaEnabled ? (new MediaRepository())->all() : [],
+            'folders'      => $mediaEnabled ? (new MediaFolderRepository())->all() : [],
+            'thumb'        => $thumb,
+            'canPublish'   => $this->auth->can('content.publish'),
         ]);
     }
 

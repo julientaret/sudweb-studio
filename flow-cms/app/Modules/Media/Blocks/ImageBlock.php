@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Blocks;
+namespace App\Modules\Media\Blocks;
 
 use App\Core\Block;
 use App\Modules\Media\MediaRepository;
@@ -10,6 +10,10 @@ use App\Modules\Media\MediaUrl;
 
 /**
  * Bloc image (dynamique) — référence un média par ID (brief §4/§5).
+ *
+ * Fourni par le module Media : il n'est enregistré (et donc proposé dans
+ * l'éditeur) que lorsque Media est actif. Si Media est désactivé, le bloc
+ * disparaît simplement des éditeurs des autres modules, qui restent utilisables.
  *
  * data : { media_id, alt }. L'image n'est jamais référencée par URL : on stocke
  * l'ID, le chemin est reconstruit à l'affichage (régénération/déplacement sûrs).
@@ -19,6 +23,11 @@ final class ImageBlock implements Block
     public function type(): string
     {
         return 'image';
+    }
+
+    public function label(): string
+    {
+        return 'Image';
     }
 
     public function render(array $data): string

@@ -3,6 +3,7 @@
 /** @var string $error */
 /** @var array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,form:string}>>}> $rows */
 /** @var array<int, array{type:string,label:string,form:string}> $templates */
+/** @var bool $mediaEnabled */
 /** @var array<int, \App\Modules\Media\Media> $media */
 /** @var array<int, \App\Modules\Media\MediaFolder> $folders */
 /** @var bool $canPublish */
@@ -145,8 +146,11 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
     <template id="tpl-<?= e($t['type']) ?>"><?= $blockCard('__KEY__', $t['type'], $t['label'], $t['form']) ?></template>
 <?php endforeach; ?>
 
-<!-- Modale partagée de sélection d'image (partial Core, piloté par le JS) -->
+<!-- Modale partagée de sélection d'image (partial Core, piloté par le JS).
+     Présente seulement si le module Media est actif : sans lui, aucun bloc image. -->
+<?php if ($mediaEnabled): ?>
 <?= partial('partials/media_modal', ['media' => $media, 'folders' => $folders]) ?>
+<?php endif; ?>
 
 <script src="<?= e($base . '/assets/vendor/quill/quill.js') ?>"></script>
 <script src="<?= e($base . '/assets/js/pages-editor.js') ?>"></script>

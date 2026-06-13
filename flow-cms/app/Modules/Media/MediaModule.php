@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\Media;
 
+use App\Core\Kernel;
 use App\Core\Module;
 use App\Core\Router;
+use App\Modules\Media\Blocks\ImageBlock;
 
 /**
  * Module Media — bibliothèque d'images (brief §5).
  *
  * Brique transverse : les autres modules référenceront un média par son `id`
- * (jamais par URL). Voir docs/modules/media.md.
+ * (jamais par URL). Fournit aussi le bloc « image » du page-builder, qui n'est
+ * donc proposé dans les éditeurs que lorsque Media est actif. Voir
+ * docs/modules/media.md.
  */
 final class MediaModule implements Module
 {
@@ -22,6 +26,9 @@ final class MediaModule implements Module
 
     public function boot(Router $router): void
     {
+        // Bloc image du page-builder (brief §4 : enregistré dans boot()).
+        Kernel::instance()->blocks()->register(new ImageBlock());
+
         $router->get('/admin/media', [MediaController::class, 'index']);
         $router->post('/admin/media/upload', [MediaController::class, 'upload']);
         $router->post('/admin/media/upload/ajax', [MediaController::class, 'uploadAjax']);

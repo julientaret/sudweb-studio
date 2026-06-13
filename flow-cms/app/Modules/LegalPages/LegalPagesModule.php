@@ -14,8 +14,8 @@ use App\Core\Router;
  * Volontairement plus simple que Pages/Actualités : une seule zone de texte riche
  * par page (pas de page-builder par blocs), car le besoin est de la prose
  * juridique. Le contenu est stocké en Delta Quill (JSON) et rendu côté front par
- * App\Modules\Pages\DeltaRenderer (renderer borné, réutilisé tel quel — classe
- * utilitaire autoloadée, donc pas de dépendance dure au module Pages).
+ * le App\Core\DeltaRenderer partagé (renderer borné du Core, sans dépendance à un
+ * autre module).
  *
  * URLs front à la racine (/mentions-legales, /<slug>) : on enregistre des routes
  * EXACTES par page publiée, qui priment sur le catch-all /{slug} des Pages.

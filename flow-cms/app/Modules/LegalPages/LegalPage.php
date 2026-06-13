@@ -8,7 +8,7 @@ namespace App\Modules\LegalPages;
  * Entité page légale (module Pages légales).
  *
  * `content` est le Delta Quill décodé depuis le JSON ({"ops":[...]}), rendu en
- * HTML borné par App\Modules\Pages\DeltaRenderer. `slug` unique = URL front
+ * HTML borné par App\Core\DeltaRenderer. `slug` unique = URL front
  * (/<slug>). `status` pilote la visibilité publique (draft/published).
  */
 final class LegalPage

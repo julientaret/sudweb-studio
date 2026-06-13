@@ -41,9 +41,11 @@ Déclarées dans `AgendaModule::boot()`.
 
 ## Blocs fournis
 
-Aucun. Le module **réutilise les blocs enregistrés par Pages** (`heading`,
-`richtext`, `image`) via le `BlockRegistry` partagé. Les libellés affichés dans
-l'éditeur proviennent de `PagesModule::BLOCK_LABELS`.
+Aucun. Le module **consomme le page-builder partagé** : blocs de base `heading` et
+`richtext` fournis par le Core, bloc `image` fourni par Media (présent seulement si
+Media est actif), via le `BlockRegistry` partagé. Chaque bloc porte son libellé
+(`Block::label()`) : l'éditeur construit son catalogue depuis le registre, sans
+table de libellés ni référence à un autre module.
 
 ## Permissions
 
@@ -92,15 +94,15 @@ en-tête avec le titre, les dates (« Le … » ou « Du … au … »), la vign
 
 ## Config
 
-- [`config/modules.php`](../../config/modules.php) : `Agenda` dans `available`
-  (**après `Pages` et `Media`**, dont il dépend).
+- [`config/modules.php`](../../config/modules.php) : `Agenda` dans `available`.
 - [`config/app.php`](../../config/app.php) : `site_name` (titre front).
 
 ## Notes / pièges
 
-- **Dépendances inter-modules** : Agenda dépend de **Pages** (blocs + éditeur JS +
-  `BlockContent`) et de **Media** (vignette + bloc image). Les trois doivent être
-  activés.
+- **Module indépendant** : Agenda ne dépend d'aucun autre module. Le contenu
+  s'appuie sur le page-builder partagé (Core). La **vignette** et le bloc `image`
+  sont des options fournies par Media : si Media est désactivé, le choix de vignette
+  et le bloc image disparaissent, mais le module reste pleinement utilisable.
 - **Dates** : stockées en `DATE` (`Y-m-d`), sans heure. Si des horaires deviennent
   nécessaires, migrer vers `DATETIME` + `datetime-local`.
 - **Dashboard agnostique** : `recentContent()` ne dépend d'aucun module en dur ;
