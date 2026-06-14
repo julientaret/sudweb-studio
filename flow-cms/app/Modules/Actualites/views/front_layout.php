@@ -2,7 +2,7 @@
 /** @var string $title */
 /** @var ?\App\Modules\Actualites\Article $article */
 /** @var string $body  HTML déjà rendu et échappé par les blocs */
-/** @var ?string $thumbUrl  URL de la vignette (taille large) ou null */
+/** @var ?string $thumbUrl  URL de la vignette (taille desktop) ou null */
 /** @var string $siteName */
 
 /** Formatte une date Y-m-d en français long (ex. « 12 juin 2026 »). */

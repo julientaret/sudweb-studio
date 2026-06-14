@@ -3,7 +3,10 @@
 /** @var string $error */
 /** @var string $base */
 
+use App\Core\Config;
 use App\Modules\Media\MediaUrl;
+
+$ratios = (array) Config::get('media.ratios', []);
 ?>
 <link rel="stylesheet" href="<?= e($base . '/assets/vendor/cropper/cropper.min.css') ?>">
 
@@ -19,6 +22,17 @@ use App\Modules\Media\MediaUrl;
         <strong><?= e($media->originalName) ?></strong> — original <?= e($media->width) ?>×<?= e($media->height) ?> px.
         Le recadrage est <em>non destructif</em> : l'original est conservé, seules les déclinaisons sont régénérées.
     </p>
+
+    <?php if ($ratios !== []): ?>
+        <div class="ratio-bar" role="group" aria-label="Format de recadrage">
+            <span class="ratio-label">Format :</span>
+            <?php foreach ($ratios as $key => $r): ?>
+                <button type="button" class="ratio-btn" data-ratio="<?= e($r['value'] ?? '') ?>">
+                    <?= e($r['label'] ?? $key) ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <div class="crop-stage">
         <img id="cropper-image"
@@ -58,6 +72,15 @@ use App\Modules\Media\MediaUrl;
     .muted { color:var(--muted); font-size:.9rem; }
     .crop-stage { max-width:100%; background:#eef0f3; border-radius:8px; }
     .crop-stage img { display:block; max-width:100%; }
+    .ratio-bar { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; margin:.2rem 0 .9rem; }
+    .ratio-label { color:var(--muted); font-size:.9rem; margin-right:.2rem; }
+    /* color/box-shadow explicites : le thème admin force color:#fff + ombre sur tout <button>. */
+    .ratio-btn { padding:.35rem .7rem; border:1px solid var(--line); border-radius:6px;
+        background:var(--panel); color:var(--txt); cursor:pointer; font-size:.85rem;
+        box-shadow:none; }
+    .ratio-btn:hover { background:var(--accent-soft); color:var(--accent-600);
+        filter:none; box-shadow:none; }
+    .ratio-btn.is-active { background:var(--grad); border-color:transparent; color:#fff; }
 </style>
 
 <script src="<?= e($base . '/assets/vendor/cropper/cropper.min.js') ?>"></script>

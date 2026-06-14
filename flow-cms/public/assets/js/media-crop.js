@@ -53,4 +53,19 @@
             syncInputs(cropper);
         }
     });
+
+    // Boutons de format : verrouillent le ratio du Cropper. data-ratio vide =
+    // recadrage libre (NaN côté Cropper). Le ratio n'est pas stocké : il est
+    // encodé par les dimensions du crop renvoyées au serveur.
+    var buttons = document.querySelectorAll('.ratio-btn');
+    Array.prototype.forEach.call(buttons, function (btn) {
+        btn.addEventListener('click', function () {
+            var raw = btn.getAttribute('data-ratio');
+            var ratio = raw ? parseFloat(raw) : NaN;
+            cropper.setAspectRatio(isNaN(ratio) ? NaN : ratio);
+            Array.prototype.forEach.call(buttons, function (b) {
+                b.classList.toggle('is-active', b === btn);
+            });
+        });
+    });
 })();

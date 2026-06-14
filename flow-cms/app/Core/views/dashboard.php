@@ -166,7 +166,7 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
                         <?php $caption = $m->alt !== '' ? $m->alt : $m->originalName; ?>
                         <figure class="dg-slide">
                             <picture>
-                                <source type="image/webp" srcset="<?= e(\App\Modules\Media\MediaUrl::size($m, 'medium')) ?>">
+                                <source type="image/webp" srcset="<?= e(\App\Modules\Media\MediaUrl::size($m, 'tablet')) ?>">
                                 <img src="<?= e(\App\Modules\Media\MediaUrl::original($m)) ?>" alt="<?= e($m->alt) ?>" loading="lazy">
                             </picture>
                             <?php if ($caption !== ''): ?>

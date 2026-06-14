@@ -236,7 +236,7 @@ final class ArticleController extends Controller
             'title'    => $title,
             'article'  => $article,
             'body'     => $body,
-            'thumbUrl' => $thumb !== null ? MediaUrl::size($thumb, 'large') : null,
+            'thumbUrl' => $thumb !== null ? MediaUrl::size($thumb, 'desktop') : null,
             'siteName' => (string) Config::get('app.site_name', 'Flow'),
         ]);
     }

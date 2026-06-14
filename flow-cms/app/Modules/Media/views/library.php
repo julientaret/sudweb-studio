@@ -109,7 +109,7 @@ $moveOptions = static function (?int $selected) use ($folders): string {
         <?php foreach ($items as $m): ?>
             <figure class="media-item card">
                 <a class="media-thumb" href="<?= e(MediaUrl::original($m)) ?>" target="_blank" rel="noopener">
-                    <img src="<?= e(MediaUrl::size($m, 'medium', true)) ?>"
+                    <img src="<?= e(MediaUrl::size($m, 'tablet', true)) ?>"
                          alt="<?= e($m->alt) ?>" loading="lazy">
                     <?php if ($m->hasCrop()): ?><span class="badge">recadrée</span><?php endif; ?>
                 </a>

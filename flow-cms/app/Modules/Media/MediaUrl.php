@@ -30,7 +30,7 @@ final class MediaUrl
     }
 
     /**
-     * URL d'une déclinaison WebP (ex. "thumb", "medium", "large").
+     * URL d'une déclinaison WebP (ex. "thumb", "mobile", "tablet", "desktop").
      * Retombe sur le WebP pleine taille si le preset est inconnu.
      */
     public static function size(Media $media, string $size, bool $bust = false): string
@@ -40,6 +40,49 @@ final class MediaUrl
             return self::webp($media, $bust);
         }
         return self::variantUrl($media, '-' . $size, $bust);
+    }
+
+    /**
+     * Dimensions affichées (= le recadrage s'il existe, sinon l'original).
+     * Sert à poser width/height sur le <img> et à borner le srcset.
+     *
+     * @return array{0:int,1:int} [largeur, hauteur]
+     */
+    public static function intrinsic(Media $media): array
+    {
+        if ($media->hasCrop()) {
+            return [(int) $media->cropW, (int) $media->cropH];
+        }
+        return [$media->width, $media->height];
+    }
+
+    /**
+     * srcset responsive « url Nw, … » bâti depuis media.srcset_widths.
+     *
+     * En mode fit on n'agrandit jamais : chaque largeur est bornée à la source,
+     * et les doublons sont écartés — une image plus petite que « desktop » ne
+     * produit donc pas trois entrées de même largeur. La chaîne renvoyée est
+     * DÉJÀ échappée (à injecter telle quelle dans l'attribut srcset).
+     */
+    public static function srcset(Media $media, bool $bust = false): string
+    {
+        [$srcW] = self::intrinsic($media);
+        $presets = (array) Config::get('media.sizes', []);
+        $entries = [];
+        $seen = [];
+        foreach ((array) Config::get('media.srcset_widths', []) as $name) {
+            if (!isset($presets[$name])) {
+                continue;
+            }
+            $target = (int) ($presets[$name]['w'] ?? 0);
+            $real = $srcW > 0 ? min($target, $srcW) : $target;
+            if ($real <= 0 || isset($seen[$real])) {
+                continue;
+            }
+            $seen[$real] = true;
+            $entries[] = e(self::size($media, $name, $bust)) . ' ' . $real . 'w';
+        }
+        return implode(', ', $entries);
     }
 
     private static function variantUrl(Media $media, string $suffix, bool $bust): string

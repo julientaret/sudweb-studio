@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Media\Blocks;
 
 use App\Core\Block;
+use App\Core\Config;
 use App\Modules\Media\MediaRepository;
 use App\Modules\Media\MediaUrl;
 
@@ -43,11 +44,20 @@ final class ImageBlock implements Block
 
         $alt = trim((string) ($data['alt'] ?? '')) ?: $media->alt;
 
-        // <picture> : WebP (medium) avec repli sur l'original (format d'origine).
+        // <picture> : srcset WebP responsive (mobile/tablet/desktop) — le
+        // navigateur choisit la largeur selon l'écran via l'attribut `sizes`.
+        // Repli sur l'original (format d'origine) pour les rares cas sans WebP.
+        // width/height = dimensions du recadrage (ou de l'original) → pas de
+        // saut de mise en page au chargement.
+        [$w, $h] = MediaUrl::intrinsic($media);
+        $sizesAttr = (string) Config::get('media.sizes_attr', '100vw');
+
         return '<figure class="block-image">'
             . '<picture>'
-            . '<source type="image/webp" srcset="' . e(MediaUrl::size($media, 'medium')) . '">'
-            . '<img src="' . e(MediaUrl::original($media)) . '" alt="' . e($alt) . '" loading="lazy">'
+            . '<source type="image/webp" srcset="' . MediaUrl::srcset($media)
+            . '" sizes="' . e($sizesAttr) . '">'
+            . '<img src="' . e(MediaUrl::original($media)) . '" alt="' . e($alt) . '"'
+            . ' width="' . $w . '" height="' . $h . '" loading="lazy" decoding="async">'
             . '</picture>'
             . '</figure>';
     }

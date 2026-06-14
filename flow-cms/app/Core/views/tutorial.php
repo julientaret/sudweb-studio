@@ -267,7 +267,9 @@ HTML],
         pour les choisir). Chaque image s'envoie avec sa propre <strong>barre de progression</strong>, puis
         passe au vert une fois terminée — la liste se met à jour automatiquement à la fin.</p>
         <p>À l'arrivée, Flow <strong>ré-encode</strong> l'image (sécurité) et génère automatiquement
-        plusieurs tailles (vignette, moyenne, grande) ainsi qu'une version <strong>WebP</strong> plus légère.
+        plusieurs largeurs — <strong>mobile, tablette et ordinateur</strong> — en version <strong>WebP</strong>
+        plus légère. Sur le site, le navigateur du visiteur télécharge tout seul la largeur la mieux adaptée à
+        son écran : les pages restent <strong>rapides sur mobile</strong> sans rien régler de votre côté.
         Si une image est refusée (mauvais type ou trop lourde, 5 Mo max), elle passe en rouge avec le motif,
         sans bloquer les autres.</p>
 
@@ -300,10 +302,18 @@ HTML],
         <p>Le recadrage permet de <strong>découper</strong> une image : garder un visage, obtenir un
         format carré pour une vignette, retirer un bord… Vous tracez sur l'image la zone à conserver,
         et Flow en produit une <strong>nouvelle version</strong>.</p>
+        <p>En haut, une barre de <strong>formats</strong> permet de verrouiller les proportions de la zone
+        avant de la tracer :</p>
+        <ul>
+            <li><strong>Libre</strong> — aucune contrainte, vous dessinez la zone à main levée.</li>
+            <li><strong>Bannière 16:5</strong> — un bandeau large et court, idéal en haut de page.</li>
+            <li><strong>Paysage 3:2</strong> — le format photo classique, plus large que haut.</li>
+            <li><strong>Carré 1:1</strong> — parfait pour une vignette ou un portrait.</li>
+        </ul>
         <ul>
             <li><strong>L'original est toujours préservé</strong> : un crop ne l'écrase jamais, on peut
                 revenir en arrière.</li>
-            <li>Après recadrage, toutes les déclinaisons (vignette, moyenne, grande, WebP) sont
+            <li>Après recadrage, toutes les largeurs (mobile, tablette, ordinateur + WebP) sont
                 <strong>régénérées</strong> à partir du résultat.</li>
         </ul>
 

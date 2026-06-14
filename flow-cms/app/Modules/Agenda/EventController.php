@@ -250,7 +250,7 @@ final class EventController extends Controller
             'title'    => $title,
             'event'    => $event,
             'body'     => $body,
-            'thumbUrl' => $thumb !== null ? MediaUrl::size($thumb, 'large') : null,
+            'thumbUrl' => $thumb !== null ? MediaUrl::size($thumb, 'desktop') : null,
             'siteName' => (string) Config::get('app.site_name', 'Flow'),
         ]);
     }

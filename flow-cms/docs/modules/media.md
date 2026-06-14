@@ -47,7 +47,10 @@ Déclarées dans `MediaModule::boot()`.
 
 Le bloc **`image`** ([`Blocks/ImageBlock.php`](../../app/Modules/Media/Blocks/ImageBlock.php)),
 enregistré dans `MediaModule::boot()` via `Kernel::blocks()`. Il référence un média
-par **ID** (jamais par URL) et rend un `<picture>` WebP avec repli sur l'original.
+par **ID** (jamais par URL) et rend un `<picture>` : **srcset WebP responsive**
+(`mobile`/`tablet`/`desktop`) — le navigateur choisit la largeur selon l'écran via
+l'attribut `sizes` — avec repli sur l'original et `width`/`height` (zéro saut de mise
+en page).
 Comme il est fourni par Media, il n'apparaît dans les éditeurs (Pages, Actualités,
 Agenda) **que lorsque Media est actif** — les autres modules ne dépendent donc pas
 de Media : le bloc disparaît simplement s'il est désactivé.
@@ -66,7 +69,13 @@ de Media : le bloc disparaît simplement s'il est désactivé.
 ## Config
 
 [`config/media.php`](../../config/media.php) :
-- `sizes` — presets de déclinaisons (`thumb` cover 200², `medium` fit 800, `large` fit 1600).
+- `sizes` — presets de déclinaisons : `thumb` (cover 200², grille admin) + les
+  largeurs front `mobile` 640, `tablet` 1024, `desktop` 1600 (fit). En `fit` on
+  n'agrandit jamais : la largeur réelle est bornée à la source.
+- `srcset_widths` — sous-ensemble de `sizes` servi au public, dans l'ordre croissant.
+- `sizes_attr` — attribut `sizes` par défaut des images de contenu (`100vw`).
+- `ratios` — formats proposés au recadrage (`libre`, `banniere` 16:5, `paysage` 3:2,
+  `carre` 1:1). Verrouillent le Cropper ; **non stockés** (encodés par le crop).
 - `allowed_mimes` — types réels acceptés → extension.
 - `max_size`, `jpeg_quality`, `webp_quality`.
 
@@ -78,8 +87,8 @@ de Media : le bloc disparaît simplement s'il est désactivé.
    **détruit tout payload planqué**. Échec de décodage = refus.
 4. Stockage en sous-dossier **année/mois**, nom **`slug + hash court`** (jamais le
    nom client brut ; le vrai nom reste en DB).
-5. Génération **WebP plein format** + déclinaisons (`-thumb`, `-medium`, `-large`).
-   `cover` remplit et recadre ; `fit` garde le ratio sans rogner ni agrandir.
+5. Génération **WebP plein format** + déclinaisons (`-thumb`, `-mobile`, `-tablet`,
+   `-desktop`). `cover` remplit et recadre ; `fit` garde le ratio sans rogner ni agrandir.
 
 Sécurité complémentaire : exécution PHP coupée sur `public/uploads/` via
 [.htaccess](../../public/uploads/.htaccess) ; upload accepté seulement si
@@ -114,6 +123,12 @@ Recadrage **non destructif** : Cropper.js (vendorisé dans
 `MediaProcessor::regenerate()` les ré-applique sur l'original (jamais écrasé)
 avant de produire WebP + déclinaisons.
 
+**Format imposé (ratio)** : une barre de boutons (config `ratios`) verrouille
+l'`aspectRatio` du Cropper — *Libre*, *Bannière 16:5*, *Paysage 3:2*, *Carré 1:1*.
+Le ratio n'est **pas stocké** : il est entièrement encodé par les dimensions du crop
+(`crop_w`/`crop_h`) renvoyées au serveur. Les largeurs `mobile`/`tablet`/`desktop`
+sont ensuite déclinées **sur ce même recadrage** — d'où le responsive automatique.
+
 Conséquence clé : le crop **survit à `media:regen`** (il fait partie de l'état du
 média, pas d'un fichier dérivé jetable). « Réinitialiser » remet `crop_*` à NULL
 et régénère depuis l'original entier.
@@ -141,7 +156,11 @@ une image à un dossier (NULL = « Non classé »).
 
 - `MediaUrl::original($m)` → format d'origine (`…/photo-x.jpg`)
 - `MediaUrl::webp($m)` → `…/photo-x.webp`
-- `MediaUrl::size($m, 'thumb')` → `…/photo-x-thumb.webp` (retombe sur le WebP plein format si preset inconnu)
+- `MediaUrl::size($m, 'desktop')` → `…/photo-x-desktop.webp` (retombe sur le WebP plein format si preset inconnu)
+- `MediaUrl::srcset($m)` → chaîne `url Nw, …` responsive (déjà échappée) bornée à la
+  source et dédupliquée (pas trois entrées de même largeur si l'image est petite).
+- `MediaUrl::intrinsic($m)` → `[largeur, hauteur]` affichées (le crop s'il existe,
+  sinon l'original) — pour poser `width`/`height` sur le `<img>`.
 - Param `$bust = true` ajoute `?v=mtime` (cache-busting back-office après recadrage).
 
 ## Régénération (obligatoire — brief §5)
