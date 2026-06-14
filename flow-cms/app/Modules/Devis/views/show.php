@@ -1,0 +1,76 @@
+<?php
+/** @var \App\Modules\Devis\QuoteRequest $item */
+/** @var string $consentText */
+/** @var string $base */
+
+$fmt = static function (string $dt): string {
+    $d = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dt);
+    return $d !== false ? $d->format('d/m/Y à H:i') : $dt;
+};
+?>
+<div class="actions" style="justify-content:space-between;">
+    <h1 style="margin:0;">Demande de devis</h1>
+    <a class="btn-secondary" href="<?= e($base . '/admin/devis') ?>">← Retour</a>
+</div>
+
+<div class="card" style="margin-top:1.2rem;max-width:720px;">
+    <dl class="devis-detail">
+        <dt>Nom</dt><dd><?= e($item->name) ?></dd>
+        <?php if ($item->company !== ''): ?><dt>Société</dt><dd><?= e($item->company) ?></dd><?php endif; ?>
+        <dt>E-mail</dt><dd><a href="mailto:<?= e($item->email) ?>"><?= e($item->email) ?></a></dd>
+        <?php if ($item->phone !== ''): ?><dt>Téléphone</dt><dd><a href="tel:<?= e($item->phone) ?>"><?= e($item->phone) ?></a></dd><?php endif; ?>
+        <dt>Type de projet</dt><dd><?= e($item->projectType !== '' ? $item->projectType : '—') ?></dd>
+        <dt>Budget</dt><dd><?= e($item->budget !== '' ? $item->budget : '—') ?></dd>
+        <dt>Délai</dt><dd><?= e($item->deadline !== '' ? $item->deadline : '—') ?></dd>
+        <dt>Reçue le</dt><dd><?= e($fmt($item->createdAt)) ?></dd>
+        <dt>Description</dt><dd class="message"><?= nl2br(e($item->description)) ?></dd>
+        <dt>Consentement RGPD</dt>
+        <dd>
+            <?= $item->consent ? '✓ accepté' : '✗ non' ?>
+            <?php if ($item->consentVersion !== ''): ?>
+                <span class="muted">(version <?= e($item->consentVersion) ?>)</span>
+            <?php endif; ?>
+            <?php if ($consentText !== ''): ?>
+                <div class="muted" style="font-size:.85rem;margin-top:.3rem;">« <?= e($consentText) ?> »</div>
+            <?php endif; ?>
+        </dd>
+    </dl>
+
+    <div class="actions" style="margin-top:1.4rem;gap:.6rem;border-top:1px solid #eee;padding-top:1rem;flex-wrap:wrap;">
+        <a class="btn" href="mailto:<?= e($item->email) ?>?subject=<?= rawurlencode('Votre demande de devis — ' . $item->projectType) ?>">Répondre par e-mail</a>
+
+        <form method="post" action="<?= e($base . '/admin/devis/status') ?>" style="display:inline">
+            <?= \App\Core\Csrf::field() ?>
+            <input type="hidden" name="id" value="<?= e($item->id) ?>">
+            <input type="hidden" name="status" value="quoted">
+            <button type="submit" class="btn-secondary">Marquer « devis envoyé »</button>
+        </form>
+
+        <form method="post" action="<?= e($base . '/admin/devis/status') ?>" style="display:inline">
+            <?= \App\Core\Csrf::field() ?>
+            <input type="hidden" name="id" value="<?= e($item->id) ?>">
+            <input type="hidden" name="status" value="archived">
+            <button type="submit" class="btn-secondary">Archiver</button>
+        </form>
+
+        <form method="post" action="<?= e($base . '/admin/devis/delete') ?>"
+              onsubmit="return confirm('Supprimer définitivement cette demande ?');" style="display:inline">
+            <?= \App\Core\Csrf::field() ?>
+            <input type="hidden" name="id" value="<?= e($item->id) ?>">
+            <button type="submit" class="btn-danger">Supprimer</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .muted { color:var(--muted); }
+    .devis-detail { display:grid; grid-template-columns:160px 1fr; gap:.6rem 1rem; margin:0; }
+    .devis-detail dt { font-weight:600; color:var(--muted); }
+    .devis-detail dd { margin:0; }
+    .devis-detail dd.message { white-space:normal; line-height:1.6; }
+    .btn-secondary { display:inline-flex; align-items:center; line-height:1.2; padding:.5rem .9rem;
+        font-size:.85rem; border-radius:9px; border:1px solid; text-decoration:none; }
+    .btn-danger { background:#fff; border:1px solid #f1c4c4; color:#c0322f; cursor:pointer;
+        padding:.5rem .9rem; font-size:.85rem; border-radius:9px; }
+    .btn-danger:hover { background:#fdecec; }
+</style>

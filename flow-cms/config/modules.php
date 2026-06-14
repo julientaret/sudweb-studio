@@ -23,6 +23,7 @@ return [
         'Actualites',
         'GoogleReviews',
         'Contact',
+        'Devis',
         'LegalPages',
         'Stats',
     ],

@@ -76,6 +76,8 @@ if (!function_exists('admin_icon')) {
             str_contains($url, 'google-reviews') => $svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
             // Contact — enveloppe (demandes reçues).
             str_contains($url, 'contact') => $svg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'),
+            // Devis — reçu / document chiffré.
+            str_contains($url, 'devis') => $svg('<path d="M16 2H8a2 2 0 0 0-2 2v16l3-2 3 2 3-2 3 2V4a2 2 0 0 0-2-2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/>'),
             // Médias — image.
             str_contains($url, 'media') => $svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'),
             // Documents — fichier avec flèche de téléchargement.

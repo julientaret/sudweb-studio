@@ -38,6 +38,9 @@ $siteName = site('name', 'Flow');
                 <?php foreach ($nav as $label => $url): ?>
                 <a href="<?= e(site_url($url)) ?>"><?= e($label) ?></a>
                 <?php endforeach; ?>
+                <?php if (module_enabled('Devis')): ?>
+                <a href="#" class="devis-trigger" data-devis-open>Demander un devis</a>
+                <?php endif; ?>
             </nav>
             <?php endif; ?>
         </div>

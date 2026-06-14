@@ -27,6 +27,7 @@ return [
         'content.*', 'media.*', 'documents.*', 'users.manage',
         'googlereviews.view', 'googlereviews.sync', 'googlereviews.manage',
         'contacts.view', 'contacts.delete',
+        'devis.view', 'devis.delete',
         'stats.view',
     ],
 
