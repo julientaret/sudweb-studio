@@ -44,11 +44,10 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
     </footer>
 
     <?php if (module_enabled('Devis')):
-        $devisTypes     = (array) \App\Core\Config::get('devis.project_types', []);
-        $devisBudgets   = (array) \App\Core\Config::get('devis.budgets', []);
-        $devisDeadlines = (array) \App\Core\Config::get('devis.deadlines', []);
-        $devisConsent   = (string) \App\Core\Config::get('devis.consent_text', '');
-        $devisPrivacy   = (string) \App\Core\Config::get('devis.privacy_url', '');
+        $devisSteps   = (new \App\Modules\Devis\DevisFormSettings())->schema();
+        $devisConsent = (string) \App\Core\Config::get('devis.consent_text', '');
+        $devisPrivacy = (string) \App\Core\Config::get('devis.privacy_url', '');
+        $devisLast    = count($devisSteps) - 1;
     ?>
     <button type="button" class="devis-trigger devis-fab" data-devis-open aria-haspopup="dialog" aria-controls="devis-modal">
         Demander un devis
@@ -63,9 +62,9 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
             <h2 id="devis-title">Demander un devis</h2>
 
             <div class="devis-steps">
-                <span class="devis-dot is-active"></span>
-                <span class="devis-dot"></span>
-                <span class="devis-dot"></span>
+                <?php foreach ($devisSteps as $i => $devisStep): ?>
+                <span class="devis-dot<?= $i === 0 ? ' is-active' : '' ?>"></span>
+                <?php endforeach; ?>
             </div>
 
             <form class="devis-form" novalidate>
@@ -76,66 +75,32 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
 
                 <div class="devis-error" role="alert" hidden></div>
 
-                <!-- Étape 1 : type de projet -->
-                <fieldset class="devis-step is-active" data-step="1">
-                    <legend>Votre projet</legend>
+                <?php foreach ($devisSteps as $i => $devisStep): ?>
+                <fieldset class="devis-step<?= $i === 0 ? ' is-active' : '' ?>" data-step="<?= $i + 1 ?>">
+                    <?php if ($devisStep['title'] !== ''): ?><legend><?= e($devisStep['title']) ?></legend><?php endif; ?>
+                    <?php foreach ($devisStep['fields'] as $field):
+                        $fid  = 'devis-f-' . e($field['key']);
+                        $req  = $field['required'] ? ' required' : '';
+                        $optTag = $field['required'] ? '' : ' <span class="opt">(facultatif)</span>';
+                    ?>
                     <div class="devis-field">
-                        <label for="devis-type">Type de prestation</label>
-                        <select id="devis-type" name="project_type" required>
+                        <label for="<?= $fid ?>"><?= e($field['label']) ?><?= $optTag ?></label>
+                        <?php if ($field['type'] === 'select'): ?>
+                        <select id="<?= $fid ?>" name="<?= e($field['key']) ?>"<?= $req ?>>
                             <option value="" disabled selected>Choisissez…</option>
-                            <?php foreach ($devisTypes as $t): ?>
-                            <option value="<?= e($t) ?>"><?= e($t) ?></option>
+                            <?php foreach ($field['options'] as $opt): ?>
+                            <option value="<?= e($opt) ?>"><?= e($opt) ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <?php elseif ($field['type'] === 'textarea'): ?>
+                        <textarea id="<?= $fid ?>" name="<?= e($field['key']) ?>" rows="4" maxlength="5000"<?= $req ?><?= $field['minlength'] > 0 ? ' minlength="' . (int) $field['minlength'] . '"' : '' ?>></textarea>
+                        <?php else: ?>
+                        <input type="<?= e($field['type']) ?>" id="<?= $fid ?>" name="<?= e($field['key']) ?>" maxlength="255"<?= $req ?>>
+                        <?php endif; ?>
                     </div>
-                </fieldset>
+                    <?php endforeach; ?>
 
-                <!-- Étape 2 : détails -->
-                <fieldset class="devis-step" data-step="2">
-                    <legend>Détails du besoin</legend>
-                    <div class="devis-field">
-                        <label for="devis-budget">Budget estimé</label>
-                        <select id="devis-budget" name="budget" required>
-                            <option value="" disabled selected>Choisissez…</option>
-                            <?php foreach ($devisBudgets as $b): ?>
-                            <option value="<?= e($b) ?>"><?= e($b) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="devis-field">
-                        <label for="devis-deadline">Délai souhaité</label>
-                        <select id="devis-deadline" name="deadline" required>
-                            <option value="" disabled selected>Choisissez…</option>
-                            <?php foreach ($devisDeadlines as $d): ?>
-                            <option value="<?= e($d) ?>"><?= e($d) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="devis-field">
-                        <label for="devis-desc">Décrivez votre projet</label>
-                        <textarea id="devis-desc" name="description" rows="4" maxlength="5000" required></textarea>
-                    </div>
-                </fieldset>
-
-                <!-- Étape 3 : coordonnées -->
-                <fieldset class="devis-step" data-step="3">
-                    <legend>Vos coordonnées</legend>
-                    <div class="devis-field">
-                        <label for="devis-name">Nom</label>
-                        <input type="text" id="devis-name" name="name" maxlength="150" required autocomplete="name">
-                    </div>
-                    <div class="devis-field">
-                        <label for="devis-company">Société <span class="opt">(facultatif)</span></label>
-                        <input type="text" id="devis-company" name="company" maxlength="150" autocomplete="organization">
-                    </div>
-                    <div class="devis-field">
-                        <label for="devis-email">E-mail</label>
-                        <input type="email" id="devis-email" name="email" maxlength="255" required autocomplete="email">
-                    </div>
-                    <div class="devis-field">
-                        <label for="devis-phone">Téléphone <span class="opt">(facultatif)</span></label>
-                        <input type="tel" id="devis-phone" name="phone" maxlength="40" autocomplete="tel">
-                    </div>
+                    <?php if ($i === $devisLast): ?>
                     <div class="devis-consent">
                         <input type="checkbox" id="devis-consent" name="consent" value="1" required>
                         <label for="devis-consent">
@@ -145,7 +110,9 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
                             <?php endif; ?>
                         </label>
                     </div>
+                    <?php endif; ?>
                 </fieldset>
+                <?php endforeach; ?>
 
                 <div class="devis-actions">
                     <button type="button" class="devis-btn devis-btn-ghost devis-prev" hidden>Précédent</button>

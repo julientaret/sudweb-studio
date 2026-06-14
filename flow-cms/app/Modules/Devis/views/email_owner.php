@@ -2,18 +2,14 @@
 /**
  * E-mail HTML envoyé à l'adresse de contact à chaque nouvelle demande de devis.
  *
- * Mis en forme par CSS *inline* : les clients mail (Gmail, Outlook…) ignorent
- * largement les feuilles externes. Tout est échappé avec e().
+ * Le formulaire étant dynamique, les réponses sont rendues génériquement depuis
+ * $answers (liste ordonnée [{label, value}]). Mise en forme par CSS *inline*
+ * (les clients mail ignorent les feuilles externes). Tout est échappé avec e().
  *
  * @var string $siteName
- * @var string $projectType
- * @var string $budget
- * @var string $deadline
- * @var string $description
  * @var string $name
  * @var string $email
- * @var string $phone
- * @var string $company
+ * @var array<int, array{label:string, value:string}> $answers
  * @var string $date
  * @var string $adminUrl  URL absolue du site (peut être vide)
  */
@@ -41,46 +37,25 @@
 
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;">
                         <tr>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;width:130px;vertical-align:top;">Nom</td>
+                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;width:170px;vertical-align:top;">Nom</td>
                             <td style="padding:10px 0;border-top:1px solid #eef0f3;font-weight:600;"><?= e($name) ?></td>
                         </tr>
-                        <?php if ($company !== ''): ?>
-                        <tr>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;">Société</td>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;"><?= e($company) ?></td>
-                        </tr>
-                        <?php endif; ?>
                         <tr>
                             <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;">E-mail</td>
                             <td style="padding:10px 0;border-top:1px solid #eef0f3;">
                                 <a href="mailto:<?= e($email) ?>" style="color:#2f6bff;text-decoration:none;font-weight:600;"><?= e($email) ?></a>
                             </td>
                         </tr>
-                        <?php if ($phone !== ''): ?>
+                        <?php foreach ($answers as $a): ?>
                         <tr>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;">Téléphone</td>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;"><?= e($phone) ?></td>
+                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;"><?= e($a['label']) ?></td>
+                            <td style="padding:10px 0;border-top:1px solid #eef0f3;white-space:pre-wrap;"><?= nl2br(e($a['value'])) ?></td>
                         </tr>
-                        <?php endif; ?>
-                        <tr>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;">Type de projet</td>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;font-weight:600;"><?= e($projectType) ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;">Budget</td>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;"><?= e($budget) ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;color:#8a93a3;vertical-align:top;">Délai</td>
-                            <td style="padding:10px 0;border-top:1px solid #eef0f3;"><?= e($deadline) ?></td>
-                        </tr>
+                        <?php endforeach; ?>
                     </table>
 
-                    <div style="margin-top:18px;color:#8a93a3;font-size:13px;text-transform:uppercase;letter-spacing:.05em;">Description du besoin</div>
-                    <div style="margin-top:8px;padding:16px 18px;background:#f7f8fa;border:1px solid #eef0f3;border-radius:10px;font-size:15px;line-height:1.6;white-space:pre-wrap;color:#2b313c;"><?= nl2br(e($description)) ?></div>
-
                     <div style="margin-top:26px;">
-                        <a href="mailto:<?= e($email) ?>?subject=<?= rawurlencode('Votre demande de devis — ' . $projectType) ?>"
+                        <a href="mailto:<?= e($email) ?>?subject=<?= rawurlencode('Votre demande de devis') ?>"
                            style="display:inline-block;background:#2f6bff;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;">
                             Répondre à <?= e($name) ?>
                         </a>

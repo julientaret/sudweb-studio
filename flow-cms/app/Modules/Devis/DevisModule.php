@@ -39,6 +39,10 @@ final class DevisModule implements Module
         $router->post('/admin/devis/status', [DevisController::class, 'updateStatus']);
         $router->post('/admin/devis/delete', [DevisController::class, 'destroy']);
 
+        // Constructeur de formulaire (étapes/questions du pop-up) — devis.configure.
+        $router->get('/admin/devis/form', [DevisController::class, 'editForm']);
+        $router->post('/admin/devis/form', [DevisController::class, 'saveForm']);
+
         // Front : pop-up (AJAX). Le jeton est servi en POST : il pose un état de
         // session (horodatage anti-bot) et reste ainsi hors de la mesure d'audience
         // (le module Stats ne compte que les GET).
@@ -68,6 +72,7 @@ final class DevisModule implements Module
     {
         return [
             __DIR__ . '/migrations/001_create_quote_requests.sql',
+            __DIR__ . '/migrations/002_dynamic_answers.sql',
         ];
     }
 

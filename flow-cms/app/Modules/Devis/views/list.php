@@ -1,6 +1,7 @@
 <?php
 /** @var array<int, \App\Modules\Devis\QuoteRequest> $items */
 /** @var string $notice */
+/** @var bool $canConfigure */
 /** @var string $base */
 
 $fmt = static function (string $dt): string {
@@ -11,6 +12,9 @@ $labels = ['new' => 'Nouvelle', 'read' => 'Lue', 'quoted' => 'Devis envoyé', 'a
 ?>
 <div class="actions" style="justify-content:space-between;">
     <h1 style="margin:0;">Demandes de devis</h1>
+    <?php if ($canConfigure ?? false): ?>
+    <a class="btn" href="<?= e($base . '/admin/devis/form') ?>">Configurer le formulaire</a>
+    <?php endif; ?>
 </div>
 
 <?php if ($notice !== ''): ?><div class="notice"><?= e($notice) ?></div><?php endif; ?>
@@ -18,7 +22,7 @@ $labels = ['new' => 'Nouvelle', 'read' => 'Lue', 'quoted' => 'Devis envoyé', 'a
 <div class="card" style="margin-top:1.2rem;">
     <table>
         <thead>
-            <tr><th>Statut</th><th>Nom</th><th>Projet</th><th>Budget</th><th>Reçue le</th><th></th></tr>
+            <tr><th>Statut</th><th>Nom</th><th>E-mail</th><th>Aperçu</th><th>Reçue le</th><th></th></tr>
         </thead>
         <tbody>
         <?php if ($items === []): ?>
@@ -28,8 +32,8 @@ $labels = ['new' => 'Nouvelle', 'read' => 'Lue', 'quoted' => 'Devis envoyé', 'a
             <tr<?= $it->isNew() ? ' style="font-weight:600;"' : '' ?>>
                 <td><span class="status status-<?= e($it->status) ?>"><?= e($labels[$it->status] ?? $it->status) ?></span></td>
                 <td><?= e($it->name) ?></td>
-                <td><?= e($it->projectType !== '' ? $it->projectType : '—') ?></td>
-                <td class="muted"><?= e($it->budget !== '' ? $it->budget : '—') ?></td>
+                <td class="muted"><a href="mailto:<?= e($it->email) ?>"><?= e($it->email) ?></a></td>
+                <td class="muted"><?= e($it->summary() !== '' ? $it->summary() : '—') ?></td>
                 <td class="muted"><?= e($fmt($it->createdAt)) ?></td>
                 <td>
                     <a class="btn-secondary" href="<?= e($base . '/admin/devis/show?id=' . $it->id) ?>">Voir</a>

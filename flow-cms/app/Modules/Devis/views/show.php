@@ -16,14 +16,12 @@ $fmt = static function (string $dt): string {
 <div class="card" style="margin-top:1.2rem;max-width:720px;">
     <dl class="devis-detail">
         <dt>Nom</dt><dd><?= e($item->name) ?></dd>
-        <?php if ($item->company !== ''): ?><dt>Société</dt><dd><?= e($item->company) ?></dd><?php endif; ?>
         <dt>E-mail</dt><dd><a href="mailto:<?= e($item->email) ?>"><?= e($item->email) ?></a></dd>
-        <?php if ($item->phone !== ''): ?><dt>Téléphone</dt><dd><a href="tel:<?= e($item->phone) ?>"><?= e($item->phone) ?></a></dd><?php endif; ?>
-        <dt>Type de projet</dt><dd><?= e($item->projectType !== '' ? $item->projectType : '—') ?></dd>
-        <dt>Budget</dt><dd><?= e($item->budget !== '' ? $item->budget : '—') ?></dd>
-        <dt>Délai</dt><dd><?= e($item->deadline !== '' ? $item->deadline : '—') ?></dd>
+        <?php foreach ($item->answers as $a): ?>
+        <dt><?= e($a['label']) ?></dt>
+        <dd<?= mb_strlen($a['value']) > 80 ? ' class="message"' : '' ?>><?= nl2br(e($a['value'])) ?></dd>
+        <?php endforeach; ?>
         <dt>Reçue le</dt><dd><?= e($fmt($item->createdAt)) ?></dd>
-        <dt>Description</dt><dd class="message"><?= nl2br(e($item->description)) ?></dd>
         <dt>Consentement RGPD</dt>
         <dd>
             <?= $item->consent ? '✓ accepté' : '✗ non' ?>
@@ -37,7 +35,7 @@ $fmt = static function (string $dt): string {
     </dl>
 
     <div class="actions" style="margin-top:1.4rem;gap:.6rem;border-top:1px solid #eee;padding-top:1rem;flex-wrap:wrap;">
-        <a class="btn" href="mailto:<?= e($item->email) ?>?subject=<?= rawurlencode('Votre demande de devis — ' . $item->projectType) ?>">Répondre par e-mail</a>
+        <a class="btn" href="mailto:<?= e($item->email) ?>?subject=<?= rawurlencode('Votre demande de devis') ?>">Répondre par e-mail</a>
 
         <form method="post" action="<?= e($base . '/admin/devis/status') ?>" style="display:inline">
             <?= \App\Core\Csrf::field() ?>

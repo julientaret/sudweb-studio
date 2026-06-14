@@ -86,12 +86,13 @@ export function initDevis() {
         return;
       }
       const val = (f.value || '').trim();
+      const min = parseInt(f.getAttribute('minlength') || '0', 10);
       if (f.required && val === '') {
         errors.push(labelFor(f) + ' : champ obligatoire.');
       } else if (f.type === 'email' && val !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
         errors.push('Adresse e-mail invalide.');
-      } else if (f.name === 'description' && val !== '' && val.length < 10) {
-        errors.push('Décrivez votre besoin en quelques mots (au moins 10 caractères).');
+      } else if (min > 0 && val !== '' && val.length < min) {
+        errors.push(labelFor(f) + ' : au moins ' + min + ' caractères.');
       }
     });
     return errors;

@@ -10,16 +10,18 @@ use App\Core\Csrf;
 use App\Core\Mailer;
 
 /**
- * Devis — back-office (liste / détail / statut / suppression) et réception du
- * pop-up public (AJAX).
+ * Devis — back-office (liste / détail / statut / suppression), constructeur de
+ * formulaire (étapes/questions du pop-up) et réception du pop-up public (AJAX).
  *
  * Côté front, le site public est sans état : on démarre une session légère,
  * propre au pop-up, juste pour porter le jeton CSRF et l'horodatage anti-bot. Le
  * pop-up récupère ce jeton à l'ouverture (POST /devis/token) puis envoie la
  * demande (POST /devis/envoyer), les deux en JSON.
  *
- * Anti-spam maison (sans tiers, RGPD-clean) : honeypot + délai minimum + rate
- * limit par IP hachée.
+ * Le formulaire est dynamique : ses étapes et questions sont définies dans
+ * l'admin (DevisFormSettings). La validation à la réception s'appuie sur ce même
+ * schéma. Anti-spam maison (sans tiers, RGPD-clean) : honeypot + délai minimum +
+ * rate limit par IP hachée.
  */
 final class DevisController extends Controller
 {
@@ -41,7 +43,7 @@ final class DevisController extends Controller
         return Config::get('devis.' . $key, $default);
     }
 
-    // --- Back-office ------------------------------------------------------
+    // --- Back-office : demandes -------------------------------------------
 
     public function index(): void
     {
@@ -49,8 +51,9 @@ final class DevisController extends Controller
         $this->purgeExpired(); // RGPD : nettoyage opportuniste à l'ouverture.
 
         $this->renderPage($this->views(), 'list', 'Demandes de devis', [
-            'items'  => $this->repo->all(),
-            'notice' => $this->input('notice'),
+            'items'        => $this->repo->all(),
+            'notice'       => $this->input('notice'),
+            'canConfigure' => $this->auth->can('devis.configure'),
         ]);
     }
 
@@ -93,6 +96,36 @@ final class DevisController extends Controller
         $this->redirect('/admin/devis?notice=' . rawurlencode('Demande supprimée.'));
     }
 
+    // --- Back-office : constructeur de formulaire -------------------------
+
+    public function editForm(): void
+    {
+        $this->requirePermission('devis.configure');
+        $settings = new DevisFormSettings();
+
+        $this->renderPage($this->views(), 'form', 'Formulaire de devis', [
+            'schemaJson' => (string) json_encode(
+                ['steps' => $settings->schema()],
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+            ),
+            'types'  => DevisFormSettings::TYPES,
+            'notice' => $this->input('notice'),
+        ]);
+    }
+
+    public function saveForm(): void
+    {
+        $this->requirePermission('devis.configure');
+        $this->requireCsrf();
+
+        $raw = $_POST['schema'] ?? '';
+        $data = is_string($raw) ? json_decode($raw, true) : null;
+        $steps = is_array($data) && isset($data['steps']) && is_array($data['steps']) ? $data['steps'] : [];
+
+        (new DevisFormSettings())->save($steps);
+        $this->redirect('/admin/devis/form?notice=' . rawurlencode('Formulaire enregistré.'));
+    }
+
     // --- Front : pop-up (AJAX) --------------------------------------------
 
     /**
@@ -109,7 +142,7 @@ final class DevisController extends Controller
 
     /**
      * Réception d'une demande de devis (JSON). Renvoie {ok:true} ou
-     * {ok:false, errors:[...]}.
+     * {ok:false, errors:[...]}. Validation pilotée par le schéma admin.
      */
     public function submit(): void
     {
@@ -133,44 +166,64 @@ final class DevisController extends Controller
             $this->json(['ok' => true]); // trop rapide pour un humain : drop silencieux.
         }
 
-        // 4) Saisie + validation.
-        $projectType = $this->cleanLine($this->input('project_type'), 150);
-        $budget      = $this->cleanLine($this->input('budget'), 60);
-        $deadline    = $this->cleanLine($this->input('deadline'), 60);
-        $description = trim($this->input('description'));
-        $name        = $this->cleanLine($this->input('name'), 150);
-        $email       = strtolower($this->cleanLine($this->input('email'), 255));
-        $phone       = $this->cleanLine($this->input('phone'), 40);
-        $company     = $this->cleanLine($this->input('company'), 150);
-        $consent     = $this->input('consent') !== '';
+        // 4) Saisie + validation selon le schéma défini dans l'admin.
+        $form = new DevisFormSettings();
+        $emailKey = $form->emailKey();
 
         $errors = [];
+        $answers = [];
+        $name = '';
+        $email = '';
 
-        $projectTypes = (array) $this->config('project_types', []);
-        if ($projectTypes !== [] && !in_array($projectType, $projectTypes, true)) {
-            $errors[] = 'Merci de choisir un type de projet dans la liste.';
+        foreach ($form->fields() as $f) {
+            $key = (string) $f['key'];
+            $label = (string) $f['label'];
+            $type = (string) $f['type'];
+            $required = (bool) $f['required'];
+            $value = $type === 'textarea'
+                ? mb_substr(trim($this->input($key)), 0, 5000)
+                : $this->cleanLine($this->input($key), 255);
+
+            if ($type === 'email') {
+                $value = strtolower($value);
+                if ($required && $value === '') {
+                    $errors[] = 'Merci d’indiquer votre adresse e-mail.';
+                } elseif ($value !== '' && filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+                    $errors[] = 'Merci d’indiquer une adresse e-mail valide.';
+                }
+            } elseif ($type === 'select') {
+                $options = (array) $f['options'];
+                if ($value === '' && $required) {
+                    $errors[] = 'Merci de choisir une option pour « ' . $label . ' ».';
+                } elseif ($value !== '' && $options !== [] && !in_array($value, $options, true)) {
+                    $errors[] = 'Choix invalide pour « ' . $label . ' ».';
+                }
+            } elseif ($type === 'textarea') {
+                $min = (int) $f['minlength'];
+                if ($required && $value === '') {
+                    $errors[] = 'Merci de renseigner « ' . $label . ' ».';
+                } elseif ($value !== '' && $min > 0 && mb_strlen($value) < $min) {
+                    $errors[] = '« ' . $label .' » : trop court (au moins ' . $min . ' caractères).';
+                }
+            } else { // text, tel
+                if ($required && $value === '') {
+                    $errors[] = 'Merci de renseigner « ' . $label . ' ».';
+                }
+            }
+
+            if ($key === 'name') {
+                $name = $value;
+            }
+            if ($key === $emailKey) {
+                $email = $value;
+            }
+            // Réponses stockées : tout sauf les champs cœur (nom/e-mail, en colonnes).
+            if (!(bool) $f['core'] && $value !== '') {
+                $answers[] = ['label' => $label, 'value' => $value];
+            }
         }
-        $budgets = (array) $this->config('budgets', []);
-        if ($budgets !== [] && !in_array($budget, $budgets, true)) {
-            $errors[] = 'Merci de choisir un budget dans la liste.';
-        }
-        $deadlines = (array) $this->config('deadlines', []);
-        if ($deadlines !== [] && !in_array($deadline, $deadlines, true)) {
-            $errors[] = 'Merci de choisir un délai dans la liste.';
-        }
-        $minLen = (int) $this->config('description_min_length', 10);
-        if (mb_strlen($description) < $minLen) {
-            $errors[] = 'Décrivez votre besoin en quelques mots (au moins ' . $minLen . ' caractères).';
-        }
-        if (mb_strlen($description) > 5000) {
-            $errors[] = 'Votre description est trop longue (5000 caractères maximum).';
-        }
-        if ($name === '') {
-            $errors[] = 'Merci d’indiquer votre nom.';
-        }
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            $errors[] = 'Merci d’indiquer une adresse e-mail valide.';
-        }
+
+        $consent = $this->input('consent') !== '';
         if (!$consent) {
             $errors[] = 'Merci d’accepter l’utilisation de vos données pour traiter la demande.';
         }
@@ -188,22 +241,11 @@ final class DevisController extends Controller
         }
 
         // 6) Persistance (la demande est conservée même si l'e-mail échoue).
-        $this->repo->create(
-            $projectType,
-            $budget,
-            $deadline,
-            $description,
-            $name,
-            $email,
-            $phone,
-            $company,
-            $consent,
-            (string) $this->config('consent_version', ''),
-            $ipHash,
-        );
+        $answersJson = (string) json_encode($answers, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $this->repo->create($name, $email, $answersJson, $consent, (string) $this->config('consent_version', ''), $ipHash);
 
         // 7) Notification à l'adresse de contact.
-        $this->notifyOwner($projectType, $budget, $deadline, $description, $name, $email, $phone, $company);
+        $this->notifyOwner($name, $email, $answers);
 
         // Anti double-envoi : on consomme l'horodatage.
         unset($_SESSION['devis_form_ts']);
@@ -212,16 +254,11 @@ final class DevisController extends Controller
 
     // --- Interne ----------------------------------------------------------
 
-    private function notifyOwner(
-        string $projectType,
-        string $budget,
-        string $deadline,
-        string $description,
-        string $name,
-        string $email,
-        string $phone,
-        string $company,
-    ): void {
+    /**
+     * @param array<int, array{label:string, value:string}> $answers
+     */
+    private function notifyOwner(string $name, string $email, array $answers): void
+    {
         $recipient = (string) $this->config('recipient', '');
         if ($recipient === '') {
             return; // pas de destinataire configuré : on s'arrête (demande déjà en base).
@@ -229,27 +266,23 @@ final class DevisController extends Controller
 
         $siteName = (string) Config::get('app.site_name', 'Flow');
         $html = $this->view($this->views())->render('email_owner', [
-            'siteName'    => $siteName,
-            'projectType' => $projectType !== '' ? $projectType : '(non précisé)',
-            'budget'      => $budget !== '' ? $budget : '(non précisé)',
-            'deadline'    => $deadline !== '' ? $deadline : '(non précisé)',
-            'description' => $description,
-            'name'        => $name,
-            'email'       => $email,
-            'phone'       => $phone,
-            'company'     => $company,
-            'date'        => date('d/m/Y à H:i'),
-            'adminUrl'    => rtrim((string) Config::get('app.url', ''), '/'),
+            'siteName' => $siteName,
+            'name'     => $name,
+            'email'    => $email,
+            'answers'  => $answers,
+            'date'     => date('d/m/Y à H:i'),
+            'adminUrl' => rtrim((string) Config::get('app.url', ''), '/'),
         ]);
 
-        $mailSubject = '[' . $siteName . '] Nouvelle demande de devis'
-            . ($projectType !== '' ? ' — ' . $projectType : '');
-
-        Mailer::sendHtml($recipient, $mailSubject, $html, [
+        $opts = [
             'from'      => (string) $this->config('sender', ''),
             'from_name' => $siteName,
-            'reply_to'  => $email, // répondre = écrire directement au demandeur.
-        ]);
+        ];
+        if ($email !== '') {
+            $opts['reply_to'] = $email; // répondre = écrire directement au demandeur.
+        }
+
+        Mailer::sendHtml($recipient, '[' . $siteName . '] Nouvelle demande de devis', $html, $opts);
     }
 
     /**

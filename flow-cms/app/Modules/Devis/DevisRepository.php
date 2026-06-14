@@ -56,41 +56,33 @@ final class DevisRepository
         return (int) $stmt->fetchColumn();
     }
 
+    /**
+     * Persiste une demande. `$answersJson` est la liste ordonnée [{label,value}]
+     * des réponses aux questions dynamiques (hors nom/e-mail, qui ont leur colonne).
+     */
     public function create(
-        string $projectType,
-        string $budget,
-        string $deadline,
-        string $description,
         string $name,
         string $email,
-        string $phone,
-        string $company,
+        string $answersJson,
         bool $consent,
         string $consentVersion,
         ?string $ipHash,
     ): int {
         $stmt = $this->pdo->prepare(
             'INSERT INTO quote_requests
-                (project_type, budget, deadline, description, name, email, phone, company,
-                 consent, consent_version, ip_hash, status, created_at)
+                (name, email, answers, consent, consent_version, ip_hash, status, created_at)
              VALUES
-                (:project_type, :budget, :deadline, :description, :name, :email, :phone, :company,
-                 :consent, :version, :ip, :status, :created)'
+                (:name, :email, :answers, :consent, :version, :ip, :status, :created)'
         );
         $stmt->execute([
-            'project_type' => $projectType,
-            'budget'       => $budget,
-            'deadline'     => $deadline,
-            'description'  => $description,
-            'name'         => $name,
-            'email'        => $email,
-            'phone'        => $phone,
-            'company'      => $company,
-            'consent'      => $consent ? 1 : 0,
-            'version'      => $consentVersion,
-            'ip'           => $ipHash,
-            'status'       => 'new',
-            'created'      => date('Y-m-d H:i:s'),
+            'name'    => $name,
+            'email'   => $email,
+            'answers' => $answersJson,
+            'consent' => $consent ? 1 : 0,
+            'version' => $consentVersion,
+            'ip'      => $ipHash,
+            'status'  => 'new',
+            'created' => date('Y-m-d H:i:s'),
         ]);
         return (int) $this->pdo->lastInsertId();
     }

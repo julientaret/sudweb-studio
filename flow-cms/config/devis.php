@@ -32,7 +32,11 @@ return [
     'rate_limit_max'    => 5,
     'rate_limit_window' => 3600, // 1 heure
 
-    // --- Étapes du pop-up ---------------------------------------------------
+    // --- Étapes du pop-up (graine par défaut) -------------------------------
+    // Le formulaire (étapes + questions) est désormais ÉDITABLE depuis l'admin
+    // (Demandes de devis → « Configurer le formulaire » ; stocké dans
+    // storage/devis_form.json). Les valeurs ci-dessous ne servent que de schéma
+    // initial, tant qu'aucune personnalisation n'a été enregistrée.
     // Étape 1 — type de prestation (liste déroulante). Vide → champ libre.
     'project_types' => [
         'Site vitrine',
