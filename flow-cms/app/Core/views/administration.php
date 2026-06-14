@@ -7,7 +7,7 @@
 
 <?php if ($notice !== ''): ?><div class="notice"><?= e($notice) ?></div><?php endif; ?>
 
-<div class="card" style="max-width:760px;">
+<div class="card">
     <h2 style="margin:0 0 .3rem; font-size:1.1rem;">Modules disponibles</h2>
     <p class="muted" style="margin:0 0 1.4rem;">
         Choisissez les modules proposés aux utilisateurs de ce site. Un module désactivé

@@ -12,7 +12,7 @@
 <?php if ($notice !== ''): ?><div class="notice"><?= e($notice) ?></div><?php endif; ?>
 <?php if ($error !== ''): ?><div class="alert"><?= e($error) ?></div><?php endif; ?>
 
-<div class="card" style="max-width:760px; margin-bottom:1.4rem;">
+<div class="card" style=" margin-bottom:1.4rem;">
     <div class="mtn-head">
         <div>
             <h2 style="margin:0 0 .3rem; font-size:1.1rem;">Mode maintenance</h2>
@@ -35,7 +35,7 @@
     </form>
 </div>
 
-<div class="card" style="max-width:760px; margin-bottom:1.4rem;">
+<div class="card" style=" margin-bottom:1.4rem;">
     <h2 style="margin:0 0 .3rem; font-size:1.1rem;">URL de contournement (bypass)</h2>
     <p class="muted" style="margin:0 0 1rem;">
         Partagez cette URL secrète : l'ouvrir autorise le visiteur à voir le site malgré la
@@ -53,7 +53,7 @@
     </form>
 </div>
 
-<div class="card" style="max-width:760px;">
+<div class="card" style="">
     <h2 style="margin:0 0 .3rem; font-size:1.1rem;">Adresses IP autorisées</h2>
     <p class="muted" style="margin:0 0 1rem;">
         Ces adresses contournent la maintenance sans jeton. Votre IP actuelle est
