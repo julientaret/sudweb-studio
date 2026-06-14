@@ -79,8 +79,9 @@ gabarits `tpl-*`, modale `#media-modal`) que l'éditeur de pages.
 ## Rendu front
 
 [`views/front_layout.php`](../../app/Modules/Actualites/views/front_layout.php) :
-en-tête avec le titre, la date (« Publié le … »), la vignette en hero (taille
-`large`) puis le contenu rendu par `BlockContent::render()`.
+en-tête avec le titre, la date (« Publié le … »), la vignette en hero
+(`<picture>` srcset WebP responsive `mobile`/`tablet`/`desktop`, `sizes="100vw"`,
+repli original) puis le contenu rendu par `BlockContent::render()`.
 
 ## Intégrations transverses
 

@@ -80,7 +80,8 @@ gabarits `tpl-*`, modale `#media-modal`) que l'éditeur de pages.
 
 [`views/front_layout.php`](../../app/Modules/Agenda/views/front_layout.php) :
 en-tête avec le titre, les dates (« Le … » ou « Du … au … »), la vignette en hero
-(taille `large`) puis le contenu rendu par `BlockContent::render()`.
+(`<picture>` srcset WebP responsive `mobile`/`tablet`/`desktop`, `sizes="100vw"`,
+repli original) puis le contenu rendu par `BlockContent::render()`.
 
 ## Intégrations transverses
 

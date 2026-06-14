@@ -2,7 +2,10 @@
 /** @var string $title */
 /** @var ?\App\Modules\Actualites\Article $article */
 /** @var string $body  HTML déjà rendu et échappé par les blocs */
-/** @var ?string $thumbUrl  URL de la vignette (taille desktop) ou null */
+/** @var ?string $thumbUrl  URL de repli du héro (original) ou null */
+/** @var string $thumbSrcset  srcset WebP responsive (déjà échappé) ou '' */
+/** @var int $thumbW  Largeur affichée du héro (0 si aucun) */
+/** @var int $thumbH  Hauteur affichée du héro (0 si aucun) */
 /** @var string $siteName */
 
 /** Formatte une date Y-m-d en français long (ex. « 12 juin 2026 »). */
@@ -60,7 +63,13 @@ $fmt = static function (?string $date): string {
             <h1><?= e($article->title) ?></h1>
             <p class="article-date">Publié le <?= e($fmt($article->publishedDate)) ?></p>
             <?php if ($thumbUrl !== null): ?>
-                <div class="article-hero"><img src="<?= e($thumbUrl) ?>" alt=""></div>
+                <div class="article-hero">
+                    <picture>
+                        <?php /* $thumbSrcset déjà échappé par MediaUrl::srcset(). Héro = pleine largeur → 100vw. */ ?>
+                        <source type="image/webp" srcset="<?= $thumbSrcset ?>" sizes="100vw">
+                        <img src="<?= e($thumbUrl) ?>" alt="" width="<?= e($thumbW) ?>" height="<?= e($thumbH) ?>" decoding="async">
+                    </picture>
+                </div>
             <?php endif; ?>
         <?php endif; ?>
         <?= $body ?>

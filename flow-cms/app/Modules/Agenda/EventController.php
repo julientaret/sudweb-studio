@@ -246,11 +246,16 @@ final class EventController extends Controller
     private function renderFront(string $title, ?Event $event, string $body, ?\App\Modules\Media\Media $thumb = null): void
     {
         $view = $this->view($this->views());
+        [$thumbW, $thumbH] = $thumb !== null ? MediaUrl::intrinsic($thumb) : [0, 0];
         echo $view->render('front_layout', [
             'title'    => $title,
             'event'    => $event,
             'body'     => $body,
-            'thumbUrl' => $thumb !== null ? MediaUrl::size($thumb, 'desktop') : null,
+            // Repli original + srcset WebP responsive (déjà échappé) pour le héro.
+            'thumbUrl'    => $thumb !== null ? MediaUrl::original($thumb) : null,
+            'thumbSrcset' => $thumb !== null ? MediaUrl::srcset($thumb) : '',
+            'thumbW'      => $thumbW,
+            'thumbH'      => $thumbH,
             'siteName' => (string) Config::get('app.site_name', 'Flow'),
         ]);
     }
