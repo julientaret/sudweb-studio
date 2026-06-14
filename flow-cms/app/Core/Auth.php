@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Modules\Users\LoginIpRepository;
+use App\Modules\Users\SecurityAlert;
 use App\Modules\Users\User;
 use App\Modules\Users\UserRepository;
 use PDO;
@@ -60,7 +62,36 @@ final class Auth
         session_regenerate_id(true);
         $_SESSION[self::SESSION_KEY] = $user->id;
 
+        $this->guardLoginIp($user, $ip);
+
         return $user;
+    }
+
+    /**
+     * Sécurité (brief §6) : enregistre l'IP de connexion et, si elle est
+     * inhabituelle pour ce compte (au moins une IP déjà connue, mais pas
+     * celle-ci), pose un drapeau de session pour le bandeau d'alerte de l'admin
+     * et notifie le support par e-mail.
+     *
+     * Best-effort : ne doit jamais empêcher une connexion légitime (table absente
+     * avant migration, e-mail indisponible…).
+     */
+    private function guardLoginIp(User $user, string $ip): void
+    {
+        try {
+            $ips = new LoginIpRepository();
+            $hadKnown = $ips->hasAny($user->id);
+            $isKnown = $ips->isKnown($user->id, $ip);
+            $ips->record($user->id, $ip);
+
+            // Première connexion (aucune IP connue) : on enregistre sans alerter.
+            if ($hadKnown && !$isKnown) {
+                $_SESSION[SecurityController::IP_ALERT_KEY] = ['ip' => $ip, 'at' => date('Y-m-d H:i:s')];
+                SecurityAlert::notifyNewIp($user, $ip);
+            }
+        } catch (\Throwable) {
+            // Surveillance best-effort : on n'interrompt jamais la connexion.
+        }
     }
 
     public function logout(): void

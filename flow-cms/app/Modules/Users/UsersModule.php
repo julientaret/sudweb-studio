@@ -50,6 +50,7 @@ final class UsersModule implements Module
             __DIR__ . '/migrations/002_create_login_attempts.sql',
             __DIR__ . '/migrations/003_create_password_resets.sql',
             __DIR__ . '/migrations/004_add_dashboard_prefs.sql',
+            __DIR__ . '/migrations/005_create_user_login_ips.sql',
         ];
     }
 }

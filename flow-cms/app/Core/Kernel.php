@@ -125,6 +125,9 @@ final class Kernel
         $this->router->post('/admin/dashboard/layout', [DashboardController::class, 'saveLayout']);
         $this->router->get('/admin/tutoriel', [TutorialController::class, 'index']);
 
+        // Sécurité — acquittement du bandeau d'alerte « connexion IP inhabituelle ».
+        $this->router->post('/admin/security/ip-alert/dismiss', [SecurityController::class, 'dismissIpAlert']);
+
         // Administration (choix des modules) — niveau Core, réservé à admin.modules.
         $this->router->get('/admin/administration', [AdministrationController::class, 'index']);
         $this->router->post('/admin/administration/modules', [AdministrationController::class, 'saveModules']);

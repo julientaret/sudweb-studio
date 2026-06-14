@@ -124,6 +124,18 @@ $logoUrl = match (true) {
         .admin-foot a { color:var(--accent-600); text-decoration:none; font-weight:600; }
         .admin-foot a:hover { text-decoration:underline; }
 
+        /* ---- Bandeau d'alerte sécurité (connexion IP inhabituelle) ---- */
+        .ip-alert { display:flex; align-items:center; gap:12px; padding:12px 24px;
+            background:#fff4e5; border-bottom:1px solid #f3c98b; color:#8a4b00; }
+        .ip-alert > svg { width:22px; height:22px; flex:0 0 auto; }
+        .ip-alert-txt { flex:1; font-size:.88rem; line-height:1.45; }
+        .ip-alert-txt code { background:#ffe3bd; padding:.05rem .35rem; border-radius:4px;
+            font-size:.85em; font-family:Menlo,Consolas,monospace; }
+        .ip-alert form { margin:0; }
+        .ip-alert-close { background:none; border:0; color:#8a4b00; font-size:1.5rem; line-height:1;
+            cursor:pointer; padding:0 .3rem; box-shadow:none; }
+        .ip-alert-close:hover { color:#5c3200; filter:none; box-shadow:none; }
+
         /* ---- Composants partagés (utilisés par les vues) ---- */
         h1 { font-size:1.6rem; font-weight:700; letter-spacing:-.02em; margin:0 0 1.3rem; }
         h2 { font-weight:700; letter-spacing:-.01em; }
@@ -272,6 +284,21 @@ $logoUrl = match (true) {
     </aside>
 
     <div class="main">
+        <?php $ipAlert = $_SESSION[\App\Core\SecurityController::IP_ALERT_KEY] ?? null; ?>
+        <?php if (is_array($ipAlert)): ?>
+        <div class="ip-alert" role="alert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="ip-alert-txt">
+                <strong>Connexion depuis une adresse IP inhabituelle.</strong>
+                Une connexion à ce compte a été détectée depuis l’adresse
+                <code><?= e($ipAlert['ip'] ?? '') ?></code>. Si ce n’était pas vous, changez votre mot de passe sans tarder. Le support a été averti.
+            </div>
+            <form method="post" action="<?= e($base . '/admin/security/ip-alert/dismiss') ?>">
+                <?= \App\Core\Csrf::field() ?>
+                <button type="submit" class="ip-alert-close" title="Masquer cette alerte" aria-label="Masquer">&times;</button>
+            </form>
+        </div>
+        <?php endif; ?>
         <header class="topbar">
             <div class="user-chip">
                 <div class="user-meta">
