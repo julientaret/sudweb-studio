@@ -205,9 +205,10 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
     /* Ligne d'aide sous la grille : tutoriel (2/3) + support (1/3). */
     .dash-help { display:grid; grid-template-columns:2fr 1fr; gap:1.1rem; margin-top:1.1rem; }
     @media (max-width:560px) { .dash-help { grid-template-columns:1fr; } }
-    /* Bouton support : corail, pour le distinguer du tutoriel (bleu). */
-    .dash-card--support { background:linear-gradient(135deg,#ff8a73 0%,#ff6b4a 100%); border-color:transparent; color:#fff; }
-    .dash-card--support:hover { border-color:transparent; }
+    /* Bouton support : corail, pour le distinguer du tutoriel (bleu). Sélecteur
+       composé (comme --tuto) pour primer sur la règle .dash-card qui suit. */
+    .dash-card.dash-card--support { background:linear-gradient(135deg,#ff8a73 0%,#ff6b4a 100%); border-color:transparent; color:#fff; }
+    .dash-card.dash-card--support:hover { border-color:transparent; }
     .dash-card--support .dash-ic { background:rgba(255,255,255,.22); color:#fff; }
     .dash-card--support .dash-desc { color:rgba(255,255,255,.9); }
     .dash-card--support .dash-arrow { color:#fff; }
