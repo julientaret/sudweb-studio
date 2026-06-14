@@ -53,7 +53,9 @@ Modules :
 - **Actualités** — [modules/actualites.md](modules/actualites.md)
 - **Avis Google** — [modules/google-reviews.md](modules/google-reviews.md)
 - **Contact** — [modules/contact.md](modules/contact.md)
+- **Devis** — [modules/devis.md](modules/devis.md)
 - **Pages légales** — [modules/legal-pages.md](modules/legal-pages.md)
+- **Statistiques** — [modules/stats.md](modules/stats.md)
 
 ## Créer un nouveau module — checklist
 

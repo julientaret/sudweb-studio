@@ -480,6 +480,55 @@ HTML],
         conservée (ni adresse IP en clair, ni navigateur). Les statistiques sont
         <strong>effacées automatiquement</strong> au-delà de quelques mois.</p>
 HTML],
+
+    'devis' => ['Les devis', <<<HTML
+        <h2>Les demandes de devis</h2>
+        <p>Vos visiteurs peuvent demander un devis via un <strong>pop-up</strong> qui s'ouvre depuis le
+        bouton <em>« Demander un devis »</em> (dans le menu du site et en bouton flottant, sur toutes les
+        pages). Le formulaire se remplit <strong>étape par étape</strong>. Chaque demande arrive dans le
+        menu <strong>Demandes de devis</strong> et vous est <strong>notifiée par e-mail</strong>.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — un parcours en étapes</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">1 · Projet</span>
+                <span class="demo-pill">2 · Détails</span>
+                <span class="demo-pill">3 · Coordonnées</span>
+            </div>
+        </div>
+
+        <h3>Gérer les demandes</h3>
+        <ul>
+            <li>la <strong>liste</strong> affiche le nom, l'e-mail, un aperçu et la date de chaque demande ;</li>
+            <li>en ouvrant une demande, vous voyez <strong>toutes les réponses</strong> et pouvez
+            <strong>répondre par e-mail</strong> d'un clic ;</li>
+            <li>chaque demande a un <strong>statut</strong> : nouvelle, lue, <em>devis envoyé</em> ou archivée ;</li>
+            <li>une demande peut être <strong>supprimée</strong> à tout moment (RGPD).</li>
+        </ul>
+
+        <h3>Composer le formulaire vous-même</h3>
+        <p>Bouton <strong>« Configurer le formulaire »</strong> (en haut de la liste) : vous y construisez
+        le pop-up <strong>sans toucher au code</strong>.</p>
+        <ul>
+            <li><strong>Ajoutez des étapes</strong> et donnez-leur un titre ;</li>
+            <li>dans chaque étape, <strong>ajoutez des questions</strong> : texte court, e-mail, téléphone,
+            zone de texte ou <strong>liste de choix</strong> (vous saisissez alors les options, une par ligne) ;</li>
+            <li>indiquez si une réponse est <strong>obligatoire</strong>, et réordonnez le tout avec les
+            flèches ;</li>
+            <li>cliquez sur <strong>Enregistrer</strong> : le pop-up du site se met à jour aussitôt.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — une question « liste de choix »</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">Type de projet : Site vitrine ▾</span>
+            </div>
+        </div>
+
+        <p class="muted">Les questions <strong>Nom</strong> et <strong>E-mail</strong> sont indispensables
+        (elles servent à vous recontacter) : elles restent toujours présentes. Pas d'inquiétude pour le
+        spam : protection maison intégrée, <strong>sans cookie ni service tiers</strong>.</p>
+HTML],
 ];
 
 /**
@@ -494,6 +543,7 @@ $sectionModule = [
     'actualites'     => 'Actualites',
     'legal_pages'    => 'LegalPages',
     'google_reviews' => 'GoogleReviews',
+    'devis'          => 'Devis',
     'media'          => 'Media',
     'documents'      => 'Documents',
     'stats'          => 'Stats',
