@@ -81,7 +81,12 @@ $logoUrl = match (true) {
                        opacity:0; transition:opacity .18s; }
         .sidebar:hover .brand .word { opacity:1; }
 
-        .nav { flex:1; display:flex; flex-direction:column; gap:3px; padding:6px 14px; }
+        .nav { flex:1; min-height:0; display:flex; flex-direction:column; gap:3px; padding:6px 14px;
+               overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; scrollbar-color:var(--line) transparent; }
+        .nav::-webkit-scrollbar { width:6px; }
+        .nav::-webkit-scrollbar-track { background:transparent; }
+        .nav::-webkit-scrollbar-thumb { background:var(--line); border-radius:3px; }
+        .nav::-webkit-scrollbar-thumb:hover { background:#cdd1e2; }
         .nav-item { display:flex; align-items:center; gap:15px; padding:11px 11px; border-radius:12px;
                     color:var(--muted); text-decoration:none; white-space:nowrap;
                     transition:background .15s,color .15s; }
