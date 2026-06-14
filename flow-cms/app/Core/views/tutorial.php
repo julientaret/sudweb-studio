@@ -549,7 +549,7 @@ $first = array_key_first($sections);
     /* Bouton support (orange) — même action que sur le tableau de bord. */
     .tuto-support { display:inline-flex; align-items:center; gap:.5rem; padding:.6rem 1rem;
                     border-radius:11px; text-decoration:none; font-weight:600; font-size:.9rem;
-                    color:#fff; background:linear-gradient(135deg,#ff9d42 0%,#f4640f 100%);
+                    color:#fff; background:linear-gradient(135deg,#ff8a73 0%,#ff6b4a 100%);
                     box-shadow:var(--shadow-sm); white-space:nowrap; }
     .tuto-support:hover { filter:brightness(1.05); }
     .tuto-support svg { width:18px; height:18px; }
