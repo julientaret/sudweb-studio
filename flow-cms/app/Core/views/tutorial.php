@@ -616,7 +616,9 @@ $first = array_key_first($sections);
 
     .tuto-layout { display:flex; gap:1.4rem; align-items:flex-start; }
     .tuto-nav { display:flex; flex-direction:column; gap:.3rem; flex:0 0 230px; position:sticky; top:1rem; }
-    .tuto-tab { margin:0; text-align:left; padding:.7rem .9rem; border-radius:11px; background:transparent;
+    /* justify-content:flex-start surcharge le centrage flex global des <button>. */
+    .tuto-tab { margin:0; justify-content:flex-start; text-align:left; padding:.7rem .9rem;
+                border-radius:11px; background:transparent;
                 color:var(--muted); font-weight:600; font-size:.92rem; box-shadow:none;
                 transition:background .15s, color .15s; }
     .tuto-tab:hover { background:var(--bg); color:var(--txt); filter:none; box-shadow:none; }
