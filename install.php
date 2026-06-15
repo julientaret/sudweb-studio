@@ -180,8 +180,17 @@ try {
         $fullName = trim((string) ($_POST['name'] ?? ''));
     }
 
+    // Sécurité : par le web, on n'autorise QUE la création du tout premier compte.
+    // Dès qu'un compte existe, le formulaire est verrouillé — sans quoi un
+    // install.php oublié sur un serveur laisserait n'importe qui se créer un
+    // administrateur (prise de contrôle totale). La CLI reste ouverte : y accéder
+    // suppose déjà un shell sur le serveur (utilisez plutôt bin/flow ensuite).
+    $createLocked = !$cli && $userCount > 0;
+
     if ($email !== null && ($email !== '' || $password !== '')) {
-        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($createLocked) {
+            $userResult = ['error', 'Un compte existe déjà : la création de compte est désactivée. Supprimez install.php et gérez les comptes depuis l’admin.'];
+        } elseif ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $userResult = ['error', 'Adresse e-mail invalide.'];
         } elseif (strlen($password) < 8) {
             $userResult = ['error', 'Le mot de passe doit faire au moins 8 caractères.'];
@@ -270,19 +279,24 @@ header('Content-Type: text/html; charset=utf-8');
         <?php if ($userResult !== null): ?>
             <p class="msg <?= $esc($userResult[0]) ?>"><?= $esc($userResult[1]) ?></p>
         <?php endif; ?>
-        <?php if ($userCount > 0 && ($userResult === null || $userResult[0] === 'ok')): ?>
-            <p><small><?= (int) $userCount ?> compte(s) déjà en base. Vous pouvez en créer un autre ou passer à la suite.</small></p>
+        <?php if ($createLocked): ?>
+            <p class="msg error">
+                <strong>Création désactivée.</strong> <?= (int) $userCount ?> compte(s) existe(nt) déjà.
+                Par sécurité, install.php ne crée que le tout premier compte.
+                <strong>Supprimez ce fichier ci-dessous</strong> et gérez les comptes depuis l’admin.
+            </p>
+        <?php else: ?>
+            <form method="post">
+                <input type="hidden" name="action" value="create_user">
+                <label for="name">Nom</label>
+                <input id="name" name="name" type="text" autocomplete="name">
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" required autocomplete="username">
+                <label for="password">Mot de passe <small>(8 caractères min.)</small></label>
+                <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+                <button type="submit" class="primary">Créer l'administrateur</button>
+            </form>
         <?php endif; ?>
-        <form method="post">
-            <input type="hidden" name="action" value="create_user">
-            <label for="name">Nom</label>
-            <input id="name" name="name" type="text" autocomplete="name">
-            <label for="email">E-mail</label>
-            <input id="email" name="email" type="email" required autocomplete="username">
-            <label for="password">Mot de passe <small>(8 caractères min.)</small></label>
-            <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
-            <button type="submit" class="primary">Créer l'administrateur</button>
-        </form>
 
         <div class="danger-zone">
             <h2>Terminer l'installation</h2>
