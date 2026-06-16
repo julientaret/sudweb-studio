@@ -82,6 +82,8 @@
     function render() {
         root.innerHTML = '';
 
+        var grid = el('div', {'class': 'db-steps-grid'});
+
         model.forEach(function (step, si) {
             var stepEl = el('div', { 'class': 'db-step', 'data-step': si });
 
@@ -119,8 +121,10 @@
             });
             stepEl.appendChild(addField);
 
-            root.appendChild(stepEl);
+            grid.appendChild(stepEl);
         });
+
+        root.appendChild(grid);
 
         var addStep = btn('+ Ajouter une étape', 'db-add-step');
         addStep.addEventListener('click', function () {

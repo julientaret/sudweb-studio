@@ -49,8 +49,10 @@
     .notice { background:#e7f6ec; border:1px solid #a8d5b9; color:#1c6b3a; padding:.7rem .9rem; border-radius:7px; margin-bottom:1rem; }
     .muted { color:var(--muted); }
 
+    .db-steps-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
+    @media (max-width:860px){ .db-steps-grid { grid-template-columns:1fr; } }
     .db-step { background:var(--panel); border:1px solid var(--line); border-radius:14px;
-        padding:1.1rem 1.2rem; margin-bottom:1.1rem; box-shadow:var(--shadow-sm); }
+        padding:1.1rem 1.2rem; box-shadow:var(--shadow-sm); }
     .db-step-head { display:flex; align-items:center; gap:.7rem; margin-bottom:.9rem; }
     .db-step-head .db-num { width:26px; height:26px; flex:0 0 auto; border-radius:8px;
         background:var(--accent-soft); color:var(--accent-600); font-weight:700; font-size:.85rem;
