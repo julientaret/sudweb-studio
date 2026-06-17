@@ -47,4 +47,37 @@ final class SecurityAlert
             ['from_name' => $siteName],
         );
     }
+
+    /**
+     * Notifie le support qu'une connexion admin a été verrouillée après trop
+     * d'échecs (anti-brute-force, brief §6). Déclenchée par Core\Auth au moment
+     * où le seuil est atteint, une seule fois par fenêtre de blocage.
+     *
+     * @param string $identifier e-mail saisi lors des tentatives (peut être vide)
+     * @param string $ip         adresse IP à l'origine des tentatives
+     */
+    public static function notifyLockout(string $identifier, string $ip): void
+    {
+        $siteName = (string) Config::get('app.site_name', 'Flow');
+        $window   = (int) Config::get('app.login_lockout_window', 600);
+        $max      = (int) Config::get('app.login_max_attempts', 5);
+
+        $view = new View([__DIR__ . '/views']);
+        $html = $view->render('email_lockout', [
+            'siteName'   => $siteName,
+            'identifier' => $identifier !== '' ? $identifier : '—',
+            'ip'         => $ip,
+            'date'       => date('d/m/Y à H:i'),
+            'minutes'    => max(1, (int) round($window / 60)),
+            'attempts'   => $max,
+            'adminUrl'   => rtrim((string) Config::get('app.url', ''), '/'),
+        ]);
+
+        Mailer::sendHtml(
+            self::ALERT_RECIPIENT,
+            '[' . $siteName . '] Connexion admin bloquée après trop d’échecs',
+            $html,
+            ['from_name' => $siteName],
+        );
+    }
 }

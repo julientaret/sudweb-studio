@@ -111,6 +111,11 @@ final class Kernel
         $this->startSession();
         $this->sendSecurityHeaders();
 
+        // Filtrage géographique : tout le back-office est réservé aux pays
+        // autorisés (France par défaut). Fail-open si l'infra ne fournit pas le
+        // pays — voir App\Core\IpGeoGuard et config/security.php.
+        IpGeoGuard::enforce();
+
         // Entrée par défaut : la racine mène à l'outil. Un module front (Pages)
         // pourra surcharger '/' en l'enregistrant dans son boot().
         $base = (string) Config::get('app.base_path', '');

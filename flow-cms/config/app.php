@@ -37,6 +37,8 @@ return [
     'base_url' => $appUrl !== '' ? $appUrl : 'http://localhost/',
 
     // Anti-brute-force (brief §6) : seuil et fenêtre glissante (secondes).
+    // Au-delà du seuil (par IP ou par e-mail), la connexion est verrouillée pour
+    // la durée de la fenêtre et le support est alerté par e-mail.
     'login_max_attempts'   => 5,
-    'login_lockout_window' => 900, // 15 minutes
+    'login_lockout_window' => 600, // 10 minutes
 ];

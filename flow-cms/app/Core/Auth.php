@@ -49,6 +49,16 @@ final class Auth
 
         if ($user === null || !password_verify($password, $user->passwordHash)) {
             $this->recordAttempt($email, $ip);
+            // Si cette tentative atteint le seuil, le verrou vient de se poser :
+            // les suivantes sont rejetées en amont (isLockedOut au début), donc
+            // l'alerte ne part qu'une fois par fenêtre de blocage. Best-effort :
+            // un échec d'e-mail ne doit jamais perturber le flux de connexion.
+            if ($this->isLockedOut($email, $ip)) {
+                try {
+                    SecurityAlert::notifyLockout($email, $ip);
+                } catch (\Throwable) {
+                }
+            }
             return null;
         }
 

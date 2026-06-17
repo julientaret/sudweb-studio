@@ -16,8 +16,10 @@ Migrations dans [`app/Modules/Users/migrations/`](../../app/Modules/Users/migrat
   Pas de table `roles`/`permissions` : le champ `role` + le mapping
   [`config/roles.php`](../../config/roles.php) suffisent (brief §7).
 - **`login_attempts`** — anti-brute-force (brief §6).
-  `id`, `identifier` (e-mail), `ip`, `attempted_at`. Lockout calculé sur une
-  fenêtre glissante ; purgé au succès.
+  `id`, `identifier` (e-mail), `ip`, `attempted_at`. Lockout par e-mail **ou** IP,
+  calculé sur une fenêtre glissante (`login_max_attempts` / `login_lockout_window`) ;
+  purgé au succès. Au déclenchement du verrou, le support est alerté une fois par
+  fenêtre via `SecurityAlert::notifyLockout()`.
 - **`password_resets`** — table posée pour le reset par mail (flux non encore branché).
   `id`, `user_id`, `token_hash`, `expires_at`, `used_at`, `created_at`.
 
@@ -58,6 +60,8 @@ Aucun.
 - [`config/roles.php`](../../config/roles.php) — mapping rôle → permissions (wildcards `*`, `module.*`).
 - [`config/app.php`](../../config/app.php) — `session_name`, paramètres cookie,
   `login_max_attempts`, `login_lockout_window`.
+- [`config/security.php`](../../config/security.php) — filtrage géographique de
+  l'admin (`geo_block_enabled`, `geo_allowed_countries`, `geo_fail_open`, `geo_database`).
 - [`config/modules.php`](../../config/modules.php) — `Users` doit être dans `available` (et il est non désactivable depuis l'onglet Administration).
 
 ## Notes / pièges
@@ -67,6 +71,11 @@ Aucun.
 - **Hachage** : `Auth::hashAlgo()` = Argon2id si dispo, sinon `PASSWORD_DEFAULT`.
   Re-hash transparent au login via `password_needs_rehash()`.
 - **Garde-fou suppression** : on ne peut pas supprimer son propre compte.
+- **Filtrage géographique** : tout le back-office est filtré par pays via
+  `App\Core\IpGeoGuard` (branché dans `Kernel::handleWeb()`), réglé dans
+  [`config/security.php`](../../config/security.php). Sources sans dépendance ni
+  appel externe (mod_geoip/mod_maxminddb, en-tête CDN, extension PHP `geoip`,
+  base GeoLite2 optionnelle), *fail-open* par défaut ; IP privées toujours admises.
 - **Seed** : `php bin/flow user:create <email> <password> [role] [name]`.
 - **À venir** : reset de mot de passe par mail (table prête), 2FA TOTP (brief §6),
   passage des routes à params dynamiques.
