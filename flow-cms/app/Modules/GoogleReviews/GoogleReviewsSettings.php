@@ -9,14 +9,19 @@ use App\Core\Kernel;
 /**
  * État du module choisi/produit depuis l'admin, stocké dans
  * storage/google_reviews.json — même approche que storage/modules.json : un
- * état d'admin, pas une constante serveur. Deux choses y vivent :
+ * état d'admin, pas une constante serveur. Y vivent :
  *  - l'établissement suivi (place_id + nom + adresse pour réaffichage),
  *    choisi via la recherche Find Place ;
  *  - l'horodatage de la dernière synchro, qui porte le verrou « une synchro
- *    par jour » (limite le coût d'API et les clics compulsifs).
+ *    par jour » (limite les clics compulsifs côté manager) ;
+ *  - le quota mensuel de synchros (plafond de budget API, réglable par l'admin
+ *    dans l'onglet) et son compteur, qui se remet à zéro au changement de mois.
  */
 final class GoogleReviewsSettings
 {
+    /** Quota mensuel par défaut tant que l'admin n'en a pas réglé un autre. */
+    public const DEFAULT_MONTHLY_QUOTA = 5;
+
     private string $path;
 
     public function __construct()
@@ -64,10 +69,64 @@ final class GoogleReviewsSettings
 
     public function markSynced(): void
     {
-        $this->write(['last_sync' => date('Y-m-d H:i:s')] + $this->read());
+        $data = $this->read();
+        $month = date('Y-m');
+        if (($data['sync_month'] ?? null) !== $month) {
+            // Nouveau mois : le compteur de quota repart de zéro.
+            $data['sync_month'] = $month;
+            $data['sync_count'] = 0;
+        }
+        $data['sync_count'] = (int) ($data['sync_count'] ?? 0) + 1;
+        $data['last_sync']  = date('Y-m-d H:i:s');
+        $this->write($data);
     }
 
-    /** Lève le verrou (appelé par la purge : repartir de zéro sans attendre demain). */
+    /**
+     * Quota mensuel de synchros réglé par l'admin. 0 = illimité. Par défaut
+     * self::DEFAULT_MONTHLY_QUOTA tant qu'aucune valeur n'a été enregistrée.
+     */
+    public function monthlyQuota(): int
+    {
+        $val = $this->read()['monthly_quota'] ?? null;
+        return is_int($val) && $val >= 0 ? $val : self::DEFAULT_MONTHLY_QUOTA;
+    }
+
+    public function setMonthlyQuota(int $quota): void
+    {
+        $data = $this->read();
+        $data['monthly_quota'] = max(0, $quota);
+        $this->write($data);
+    }
+
+    /** Nombre de synchros lancées durant le mois courant (0 si le mois a changé). */
+    public function syncsThisMonth(): int
+    {
+        $data = $this->read();
+        if (($data['sync_month'] ?? null) !== date('Y-m')) {
+            return 0;
+        }
+        return (int) ($data['sync_count'] ?? 0);
+    }
+
+    /** Quota mensuel atteint ? (0 = illimité, jamais atteint). */
+    public function quotaReached(): bool
+    {
+        $quota = $this->monthlyQuota();
+        return $quota > 0 && $this->syncsThisMonth() >= $quota;
+    }
+
+    /** Synchros restantes ce mois-ci, ou null si le quota est illimité. */
+    public function remainingThisMonth(): ?int
+    {
+        $quota = $this->monthlyQuota();
+        return $quota === 0 ? null : max(0, $quota - $this->syncsThisMonth());
+    }
+
+    /**
+     * Lève le verrou 1/jour (appelé par la purge : repartir de zéro sans
+     * attendre demain). Ne touche PAS au compteur de quota mensuel : les appels
+     * API déjà consommés ne se « remboursent » pas par une purge.
+     */
     public function clearLastSync(): void
     {
         $data = $this->read();

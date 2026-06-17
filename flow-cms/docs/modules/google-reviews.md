@@ -35,6 +35,7 @@ Déclarées dans `GoogleReviewsModule::boot()`.
 | GET  | `/admin/google-reviews`        | `index`       | `googlereviews.view` (la recherche `?q=` exige en plus `googlereviews.configure`) |
 | POST | `/admin/google-reviews/place`  | `selectPlace` | `googlereviews.configure` + CSRF |
 | POST | `/admin/google-reviews/sync`   | `sync`        | `googlereviews.sync` + CSRF |
+| POST | `/admin/google-reviews/quota`  | `setQuota`    | `googlereviews.configure` + CSRF |
 | POST | `/admin/google-reviews/toggle` | `toggle`      | `googlereviews.manage` + CSRF |
 | POST | `/admin/google-reviews/purge`  | `purge`       | `googlereviews.manage` + CSRF |
 
@@ -58,7 +59,7 @@ Aucune route front : l'affichage passe exclusivement par le bloc.
 | `googlereviews.view`      | `admin`, `manager` | Consulter la liste |
 | `googlereviews.sync`      | `admin`, `manager` | Lancer une synchro (le `manager` est limité à 1×/jour, voir ci-dessous) |
 | `googlereviews.manage`    | `admin`, `manager` | Afficher/masquer un avis, vider la table |
-| `googlereviews.configure` | `admin` seul | Choisir l'établissement (recherche Find Place) **et** synchroniser sans limite de fréquence |
+| `googlereviews.configure` | `admin` seul | Choisir l'établissement (recherche Find Place), régler le **quota mensuel** **et** synchroniser sans limite de fréquence (le quota mensuel reste, lui, appliqué) |
 
 `googlereviews.configure` est **réservé à l'agence** : seul le rôle `admin` le
 détient (via le wildcard `*` de [`config/roles.php`](../../config/roles.php)). Le
@@ -75,7 +76,9 @@ l'établissement, et il reste soumis au verrou d'une synchro par jour.
 - [`config/google_reviews.php`](../../config/google_reviews.php), depuis
   `.env.local` : `GOOGLE_PLACES_API_KEY` — clé API Google Places (facturation
   activée sur le projet GCP ; le crédit mensuel couvre largement un site).
-- L'établissement (place_id + nom + adresse pour réaffichage) vit dans
+- L'établissement (place_id + nom + adresse pour réaffichage), l'horodatage de
+  la dernière synchro (verrou 1/jour) et le **quota mensuel** + son compteur
+  (`monthly_quota`, `sync_month`, `sync_count`) vivent dans
   `storage/google_reviews.json`
   ([`GoogleReviewsSettings`](../../app/Modules/GoogleReviews/GoogleReviewsSettings.php)),
   non versionné — état choisi dans l'admin, pas une constante serveur.
@@ -101,7 +104,17 @@ l'établissement, et il reste soumis au verrou d'une synchro par jour.
   `last_sync` dans `storage/google_reviews.json`), le bouton est aussi désactivé
   dans l'admin jusqu'au lendemain. Une synchro **en échec** (erreur API) ne
   consomme pas le quota du jour. L'**agence** (`googlereviews.configure`) n'est
-  pas concernée : elle resynchronise à volonté.
+  pas concernée par ce verrou *quotidien* : elle resynchronise à volonté dans la
+  journée (mais reste soumise au quota mensuel ci-dessous).
+- **Quota mensuel de synchros (tous rôles).** Plafond de budget API réglé par
+  l'admin dans l'onglet (`monthly_quota` dans `storage/google_reviews.json`,
+  `0` = illimité, défaut `5`). Compteur `sync_count` / `sync_month` qui se remet
+  à zéro au changement de mois. S'applique à **tout le monde, agence comprise** —
+  c'est un plafond de coût, pas un anti-spam ; l'admin le relève au besoin.
+  Appliqué côté serveur dans `sync()` (le bouton est aussi désactivé). Comme le
+  verrou quotidien, une synchro en échec ne le consomme pas (incrément après
+  `fetchLatest` réussi). La **purge ne réinitialise pas** ce compteur : les
+  appels API déjà passés ne se remboursent pas.
 - **Curation préservée.** L'upsert ne réécrit jamais `is_visible` : un avis
   masqué le reste après resynchro. Un nouvel avis arrive visible par défaut
   (changer le `1` en dur dans `upsertMany()` pour modérer avant publication).

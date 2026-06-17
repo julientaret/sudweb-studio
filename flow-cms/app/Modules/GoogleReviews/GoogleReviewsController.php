@@ -8,12 +8,13 @@ use App\Core\Config;
 use App\Core\Controller;
 
 /**
- * Avis Google — back-office. Cinq actions :
+ * Avis Google — back-office. Six actions :
  *   - index()       : la liste curable + le choix de l'établissement (la
  *     recherche Find Place passe par ?q=, lecture seule donc GET) ;
  *   - selectPlace() : enregistre l'établissement choisi parmi les candidats ;
  *   - sync()        : récupère les 5 derniers avis (clic bouton, verrou
- *     1/jour appliqué côté serveur) ;
+ *     1/jour + quota mensuel appliqués côté serveur) ;
+ *   - setQuota()    : règle le quota mensuel de synchros (admin seul) ;
  *   - toggle()      : bascule l'affichage d'un avis sur le front ;
  *   - purge()       : vide la table et lève le verrou de synchro.
  *
@@ -66,20 +67,24 @@ final class GoogleReviewsController extends Controller
         $syncLocked = $this->settings->syncedToday() && !$canConfigure;
 
         $this->renderPage($this->views(), 'list', 'Avis Google', [
-            'reviews'      => $this->repo->allForAdmin(),
-            'lastSync'     => $this->repo->lastSyncedAt(),
-            'notice'       => $this->input('notice'),
-            'error'        => $this->input('error'),
-            'canSync'      => $this->auth->can('googlereviews.sync'),
-            'canManage'    => $canManage,
-            'canConfigure' => $canConfigure,
-            'hasApiKey'    => $hasApiKey,
-            'place'        => $this->settings->place(),
-            'q'            => $q,
-            'candidates'   => $candidates,
-            'searchError'  => $searchError,
-            'configured'   => $this->configured(),
-            'syncLocked'   => $syncLocked,
+            'reviews'        => $this->repo->allForAdmin(),
+            'lastSync'       => $this->repo->lastSyncedAt(),
+            'notice'         => $this->input('notice'),
+            'error'          => $this->input('error'),
+            'canSync'        => $this->auth->can('googlereviews.sync'),
+            'canManage'      => $canManage,
+            'canConfigure'   => $canConfigure,
+            'hasApiKey'      => $hasApiKey,
+            'place'          => $this->settings->place(),
+            'q'              => $q,
+            'candidates'     => $candidates,
+            'searchError'    => $searchError,
+            'configured'     => $this->configured(),
+            'syncLocked'     => $syncLocked,
+            'monthlyQuota'   => $this->settings->monthlyQuota(),
+            'syncsThisMonth' => $this->settings->syncsThisMonth(),
+            'quotaRemaining' => $this->settings->remainingThisMonth(),
+            'quotaReached'   => $this->settings->quotaReached(),
         ]);
     }
 
@@ -121,6 +126,15 @@ final class GoogleReviewsController extends Controller
             ));
         }
 
+        // Quota mensuel (plafond de budget API) : s'applique à tous, agence
+        // comprise. L'admin peut le relever dans l'onglet (0 = illimité).
+        if ($this->settings->quotaReached()) {
+            $this->redirect('/admin/google-reviews?error=' . rawurlencode(
+                'Quota mensuel de synchronisation atteint (' . $this->settings->monthlyQuota()
+                . '/mois). Réinitialisation le 1er du mois prochain, ou augmentez le quota.'
+            ));
+        }
+
         try {
             $payload = (new GoogleReviewsClient($this->apiKey()))->fetchLatest($this->settings->placeId());
             $this->settings->markSynced();
@@ -135,6 +149,21 @@ final class GoogleReviewsController extends Controller
                 'Synchronisation impossible : ' . $e->getMessage()
             ));
         }
+    }
+
+    public function setQuota(): void
+    {
+        $this->requirePermission('googlereviews.configure');
+        $this->requireCsrf();
+
+        $quota = max(0, (int) $this->input('monthly_quota', '0'));
+        $this->settings->setMonthlyQuota($quota);
+
+        $this->redirect('/admin/google-reviews?notice=' . rawurlencode(
+            $quota > 0
+                ? "Quota mensuel de synchronisation réglé à {$quota}/mois."
+                : 'Quota mensuel désactivé : synchronisations illimitées.'
+        ));
     }
 
     public function toggle(): void

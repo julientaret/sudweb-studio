@@ -13,6 +13,10 @@
 /** @var string $searchError */
 /** @var bool   $configured */
 /** @var bool   $syncLocked */
+/** @var int      $monthlyQuota */
+/** @var int      $syncsThisMonth */
+/** @var int|null $quotaRemaining */
+/** @var bool     $quotaReached */
 /** @var string $base */
 ?>
 <div class="actions" style="justify-content:space-between;">
@@ -21,13 +25,21 @@
         <div style="text-align:right;">
             <form method="post" action="<?= e($base . '/admin/google-reviews/sync') ?>">
                 <?= \App\Core\Csrf::field() ?>
-                <button type="submit" class="btn"<?= ($configured && !$syncLocked) ? '' : ' disabled' ?>>
+                <button type="submit" class="btn"<?= ($configured && !$syncLocked && !$quotaReached) ? '' : ' disabled' ?>>
                     Synchroniser les 5 derniers avis
                 </button>
             </form>
-            <?php if ($syncLocked): ?>
+            <?php if ($quotaReached): ?>
+                <p class="muted" style="margin:.4rem 0 0; font-size:.85rem;">
+                    Quota mensuel atteint (<?= (int) $monthlyQuota ?>/mois) — réinitialisé le 1er du mois prochain.
+                </p>
+            <?php elseif ($syncLocked): ?>
                 <p class="muted" style="margin:.4rem 0 0; font-size:.85rem;">
                     Une synchronisation par jour — prochaine possible demain.
+                </p>
+            <?php elseif ($quotaRemaining !== null): ?>
+                <p class="muted" style="margin:.4rem 0 0; font-size:.85rem;">
+                    <?= (int) $quotaRemaining ?> synchro(s) restante(s) ce mois-ci.
                 </p>
             <?php endif; ?>
         </div>
@@ -106,6 +118,33 @@
         <?php endif; ?>
     <?php endif; ?>
 </div>
+
+<?php if ($canConfigure): ?>
+    <div class="card" style="margin-top:1.2rem;">
+        <h2 style="margin-top:0;">Quota mensuel de synchronisation</h2>
+        <p class="muted">
+            Plafonne le nombre de synchronisations Google par mois (maîtrise du coût d'API).
+            Le compteur se remet à zéro le 1er de chaque mois. Mettez <code>0</code> pour des
+            synchronisations illimitées.
+        </p>
+        <form method="post" action="<?= e($base . '/admin/google-reviews/quota') ?>"
+              class="actions" style="margin-top:.6rem; align-items:center;">
+            <?= \App\Core\Csrf::field() ?>
+            <label for="monthly_quota">Synchros par mois</label>
+            <input type="number" id="monthly_quota" name="monthly_quota" min="0" step="1"
+                   value="<?= (int) $monthlyQuota ?>" style="width:6rem;">
+            <button type="submit" class="btn-secondary">Enregistrer</button>
+        </form>
+        <p class="muted" style="margin:.6rem 0 0;">
+            <?php if ($quotaRemaining === null): ?>
+                Synchronisations illimitées — <?= (int) $syncsThisMonth ?> effectuée(s) ce mois-ci.
+            <?php else: ?>
+                <strong><?= (int) $syncsThisMonth ?> / <?= (int) $monthlyQuota ?></strong>
+                utilisée(s) ce mois-ci — <?= (int) $quotaRemaining ?> restante(s).
+            <?php endif; ?>
+        </p>
+    </div>
+<?php endif; ?>
 
 <div class="actions" style="justify-content:space-between; margin-top:1.2rem;">
     <p class="muted" style="margin:0;">

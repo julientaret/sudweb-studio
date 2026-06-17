@@ -38,6 +38,7 @@ final class GoogleReviewsModule implements Module
         $router->get('/admin/google-reviews', [GoogleReviewsController::class, 'index']);
         $router->post('/admin/google-reviews/place', [GoogleReviewsController::class, 'selectPlace']);
         $router->post('/admin/google-reviews/sync', [GoogleReviewsController::class, 'sync']);
+        $router->post('/admin/google-reviews/quota', [GoogleReviewsController::class, 'setQuota']);
         $router->post('/admin/google-reviews/toggle', [GoogleReviewsController::class, 'toggle']);
         $router->post('/admin/google-reviews/purge', [GoogleReviewsController::class, 'purge']);
 
