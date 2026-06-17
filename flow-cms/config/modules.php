@@ -21,6 +21,8 @@ return [
         'Pages',
         'Agenda',
         'Actualites',
+        'Realisations',
+        'Sliders',
         'GoogleReviews',
         'Contact',
         'Devis',

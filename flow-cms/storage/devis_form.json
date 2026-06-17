@@ -19,48 +19,8 @@
             ]
         },
         {
-            "title": "Détails du besoin",
+            "title": "Vos coordonnées",
             "fields": [
-                {
-                    "key": "budget",
-                    "label": "Budget estimé",
-                    "type": "select",
-                    "required": true,
-                    "options": [
-                        "Moins de 1 000 €",
-                        "1 000 – 3 000 €",
-                        "3 000 – 6 000 €",
-                        "6 000 – 10 000 €",
-                        "Plus de 10 000 €",
-                        "À définir ensemble"
-                    ],
-                    "minlength": 0,
-                    "core": false
-                },
-                {
-                    "key": "deadline",
-                    "label": "Délai souhaité",
-                    "type": "select",
-                    "required": true,
-                    "options": [
-                        "Dès que possible",
-                        "Sous 1 mois",
-                        "1 à 3 mois",
-                        "3 à 6 mois",
-                        "Pas de date précise"
-                    ],
-                    "minlength": 0,
-                    "core": false
-                },
-                {
-                    "key": "description",
-                    "label": "Décrivez votre projet",
-                    "type": "textarea",
-                    "required": true,
-                    "options": [],
-                    "minlength": 10,
-                    "core": false
-                },
                 {
                     "key": "name",
                     "label": "Nom",

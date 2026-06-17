@@ -186,6 +186,87 @@ HTML],
         <strong>Dernières modifications</strong> du tableau de bord, marquées d'une étiquette « Actualité ».</p>
 HTML],
 
+    'realisations' => ['Les réalisations', <<<HTML
+        <h2>Les réalisations</h2>
+        <p>Menu <strong>Réalisations</strong> : votre <strong>portfolio</strong> (chantiers, projets,
+        références…). Chaque réalisation est une fiche simple — un <strong>titre</strong>, une
+        <strong>description</strong> et une <strong>photo</strong>. Cliquez sur
+        <em>+ Nouvelle réalisation</em> pour ouvrir l'éditeur.</p>
+
+        <h3>Composer une réalisation</h3>
+        <ul>
+            <li><strong>Titre</strong> — le nom de la réalisation.</li>
+            <li><strong>Description</strong> — un <strong>éditeur de texte riche</strong> (gras, listes,
+                liens, titres…), pour présenter le projet en quelques lignes.</li>
+            <li><strong>Photo</strong> — une image de la bibliothèque, choisie dans la même fenêtre de
+                vignettes que les blocs image.</li>
+            <li><strong>Ordre d'affichage</strong> — un nombre : les plus petits passent en premier.
+                Pratique pour mettre en avant vos plus belles réalisations.</li>
+            <li><strong>Statut</strong> — interrupteur <em>Brouillon / Publiée</em> : seules les
+                réalisations publiées apparaissent sur le site.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — une réalisation</span>
+            <label>Titre de la réalisation</label>
+            <input type="text" value="Rénovation d'une villa à Carcassonne" disabled aria-hidden="true" tabindex="-1">
+            <label>Photo</label>
+            <div class="demo-thumb" aria-hidden="true">
+                <span class="demo-thumb-box">🖼️</span>
+                <span class="demo-pill">Choisir une image</span>
+            </div>
+        </div>
+
+        <h3>Afficher les réalisations sur le site</h3>
+        <p>Les réalisations ne s'affichent pas seules : on les pose sur une page avec le
+        <strong>bloc « Réalisations »</strong>. Dans l'éditeur d'une page, ajoutez ce bloc à l'endroit
+        voulu ; vous pouvez lui donner un <strong>titre de section</strong> et choisir <strong>combien</strong>
+        de réalisations afficher. Voir la rubrique <strong>Les pages</strong> pour l'usage des blocs.</p>
+
+        <p class="muted">Astuce : laissez en <em>Brouillon</em> les réalisations en préparation ; elles
+        restent invisibles du public jusqu'à leur publication.</p>
+HTML],
+
+    'sliders' => ['Les sliders', <<<HTML
+        <h2>Les sliders (diapositives)</h2>
+        <p>Menu <strong>Sliders</strong> : les <strong>diapositives</strong> d'un carrousel (le bandeau
+        d'images qui défile, souvent en haut de l'accueil). Chaque diapositive a un
+        <strong>titre</strong>, une <strong>description</strong> et une <strong>photo</strong>. Cliquez
+        sur <em>+ Nouvelle diapositive</em> pour ouvrir l'éditeur.</p>
+
+        <h3>Composer une diapositive</h3>
+        <ul>
+            <li><strong>Titre</strong> — l'accroche affichée sur la diapositive.</li>
+            <li><strong>Description</strong> — un <strong>éditeur de texte riche</strong> pour un court
+                texte d'accompagnement (facultatif).</li>
+            <li><strong>Photo</strong> — l'image de fond/illustration, choisie dans la bibliothèque.</li>
+            <li><strong>Ordre d'affichage</strong> — un nombre : il fixe l'<strong>ordre de défilement</strong>
+                des diapositives (les plus petits d'abord).</li>
+            <li><strong>Statut</strong> — interrupteur <em>Brouillon / Publiée</em> : seules les
+                diapositives publiées défilent sur le site.</li>
+        </ul>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — une diapositive</span>
+            <label>Titre de la diapositive</label>
+            <input type="text" value="Bienvenue chez nous" disabled aria-hidden="true" tabindex="-1">
+            <label>Photo</label>
+            <div class="demo-thumb" aria-hidden="true">
+                <span class="demo-thumb-box">🖼️</span>
+                <span class="demo-pill">Choisir une image</span>
+            </div>
+        </div>
+
+        <h3>Afficher le carrousel sur le site</h3>
+        <p>Comme pour les réalisations, on pose les diapositives sur une page avec le
+        <strong>bloc « Slider »</strong> (titre de section et nombre de diapositives au choix). Voir la
+        rubrique <strong>Les pages</strong> pour l'usage des blocs.</p>
+
+        <p class="muted">Bon à savoir : l'<strong>effet de défilement</strong> (animation, flèches, points)
+        fait partie de l'habillage du site réglé par <strong>Sud Web Studio</strong> ; de votre côté, vous
+        gérez le contenu et l'ordre des diapositives.</p>
+HTML],
+
     'legal_pages' => ['Les pages légales', <<<HTML
         <h2>Les pages légales</h2>
         <p>Menu <strong>Pages légales</strong> : vos <strong>pages juridiques</strong> (mentions légales,
@@ -551,6 +632,8 @@ $sectionModule = [
     'pages'          => 'Pages',
     'agenda'         => 'Agenda',
     'actualites'     => 'Actualites',
+    'realisations'   => 'Realisations',
+    'sliders'        => 'Sliders',
     'legal_pages'    => 'LegalPages',
     'google_reviews' => 'GoogleReviews',
     'devis'          => 'Devis',
