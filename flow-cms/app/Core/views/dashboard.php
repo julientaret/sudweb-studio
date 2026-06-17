@@ -283,6 +283,7 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
     .dr-badge { font-size:.72rem; padding:.15rem .5rem; border-radius:6px; font-weight:600; }
     .dr-published { background:#e7f6ec; color:#1c6b3a; }
     .dr-draft { background:#fdf0d5; color:#8a5a00; }
+    .dr-config { background:#e7eeff; color:#2747b8; }
     .dr-date { color:var(--muted); font-size:.78rem; white-space:nowrap; }
 
     /* Visionneuse galerie (slider). En colonne flex pour s'aligner sur la hauteur

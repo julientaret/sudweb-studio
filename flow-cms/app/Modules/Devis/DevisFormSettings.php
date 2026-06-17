@@ -72,6 +72,20 @@ final class DevisFormSettings
     }
 
     /**
+     * Date de dernière personnalisation du formulaire (mtime du fichier d'état),
+     * au format 'Y-m-d H:i:s', ou null si rien n'a jamais été enregistré (on sert
+     * alors le schéma par défaut, qui n'est pas une « modification »).
+     */
+    public function lastModified(): ?string
+    {
+        if (!is_file($this->statePath)) {
+            return null;
+        }
+        $ts = filemtime($this->statePath);
+        return $ts !== false ? date('Y-m-d H:i:s', $ts) : null;
+    }
+
+    /**
      * Toutes les questions du schéma, à plat, dans l'ordre.
      *
      * @return array<int, array<string, mixed>>

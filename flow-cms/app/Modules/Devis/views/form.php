@@ -23,6 +23,8 @@
 <p class="muted" style="margin:.6rem 0 1.2rem;max-width:760px;">
     Composez le pop-up de demande de devis : ajoutez des <strong>étapes</strong>, et dans chaque étape
     des <strong>questions</strong> (texte, e-mail, téléphone, zone de texte ou liste de choix).
+    Glissez-déposez une question par sa poignée <span aria-hidden="true">⠿</span> pour la réordonner dans
+    une étape ou la déplacer vers une autre.
     Les questions <em>Nom</em> et <em>E-mail</em> sont indispensables et ne peuvent pas être supprimées.
 </p>
 
@@ -60,8 +62,15 @@
     .db-step-head input { font-weight:600; }
     .db-step-head .db-tools { margin-left:auto; display:flex; gap:.35rem; }
 
-    .db-field { border:1px solid var(--line); border-radius:11px; padding:.8rem .9rem; margin-bottom:.7rem;
-        background:#fbfbff; }
+    .db-field { position:relative; border:1px solid var(--line); border-radius:11px; padding:.8rem .9rem .8rem 1.7rem;
+        margin-bottom:.7rem; background:#fbfbff; }
+    .db-drag { position:absolute; top:0; left:0; bottom:0; width:1.4rem; display:grid; place-items:center;
+        cursor:grab; color:var(--muted); user-select:none; font-size:.95rem; line-height:1;
+        border-right:1px solid var(--line); border-radius:11px 0 0 11px; }
+    .db-drag:hover { background:var(--accent-soft); color:var(--accent-600); }
+    .db-drag:active { cursor:grabbing; }
+    .db-field.db-dragging { opacity:.45; }
+    .db-step.db-drag-over { outline:2px dashed var(--accent); outline-offset:3px; }
     .db-field-row { display:grid; grid-template-columns:1fr 150px 110px auto; gap:.6rem; align-items:end; }
     @media (max-width:680px){ .db-field-row { grid-template-columns:1fr 1fr; } }
     .db-field label { margin:0 0 .25rem; font-size:.76rem; }

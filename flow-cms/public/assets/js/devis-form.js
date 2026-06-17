@@ -26,6 +26,7 @@
     };
 
     var model = parse(input.value);
+    var dragSrc = null; // question en cours de glisser-déposer
 
     function parse(value) {
         try {
@@ -83,6 +84,7 @@
         root.innerHTML = '';
 
         var grid = el('div', {'class': 'db-steps-grid'});
+        enableDragDrop(grid);
 
         model.forEach(function (step, si) {
             var stepEl = el('div', { 'class': 'db-step', 'data-step': si });
@@ -141,6 +143,12 @@
         fEl.dataset.key = field.key || '';
         fEl.dataset.core = core ? '1' : '0';
         fEl.dataset.minlength = String(field.minlength || 0);
+
+        // Poignée de glisser-déposer (réorganise les questions dans l'étape et
+        // d'une étape à l'autre). Seule la poignée arme `draggable`, pour ne pas
+        // gêner la saisie dans les champs.
+        var handle = el('span', { 'class': 'db-drag', title: 'Glisser pour déplacer la question', 'aria-hidden': 'true' }, '⠿');
+        fEl.appendChild(handle);
 
         var row = el('div', { 'class': 'db-field-row' });
 
@@ -207,6 +215,67 @@
         if (to < 0 || to >= arr.length) { return; }
         var item = arr.splice(from, 1)[0];
         arr.splice(to, 0, item);
+    }
+
+    // --- Glisser-déposer des questions -------------------------------------
+    // Réorganisation par déplacement DOM en direct (dans l'étape et entre
+    // étapes) ; à la fin on relit le DOM dans le modèle puis on re-rend, ce qui
+    // recalcule numéros d'étapes, index et gestionnaires. Les valeurs saisies
+    // suivent l'élément déplacé, donc rien n'est perdu.
+    function clearDragOver(grid) {
+        grid.querySelectorAll('.db-step.db-drag-over').forEach(function (s) {
+            s.classList.remove('db-drag-over');
+        });
+    }
+
+    function enableDragDrop(grid) {
+        // Seule la poignée arme le glisser, pour préserver la sélection de texte.
+        grid.addEventListener('mousedown', function (e) {
+            var fEl = e.target.closest('[data-field]');
+            if (!fEl) { return; }
+            fEl.draggable = !!e.target.closest('.db-drag');
+        });
+
+        grid.addEventListener('dragstart', function (e) {
+            var fEl = e.target.closest('[data-field]');
+            if (!fEl || !fEl.draggable) { return; }
+            dragSrc = fEl;
+            fEl.classList.add('db-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            try { e.dataTransfer.setData('text/plain', 'question'); } catch (err) { /* Firefox */ }
+        });
+
+        grid.addEventListener('dragover', function (e) {
+            if (!dragSrc) { return; }
+            var stepEl = e.target.closest('[data-step]');
+            if (!stepEl) { return; }
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+
+            clearDragOver(grid);
+            stepEl.classList.add('db-drag-over');
+
+            var overField = e.target.closest('[data-field]');
+            if (overField && overField !== dragSrc) {
+                var r = overField.getBoundingClientRect();
+                var after = e.clientY > r.top + r.height / 2;
+                overField.parentNode.insertBefore(dragSrc, after ? overField.nextSibling : overField);
+            } else if (!overField && dragSrc.parentNode !== stepEl) {
+                // Survol d'une zone vide (étape sans question, en-tête) : on
+                // dépose en fin de l'étape, juste avant le bouton « + Ajouter ».
+                stepEl.insertBefore(dragSrc, stepEl.querySelector('.db-add-field'));
+            }
+        });
+
+        grid.addEventListener('dragend', function () {
+            if (!dragSrc) { return; }
+            dragSrc.classList.remove('db-dragging');
+            dragSrc.draggable = false;
+            dragSrc = null;
+            clearDragOver(grid);
+            syncFromDom();
+            render();
+        });
     }
 
     // --- Envoi --------------------------------------------------------------

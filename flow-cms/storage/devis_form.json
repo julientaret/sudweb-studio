@@ -4,6 +4,15 @@
             "title": "Votre projet",
             "fields": [
                 {
+                    "key": "name",
+                    "label": "Nom",
+                    "type": "text",
+                    "required": true,
+                    "options": [],
+                    "minlength": 0,
+                    "core": true
+                },
+                {
                     "key": "project_type",
                     "label": "Type de prestation",
                     "type": "select",
@@ -21,15 +30,6 @@
         {
             "title": "Vos coordonnées",
             "fields": [
-                {
-                    "key": "name",
-                    "label": "Nom",
-                    "type": "text",
-                    "required": true,
-                    "options": [],
-                    "minlength": 0,
-                    "core": true
-                },
                 {
                     "key": "email",
                     "label": "E-mail",

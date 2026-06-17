@@ -153,8 +153,10 @@ final class DashboardController extends Controller
 
     /**
      * Derniers contenus modifiés, tous modules de contenu confondus (Pages,
-     * Agenda), normalisés et triés par date de modification décroissante. Chaque
-     * item porte son URL d'édition propre pour que le dashboard reste agnostique.
+     * Agenda, Actualités, Réalisations, Sliders, Pages légales, et la
+     * configuration du formulaire Devis), normalisés et triés par date de modification
+     * décroissante. Chaque item porte son URL d'édition propre pour que le
+     * dashboard reste agnostique.
      *
      * @return array<int, array{title:string,status:string,published:bool,updatedAt:string,editUrl:string,kind:string,badge:string}>
      */
@@ -201,6 +203,66 @@ final class DashboardController extends Controller
                     'editUrl'   => '/admin/actualites/edit?id=' . $a->id,
                     'kind'      => 'Actualité',
                     'badge'     => $a->isPublished() ? 'Publiée' : 'Brouillon',
+                ];
+            }
+        }
+
+        if (in_array('Realisations', $enabled, true)) {
+            foreach ((new \App\Modules\Realisations\RealisationRepository())->all() as $r) {
+                $items[] = [
+                    'title'     => $r->title,
+                    'status'    => $r->status,
+                    'published' => $r->isPublished(),
+                    'updatedAt' => $r->updatedAt,
+                    'editUrl'   => '/admin/realisations/edit?id=' . $r->id,
+                    'kind'      => 'Réalisation',
+                    'badge'     => $r->isPublished() ? 'Publiée' : 'Brouillon',
+                ];
+            }
+        }
+
+        if (in_array('Sliders', $enabled, true)) {
+            foreach ((new \App\Modules\Sliders\SlideRepository())->all() as $s) {
+                $items[] = [
+                    'title'     => $s->title,
+                    'status'    => $s->status,
+                    'published' => $s->isPublished(),
+                    'updatedAt' => $s->updatedAt,
+                    'editUrl'   => '/admin/sliders/edit?id=' . $s->id,
+                    'kind'      => 'Slide',
+                    'badge'     => $s->isPublished() ? 'Publié' : 'Brouillon',
+                ];
+            }
+        }
+
+        if (in_array('LegalPages', $enabled, true)) {
+            foreach ((new \App\Modules\LegalPages\LegalPageRepository())->all() as $lp) {
+                $items[] = [
+                    'title'     => $lp->title,
+                    'status'    => $lp->status,
+                    'published' => $lp->isPublished(),
+                    'updatedAt' => $lp->updatedAt,
+                    'editUrl'   => '/admin/pages-legales/edit?id=' . $lp->id,
+                    'kind'      => 'Page légale',
+                    'badge'     => $lp->isPublished() ? 'Publiée' : 'Brouillon',
+                ];
+            }
+        }
+
+        // Devis : on ne remonte que la configuration du formulaire (et non les
+        // demandes reçues), via la date d'enregistrement du schéma. Réservé aux
+        // comptes habilités à éditer le formulaire.
+        if (in_array('Devis', $enabled, true) && $this->auth->can('devis.configure')) {
+            $modifiedAt = (new \App\Modules\Devis\DevisFormSettings())->lastModified();
+            if ($modifiedAt !== null) {
+                $items[] = [
+                    'title'     => 'Formulaire de devis',
+                    'status'    => 'config',
+                    'published' => false,
+                    'updatedAt' => $modifiedAt,
+                    'editUrl'   => '/admin/devis/form',
+                    'kind'      => 'Devis',
+                    'badge'     => 'Configuration',
                 ];
             }
         }

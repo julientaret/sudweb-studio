@@ -247,6 +247,9 @@ final class DevisController extends Controller
         // 7) Notification à l'adresse de contact.
         $this->notifyOwner($name, $email, $answers);
 
+        // 8) Récapitulatif de confirmation au demandeur (si e-mail fourni).
+        $this->notifyCustomer($name, $email, $answers);
+
         // Anti double-envoi : on consomme l'horodatage.
         unset($_SESSION['devis_form_ts']);
         $this->json(['ok' => true]);
@@ -283,6 +286,42 @@ final class DevisController extends Controller
         }
 
         Mailer::sendHtml($recipient, '[' . $siteName . '] Nouvelle demande de devis', $html, $opts);
+    }
+
+    /**
+     * Envoie au demandeur un e-mail de confirmation reprenant le récapitulatif de
+     * sa demande. Sans incidence sur la requête (la demande est déjà en base) :
+     * si l'adresse est absente ou l'envoi échoue, on n'en tient pas compte.
+     *
+     * @param array<int, array{label:string, value:string}> $answers
+     */
+    private function notifyCustomer(string $name, string $email, array $answers): void
+    {
+        if ($email === '') {
+            return; // pas d'adresse fournie : rien à confirmer.
+        }
+
+        $siteName = (string) Config::get('app.site_name', 'Flow');
+        $siteUrl  = rtrim((string) Config::get('app.url', ''), '/');
+        $html = $this->view($this->views())->render('email_customer', [
+            'siteName' => $siteName,
+            'name'     => $name,
+            'email'    => $email,
+            'answers'  => $answers,
+            'date'     => date('d/m/Y à H:i'),
+            'siteUrl'  => $siteUrl,
+        ]);
+
+        $opts = [
+            'from'      => (string) $this->config('sender', ''),
+            'from_name' => $siteName,
+        ];
+        $recipient = (string) $this->config('recipient', '');
+        if ($recipient !== '') {
+            $opts['reply_to'] = $recipient; // répondre = écrire à l'adresse de contact du site.
+        }
+
+        Mailer::sendHtml($email, 'Votre demande de devis — ' . $siteName, $html, $opts);
     }
 
     /**
