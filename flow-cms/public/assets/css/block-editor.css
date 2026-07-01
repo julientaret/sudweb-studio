@@ -118,4 +118,10 @@ button.ghost { background:#eef2ff; color:var(--accent); }
 .media-pick { margin:0; padding:0; border:2px solid transparent; border-radius:9px; overflow:hidden;
               background:none; box-shadow:none; cursor:pointer; aspect-ratio:1/1; }
 .media-pick img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Bouton "Enregistrer" flottant : accès rapide sans redescendre en bas de page
+   sur les pages longues (en plus du bouton de la barre d'actions). */
+.fab-save { position:fixed; right:1.6rem; bottom:1.6rem; z-index:900; padding:.85rem 1.5rem;
+            border-radius:999px; box-shadow:0 10px 26px rgba(0,0,0,.22); }
+@media (max-width:640px) { .fab-save { right:1rem; bottom:1rem; padding:.75rem 1.2rem; } }
 .media-pick:hover { border-color:var(--accent); }

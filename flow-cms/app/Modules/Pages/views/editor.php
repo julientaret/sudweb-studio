@@ -137,6 +137,8 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
         <button type="submit">Enregistrer</button>
         <a class="btn-secondary" href="<?= e($base . '/admin/pages') ?>">Annuler</a>
     </div>
+
+    <button type="submit" class="fab-save" title="Enregistrer la page">Enregistrer</button>
 </form>
 
 <!-- Gabarits clonés par le JS -->
