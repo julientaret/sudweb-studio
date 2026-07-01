@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Agenda;
 
+use App\Core\AosSettings;
 use App\Core\BlockContent;
 use App\Core\Config;
 use App\Core\Controller;
+use App\Core\Kernel;
 use App\Modules\Media\MediaFolderRepository;
 use App\Modules\Media\MediaRepository;
 use App\Modules\Media\MediaUrl;
@@ -23,11 +25,13 @@ use App\Modules\Media\MediaUrl;
 final class EventController extends Controller
 {
     private EventRepository $repo;
+    private AosSettings $aos;
 
     public function __construct()
     {
         parent::__construct();
         $this->repo = new EventRepository();
+        $this->aos = new AosSettings(Kernel::instance()->basePath());
     }
 
     private function views(): array
@@ -256,7 +260,9 @@ final class EventController extends Controller
             'thumbSrcset' => $thumb !== null ? MediaUrl::srcset($thumb) : '',
             'thumbW'      => $thumbW,
             'thumbH'      => $thumbH,
-            'siteName' => (string) Config::get('app.site_name', 'Flow'),
+            'siteName'    => (string) Config::get('app.site_name', 'Flow'),
+            'base'        => $this->basePath(),
+            'aosDuration' => $this->aos->duration(),
         ]);
     }
 }

@@ -2,6 +2,8 @@
 /** @var string $title */
 /** @var string $body  HTML déjà rendu et échappé par les blocs */
 /** @var string $siteName */
+/** @var string $base */
+/** @var int $aosDuration */
 ?>
 <!doctype html>
 <html lang="fr">
@@ -9,6 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($title) ?> — <?= e($siteName) ?></title>
+    <link rel="stylesheet" href="<?= e($base . '/assets/vendor/aos/aos.css') ?>">
     <style>
         :root { --txt:#1c2230; --muted:#5b6472; --accent:#2b8bff; --line:#e6e8ec; }
         * { box-sizing:border-box; }
@@ -47,5 +50,7 @@
     <main class="wrap">
         <?= $body ?>
     </main>
+    <script src="<?= e($base . '/assets/vendor/aos/aos.js') ?>"></script>
+    <script src="<?= e($base . '/assets/js/aos-init.js') ?>" data-aos-duration="<?= e((string) $aosDuration) ?>"></script>
 </body>
 </html>

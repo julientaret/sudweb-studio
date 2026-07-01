@@ -20,11 +20,52 @@ namespace App\Core;
 final class BlockContent
 {
     /**
+     * Animation au scroll (AOS) — cross-cutting : posée ici plutôt que dans
+     * chaque bloc, pour s'appliquer uniformément à tout type de bloc (existant
+     * ou futur) sans dupliquer un sélecteur dans chaque Block::form(). Ces clés
+     * sont les noms d'animation natifs de la librairie AOS (michalsnik/aos),
+     * vendorisée dans public/assets/vendor/aos (thème frontend/ ET gabarit de
+     * repli Modules/Pages/views/front_layout.php, à garder synchronisés) —
+     * aucun JS/CSS maison à maintenir pour le comportement au scroll lui-même.
+     */
+    public const AOS_OPTIONS = [
+        'none'       => 'Aucune',
+        'fade'       => 'Fondu',
+        'fade-up'    => 'Fondu (bas → haut)',
+        'fade-down'  => 'Fondu (haut → bas)',
+        'fade-left'  => 'Fondu (droite → gauche)',
+        'fade-right' => 'Fondu (gauche → droite)',
+        'zoom-in'    => 'Zoom',
+    ];
+
+    /** Délai avant déclenchement (ms) — valeurs `data-aos-delay` natives d'AOS (multiples de 50). */
+    public const AOS_DELAY_OPTIONS = [
+        '0'   => 'Aucun',
+        '100' => '100 ms',
+        '200' => '200 ms',
+        '300' => '300 ms',
+        '500' => '500 ms',
+        '800' => '800 ms',
+    ];
+
+    private static function normalizeAos(mixed $value): string
+    {
+        $value = (string) $value;
+        return array_key_exists($value, self::AOS_OPTIONS) ? $value : 'none';
+    }
+
+    private static function normalizeAosDelay(mixed $value): string
+    {
+        $value = (string) $value;
+        return array_key_exists($value, self::AOS_DELAY_OPTIONS) ? $value : '0';
+    }
+
+    /**
      * Reconstruit le contenu depuis le POST : structure de lignes décrite par le
      * champ `layout` (JSON), chaque bloc référencé par clé étant passé par son
      * sanitize() (brief §4). Chaque ligne porte 1 à 4 colonnes de blocs ordonnés.
      *
-     * @return array<int, array{id:string,cols:int,columns:array<int,array<int,array{id:string,type:string,data:array<string,mixed>}>>}>
+     * @return array<int, array{id:string,cols:int,columns:array<int,array<int,array{id:string,type:string,aos:string,aos_delay:string,data:array<string,mixed>}>>}>
      */
     public static function fromRequest(): array
     {
@@ -59,9 +100,11 @@ final class BlockContent
                     }
                     $data = is_array($raw['data'] ?? null) ? $raw['data'] : [];
                     $colBlocks[] = [
-                        'id'   => 'b' . bin2hex(random_bytes(3)),
-                        'type' => $type,
-                        'data' => $registry->get($type)->sanitize($data),
+                        'id'        => 'b' . bin2hex(random_bytes(3)),
+                        'type'      => $type,
+                        'aos'       => self::normalizeAos($raw['aos'] ?? 'none'),
+                        'aos_delay' => self::normalizeAosDelay($raw['aos_delay'] ?? '0'),
+                        'data'      => $registry->get($type)->sanitize($data),
                     ];
                 }
                 $columns[] = $colBlocks;
@@ -90,9 +133,21 @@ final class BlockContent
                 $html .= '<div class="flow-col">';
                 foreach ($column as $block) {
                     $type = $block['type'] ?? '';
-                    if (is_string($type) && $registry->has($type)) {
-                        $html .= $registry->render($type, (array) ($block['data'] ?? []));
+                    if (!is_string($type) || !$registry->has($type)) {
+                        continue;
                     }
+                    $inner = $registry->render($type, (array) ($block['data'] ?? []));
+                    if ($inner === '') {
+                        continue;
+                    }
+                    $aos = self::normalizeAos($block['aos'] ?? 'none');
+                    if ($aos === 'none') {
+                        $html .= $inner;
+                        continue;
+                    }
+                    $delay = self::normalizeAosDelay($block['aos_delay'] ?? '0');
+                    $delayAttr = $delay !== '0' ? ' data-aos-delay="' . e($delay) . '"' : '';
+                    $html .= '<div data-aos="' . e($aos) . '"' . $delayAttr . '>' . $inner . '</div>';
                 }
                 $html .= '</div>';
             }
@@ -107,7 +162,7 @@ final class BlockContent
      * est amorcé avec une ligne d'une colonne vide.
      *
      * @param array<int, mixed>          $content
-     * @return array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,form:string}>>}>
+     * @return array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,aos:string,aos_delay:string,form:string}>>}>
      */
     public static function editorRows(array $content): array
     {
@@ -121,10 +176,12 @@ final class BlockContent
             }
             $key = (string) ($block['id'] ?? ('b' . bin2hex(random_bytes(3))));
             return [
-                'key'   => $key,
-                'type'  => $type,
-                'label' => $labels[$type] ?? $type,
-                'form'  => str_replace('__KEY__', $key, $registry->get($type)->form((array) ($block['data'] ?? []))),
+                'key'       => $key,
+                'type'      => $type,
+                'label'     => $labels[$type] ?? $type,
+                'aos'       => self::normalizeAos($block['aos'] ?? 'none'),
+                'aos_delay' => self::normalizeAosDelay($block['aos_delay'] ?? '0'),
+                'form'      => str_replace('__KEY__', $key, $registry->get($type)->form((array) ($block['data'] ?? []))),
             ];
         };
 

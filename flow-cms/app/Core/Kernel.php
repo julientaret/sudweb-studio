@@ -136,6 +136,7 @@ final class Kernel
         // Administration (choix des modules) — niveau Core, réservé à admin.modules.
         $this->router->get('/admin/administration', [AdministrationController::class, 'index']);
         $this->router->post('/admin/administration/modules', [AdministrationController::class, 'saveModules']);
+        $this->router->post('/admin/administration/aos', [AdministrationController::class, 'saveAos']);
 
         // Maintenance (fermeture du site public + bypass) — niveau Core, réservé
         // à admin.maintenance. Voir App\Core\MaintenanceSettings.

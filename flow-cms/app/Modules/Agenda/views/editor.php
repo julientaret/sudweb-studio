@@ -1,7 +1,7 @@
 <?php
 /** @var ?\App\Modules\Agenda\Event $event */
 /** @var string $error */
-/** @var array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,form:string}>>}> $rows */
+/** @var array<int, array{key:string,cols:int,columns:array<int,array<int,array{key:string,type:string,label:string,aos:string,aos_delay:string,form:string}>>}> $rows */
 /** @var array<int, array{type:string,label:string,form:string}> $templates */
 /** @var bool $mediaEnabled */
 /** @var array<int, \App\Modules\Media\Media> $media */
@@ -17,12 +17,24 @@ $action = $isEdit ? '/admin/agenda/edit' : '/admin/agenda/create';
 $status = $event?->status ?? 'draft';
 
 /** Carte d'un bloc (existant ou gabarit). */
-$blockCard = static function (string $key, string $type, string $label, string $formHtml): string {
+$blockCard = static function (string $key, string $type, string $label, string $aos, string $aosDelay, string $formHtml): string {
     ob_start(); ?>
     <div class="block-card" data-key="<?= e($key) ?>" data-type="<?= e($type) ?>">
         <div class="block-head">
             <span class="drag-handle" title="Glisser le bloc">⠿</span>
             <strong><?= e($label) ?></strong>
+            <span class="block-aos-label" title="Animation jouée quand le bloc apparaît au scroll, sur le site public">Animation :</span>
+            <select class="block-aos" name="blocks[<?= e($key) ?>][aos]" title="Animation au scroll">
+                <?php foreach (\App\Core\BlockContent::AOS_OPTIONS as $value => $optLabel): ?>
+                    <option value="<?= e($value) ?>"<?= $value === $aos ? ' selected' : '' ?>><?= e($optLabel) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="block-aos-label" title="Délai avant que l'animation ne se déclenche">Délai :</span>
+            <select class="block-aos" name="blocks[<?= e($key) ?>][aos_delay]" title="Délai de l'animation">
+                <?php foreach (\App\Core\BlockContent::AOS_DELAY_OPTIONS as $value => $optLabel): ?>
+                    <option value="<?= e($value) ?>"<?= (string) $value === $aosDelay ? ' selected' : '' ?>><?= e($optLabel) ?></option>
+                <?php endforeach; ?>
+            </select>
             <button type="button" class="block-remove link">Supprimer</button>
         </div>
         <input type="hidden" name="blocks[<?= e($key) ?>][type]" value="<?= e($type) ?>">
@@ -150,7 +162,7 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
             foreach ($row['columns'] as $column) {
                 $cards = '';
                 foreach ($column as $b) {
-                    $cards .= $blockCard($b['key'], $b['type'], $b['label'], $b['form']);
+                    $cards .= $blockCard($b['key'], $b['type'], $b['label'], $b['aos'], $b['aos_delay'], $b['form']);
                 }
                 $columnsHtml .= $columnHtml($cards);
             }
@@ -173,7 +185,7 @@ $rowHtml = static function (string $rkey, int $cols, string $columnsHtml) use ($
 <template id="tpl-row"><?= $rowHtml('__RKEY__', 1, $columnHtml('')) ?></template>
 <template id="tpl-col"><?= $columnHtml('') ?></template>
 <?php foreach ($templates as $t): ?>
-    <template id="tpl-<?= e($t['type']) ?>"><?= $blockCard('__KEY__', $t['type'], $t['label'], $t['form']) ?></template>
+    <template id="tpl-<?= e($t['type']) ?>"><?= $blockCard('__KEY__', $t['type'], $t['label'], 'none', '0', $t['form']) ?></template>
 <?php endforeach; ?>
 
 <!-- Modale partagée de sélection d'image (partial Core, piloté par le JS).

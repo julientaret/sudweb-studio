@@ -7,6 +7,8 @@
 /** @var int $thumbW  Largeur affichée du héro (0 si aucun) */
 /** @var int $thumbH  Hauteur affichée du héro (0 si aucun) */
 /** @var string $siteName */
+/** @var string $base */
+/** @var int $aosDuration */
 
 /** Formatte une date Y-m-d en français long (ex. « 12 juin 2026 »). */
 $fmt = static function (?string $date): string {
@@ -28,6 +30,7 @@ $fmt = static function (?string $date): string {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($title) ?> — <?= e($siteName) ?></title>
+    <link rel="stylesheet" href="<?= e($base . '/assets/vendor/aos/aos.css') ?>">
     <style>
         :root { --txt:#1c2230; --muted:#5b6472; --accent:#2b8bff; --line:#e6e8ec; }
         * { box-sizing:border-box; }
@@ -42,7 +45,16 @@ $fmt = static function (?string $date): string {
         ul, ol { margin:0 0 1.1rem 1.4rem; }
         .rte :last-child { margin-bottom:0; }
         figure.block-image { margin:1.8rem 0; }
-        figure.block-image img { max-width:100%; height:auto; border-radius:8px; display:block; }
+        figure.block-image img { max-width:100%; height:auto; display:block; }
+        .img-radius-none { border-radius:0; }
+        .img-radius-sm { border-radius:4px; }
+        .img-radius-md { border-radius:8px; }
+        .img-radius-lg { border-radius:20px; }
+        .img-radius-full { border-radius:50%; aspect-ratio:1/1; }
+        .img-shadow-none { box-shadow:none; }
+        .img-shadow-sm { box-shadow:0 2px 8px rgba(0,0,0,.12); }
+        .img-shadow-md { box-shadow:0 8px 20px rgba(0,0,0,.16); }
+        .img-shadow-lg { box-shadow:0 16px 36px rgba(0,0,0,.22); }
         .flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
         .flow-row.cols-1 { grid-template-columns:1fr; }
         .flow-row.cols-2 { grid-template-columns:repeat(2,1fr); }
@@ -80,5 +92,7 @@ $fmt = static function (?string $date): string {
         <?php endif; ?>
         <?= $body ?>
     </main>
+    <script src="<?= e($base . '/assets/vendor/aos/aos.js') ?>"></script>
+    <script src="<?= e($base . '/assets/js/aos-init.js') ?>" data-aos-duration="<?= e((string) $aosDuration) ?>"></script>
 </body>
 </html>

@@ -6,6 +6,10 @@
 # (site.css, site.js, img/*.webp) SONT versionnées (le serveur n'a pas Node).
 /node_modules/
 
+# Libs front auto-hébergées (AOS…) : versionnées (cf. flow-cms/.gitignore, même
+# convention). Sans ça, le `vendor/` générique du .gitignore racine les ignore.
+!/public/assets/vendor/
+
 # Données utilisateur (déplacées depuis flow-cms) : uploads médias et documents.
 # Jamais versionnés… mais on garde la structure et la protection (.htaccess).
 /public/uploads/*

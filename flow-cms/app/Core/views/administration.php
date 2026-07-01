@@ -1,5 +1,7 @@
 <?php
 /** @var array<int, array{name:string,label:string,description:string,enabled:bool,protected:bool,requires:array<int,string>,dependents:array<int,string>}> $modules */
+/** @var int $aosDuration */
+/** @var array<int, string> $aosDurationOpt */
 /** @var string $notice */
 /** @var string $base */
 ?>
@@ -46,6 +48,29 @@
 
         <p class="hint">Si vous désactivez un module dont d'autres dépendent (ex. Médias),
         ces derniers seront désactivés aussi, automatiquement.</p>
+
+        <div class="form-actions">
+            <button type="submit">Enregistrer</button>
+        </div>
+    </form>
+</div>
+
+<div class="card" style="margin-top:1.4rem;">
+    <h2 style="margin:0 0 .3rem; font-size:1.1rem;">Animations (AOS)</h2>
+    <p class="muted" style="margin:0 0 1.4rem;">
+        Durée par défaut de l'animation « au scroll » choisie sur les blocs des pages,
+        événements et actualités (le délai propre à chaque bloc reste réglable indépendamment).
+    </p>
+
+    <form method="post" action="<?= e($base . '/admin/administration/aos') ?>">
+        <?= \App\Core\Csrf::field() ?>
+
+        <label for="aos-duration">Durée de l'animation</label>
+        <select id="aos-duration" name="duration">
+            <?php foreach ($aosDurationOpt as $value => $optLabel): ?>
+                <option value="<?= e((string) $value) ?>"<?= $value === $aosDuration ? ' selected' : '' ?>><?= e($optLabel) ?></option>
+            <?php endforeach; ?>
+        </select>
 
         <div class="form-actions">
             <button type="submit">Enregistrer</button>

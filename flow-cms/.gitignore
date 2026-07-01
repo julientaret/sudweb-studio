@@ -24,6 +24,7 @@ dist/
 /storage/cache/*
 /storage/modules.json
 /storage/google_reviews.json
+/storage/aos.json
 
 # …mais on garde la structure.
 !/storage/logs/.gitkeep

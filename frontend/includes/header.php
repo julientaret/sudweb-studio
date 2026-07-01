@@ -27,6 +27,7 @@ $siteName = site('name', 'Flow');
     <?php if ($description !== ''): ?>
     <meta name="description" content="<?= e($description) ?>">
     <?php endif; ?>
+    <link rel="stylesheet" href="<?= e(asset_url('/assets/vendor/aos/aos.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset_url('/assets/site.css')) ?>">
 </head>
 <body>

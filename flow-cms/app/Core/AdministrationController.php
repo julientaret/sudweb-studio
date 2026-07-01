@@ -18,11 +18,13 @@ namespace App\Core;
 final class AdministrationController extends Controller
 {
     private ModuleSettings $settings;
+    private AosSettings $aos;
 
     public function __construct()
     {
         parent::__construct();
         $this->settings = new ModuleSettings(Kernel::instance()->basePath());
+        $this->aos = new AosSettings(Kernel::instance()->basePath());
     }
 
     public function index(): void
@@ -44,8 +46,10 @@ final class AdministrationController extends Controller
         }
 
         $this->renderPage([__DIR__ . '/views'], 'administration', 'Administration', [
-            'modules' => $modules,
-            'notice'  => $this->input('notice'),
+            'modules'        => $modules,
+            'aosDuration'    => $this->aos->duration(),
+            'aosDurationOpt' => AosSettings::DURATION_OPTIONS,
+            'notice'         => $this->input('notice'),
         ]);
     }
 
@@ -63,5 +67,14 @@ final class AdministrationController extends Controller
             $notice .= ' Désactivés aussi (dépendance manquante) : ' . implode(', ', $labels) . '.';
         }
         $this->redirect('/admin/administration?notice=' . rawurlencode($notice));
+    }
+
+    public function saveAos(): void
+    {
+        $this->requirePermission('admin.modules');
+        $this->requireCsrf();
+
+        $this->aos->setDuration((int) $this->input('duration', (string) AosSettings::DEFAULT_DURATION));
+        $this->redirect('/admin/administration?notice=' . rawurlencode('Durée des animations enregistrée.'));
     }
 }
