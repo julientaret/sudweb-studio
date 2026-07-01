@@ -3,6 +3,7 @@
 /** @var array<int, array{title:string,status:string,published:bool,updatedAt:string,editUrl:string,kind:string,badge:string}> $recent */
 /** @var array<int, \App\Modules\Media\Media> $gallery */
 /** @var array{label:string, series:array<int, array{date:string,label:string,views:int,uniques:int}>, views:int, uniques:int, max:int}|null $stats */
+/** @var array<string, int> $counts */
 /** @var \App\Modules\Users\User|null $user */
 /** @var string $base */
 
@@ -39,16 +40,23 @@ $meta = static function (string $url): array {
 <?php
 // Rend une cellule de carte (conteneur déplaçable + carte + bouton retirer).
 // Utilisée aussi bien pour la grille visible que pour le stock des cartes masquées.
-$cell = static function (array $c, bool $fixed) use ($meta, $base): void {
+$cell = static function (array $c, bool $fixed) use ($meta, $base, $counts): void {
     [$icon, $desc] = $meta($c['url']);
     $tuto = str_contains($c['url'], '/tutoriel');
     $cls = 'dash-cell' . ($fixed ? ' dash-cell--fixed' : '') . ($tuto ? ' span-2' : '');
+    $notif = $counts[$c['url']] ?? 0;
+    // La bulle rend déjà le chiffre : on retire le suffixe " (N)" du libellé
+    // (posé par le menu admin, ex. « Demandes de devis (3) ») pour éviter le doublon.
+    $label = $notif > 0 ? (string) preg_replace('/\s*\(\d+\)$/', '', $c['label']) : $c['label'];
     ?>
     <div class="<?= $cls ?>"<?= $fixed ? '' : ' data-key="' . e($c['url']) . '"' ?>>
         <a class="dash-card<?= $tuto ? ' dash-card--tuto' : '' ?>" href="<?= e($base . $c['url']) ?>">
+            <?php if ($notif > 0): ?>
+                <span class="dash-notif" aria-label="<?= $notif ?> non lu<?= $notif > 1 ? 's' : '' ?>"><?= $notif > 99 ? '99+' : $notif ?></span>
+            <?php endif; ?>
             <span class="dash-ic"><?= $icon ?></span>
             <span class="dash-body">
-                <strong><?= e($c['label']) ?></strong>
+                <strong><?= e($label) ?></strong>
                 <span class="dash-desc"><?= e($desc) ?></span>
             </span>
             <span class="dash-arrow" aria-hidden="true">→</span>
@@ -223,6 +231,10 @@ $cell = static function (array $c, bool $fixed) use ($meta, $base): void {
                  text-decoration:none; color:inherit; box-shadow:var(--shadow-sm);
                  transition:transform .15s, box-shadow .15s, border-color .15s; }
     .dash-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--accent); }
+    /* Bulle de notification (demandes non lues) sur les cartes Contact/Devis. */
+    .dash-notif { position:absolute; top:-10px; right:-10px; min-width:26px; height:26px; padding:0 7px;
+                  display:grid; place-items:center; border-radius:13px; background:var(--accent-600); color:#fff;
+                  font-size:.8rem; font-weight:700; line-height:1; box-shadow:0 1px 3px rgba(0,0,0,.25); }
     .dash-ic { width:46px; height:46px; flex:0 0 auto; border-radius:13px; display:grid; place-items:center;
                background:var(--accent-soft); color:var(--accent-600); }
     .dash-ic svg { width:23px; height:23px; }

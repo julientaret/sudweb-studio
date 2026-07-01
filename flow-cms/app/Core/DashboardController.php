@@ -28,6 +28,7 @@ final class DashboardController extends Controller
             'recent'  => $this->recentContent(),
             'gallery' => $this->galleryImages(),
             'stats'   => $this->statsWidget(),
+            'counts'  => $this->notificationCounts(),
             'user'    => $this->auth->user(),
             'csrf'    => \App\Core\Csrf::token(),
         ]);
@@ -271,6 +272,44 @@ final class DashboardController extends Controller
         usort($items, static fn (array $a, array $b): int => strcmp($b['updatedAt'], $a['updatedAt']));
 
         return array_slice($items, 0, 6);
+    }
+
+    /**
+     * Compteurs « non lus » à afficher en bulle sur les cartes du dashboard
+     * (Contact, Devis). Best-effort comme la pastille du menu admin : une
+     * table absente (module tout juste activé, migration pas encore jouée)
+     * ne doit pas casser le tableau de bord.
+     *
+     * @return array<string, int> url de la carte => nombre à afficher
+     */
+    private function notificationCounts(): array
+    {
+        $enabled = (array) Config::get('modules.enabled', []);
+        $counts = [];
+
+        if (in_array('Contact', $enabled, true)) {
+            try {
+                $n = (new \App\Modules\Contact\ContactRepository())->countNew();
+                if ($n > 0) {
+                    $counts['/admin/contact'] = $n;
+                }
+            } catch (\Throwable) {
+                // silencieux : bulle non affichée
+            }
+        }
+
+        if (in_array('Devis', $enabled, true)) {
+            try {
+                $n = (new \App\Modules\Devis\DevisRepository())->countNew();
+                if ($n > 0) {
+                    $counts['/admin/devis'] = $n;
+                }
+            } catch (\Throwable) {
+                // silencieux : bulle non affichée
+            }
+        }
+
+        return $counts;
     }
 
     /**
