@@ -133,6 +133,6 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
     </div>
     <?php endif; ?>
 
-    <script src="<?= e(site_url('/assets/site.js')) ?>" defer></script>
+    <script src="<?= e(asset_url('/assets/site.js')) ?>" defer></script>
 </body>
 </html>

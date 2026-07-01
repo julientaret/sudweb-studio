@@ -23,7 +23,16 @@
         ul, ol { margin:0 0 1.1rem 1.4rem; }
         .rte :last-child { margin-bottom:0; }
         figure.block-image { margin:1.8rem 0; }
-        figure.block-image img { max-width:100%; height:auto; border-radius:8px; display:block; }
+        figure.block-image img { max-width:100%; height:auto; display:block; }
+        .img-radius-none { border-radius:0; }
+        .img-radius-sm { border-radius:4px; }
+        .img-radius-md { border-radius:8px; }
+        .img-radius-lg { border-radius:20px; }
+        .img-radius-full { border-radius:50%; aspect-ratio:1/1; }
+        .img-shadow-none { box-shadow:none; }
+        .img-shadow-sm { box-shadow:0 2px 8px rgba(0,0,0,.12); }
+        .img-shadow-md { box-shadow:0 8px 20px rgba(0,0,0,.16); }
+        .img-shadow-lg { box-shadow:0 16px 36px rgba(0,0,0,.22); }
         /* Lignes en colonnes (1 à 4), responsives. */
         .flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
         .flow-row.cols-1 { grid-template-columns:1fr; }

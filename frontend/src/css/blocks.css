@@ -2,7 +2,19 @@
 
 /* Images : fluides, ne débordent jamais de leur colonne. */
 figure.block-image { margin:1.8rem 0; }
-figure.block-image img { max-width:100%; height:auto; border-radius:8px; display:block; }
+figure.block-image img { max-width:100%; height:auto; display:block; }
+
+/* Effets du bloc image (coins arrondis / ombre portée), choisis dans l'éditeur.
+   "md" reproduit le rendu d'origine (8px, sans ombre) pour les images déjà en place. */
+.img-radius-none { border-radius:0; }
+.img-radius-sm { border-radius:4px; }
+.img-radius-md { border-radius:8px; }
+.img-radius-lg { border-radius:20px; }
+.img-radius-full { border-radius:50%; aspect-ratio:1/1 }
+.img-shadow-none { box-shadow:none; }
+.img-shadow-sm { box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.img-shadow-md { box-shadow:0 8px 20px rgba(0,0,0,.16); }
+.img-shadow-lg { box-shadow:0 16px 36px rgba(0,0,0,.22); }
 
 /* Richtext : on coupe proprement les mots/URLs trop longs ; médias, blocs de
    code et tableaux restent contenus (scroll horizontal si besoin). */

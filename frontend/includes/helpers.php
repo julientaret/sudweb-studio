@@ -45,3 +45,19 @@ if (!function_exists('site_url')) {
         return $base . $path;
     }
 }
+
+if (!function_exists('asset_url')) {
+    /**
+     * URL d'un asset statique (frontend/public/...) avec un paramètre `v` basé
+     * sur la date de modification du fichier sur disque : chaque rebuild change
+     * l'URL, ce qui invalide le cache navigateur sans étape de déploiement
+     * supplémentaire (les assets n'ont sinon aucune version dans l'URL).
+     */
+    function asset_url(string $path): string
+    {
+        $file = dirname(__DIR__) . '/public' . $path;
+        $version = is_file($file) ? (string) filemtime($file) : '';
+        $url = site_url($path);
+        return $version !== '' ? $url . '?v=' . $version : $url;
+    }
+}

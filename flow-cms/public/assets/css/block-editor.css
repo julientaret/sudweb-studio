@@ -83,6 +83,33 @@ button.ghost { background:#eef2ff; color:var(--accent); }
 .block-body:has(.ql-editor:focus) .ql-container.ql-snow { box-shadow:0 0 0 4px rgba(43,139,255,.15); }
 .link.danger, .block-remove, .row-remove { color:#b91c1c; }
 
+/* Sélecteur d'effet (coins arrondis / ombre) : radios stylées en vignettes avec
+   aperçu visuel, sur le même principe que .status-toggle (input caché + label). */
+.effect-picker { display:flex; flex-wrap:wrap; align-items:flex-start; gap:.4rem; margin:.3rem 0 1rem; }
+/* Largeur fixe : les vignettes s'alignent en grille propre quel que soit le
+   nombre de caractères du libellé (sinon "Prononcé"/"Marquée" élargissent
+   leur colonne et décalent les cases entre elles). margin:0 annule la règle
+   globale `label { margin:1.1rem 0 .4rem }` du layout admin — sans elle, les
+   vignettes 1..5 héritent de cette marge sauf la 1ʳᵉ (`label:first-child`),
+   ce qui la fait paraître décalée par rapport aux autres. */
+.effect-swatch { display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+                 gap:.35rem; width:64px; margin:0; cursor:pointer; }
+.effect-swatch input { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.swatch-box { width:32px; height:32px; flex:0 0 auto; background:#fff; border:2px solid var(--line); transition:border-color .15s, box-shadow .15s; }
+.effect-swatch input:checked + .swatch-box { border-color:var(--accent); }
+.effect-swatch input:focus-visible + .swatch-box { outline:2px solid var(--accent); outline-offset:2px; }
+.swatch-name { font-size:.72rem; color:var(--muted); font-weight:600; text-align:center; }
+.effect-swatch input:checked ~ .swatch-name { color:var(--accent-600); }
+.swatch-radius-none { border-radius:0; }
+.swatch-radius-sm { border-radius:4px; }
+.swatch-radius-md { border-radius:8px; }
+.swatch-radius-lg { border-radius:14px; }
+.swatch-radius-full { border-radius:9999px; }
+.swatch-shadow-none { box-shadow:none; }
+.swatch-shadow-sm { box-shadow:0 2px 5px rgba(0,0,0,.18); }
+.swatch-shadow-md { box-shadow:0 4px 10px rgba(0,0,0,.22); }
+.swatch-shadow-lg { box-shadow:0 6px 16px rgba(0,0,0,.28); }
+
 /* Champ image (bloc image ou vignette) : aperçu + boutons (sélection via la modale). */
 .image-field { display:flex; align-items:center; gap:.7rem; }
 .image-preview { width:84px; height:84px; flex:0 0 auto; border:1px solid var(--line);
