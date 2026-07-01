@@ -96,6 +96,13 @@ $logoUrl = match (true) {
         .nav-item:hover { background:var(--bg); color:var(--txt); }
         .nav-item.active { background:var(--accent-soft); color:var(--accent-600); font-weight:600; }
 
+        /* Bulle de notification sur l'icône (visible même sidebar repliée, contrairement
+           au « (N) » du libellé qui n'apparaît qu'au survol). */
+        .nav-ic { position:relative; display:inline-flex; flex:0 0 auto; }
+        .nav-badge { position:absolute; top:-6px; right:-8px; min-width:16px; height:16px; padding:0 4px;
+                     display:grid; place-items:center; border-radius:8px; background:var(--accent-600); color:#fff;
+                     font-size:.62rem; font-weight:700; line-height:1; box-shadow:0 1px 2px rgba(0,0,0,.25); }
+
         .side-foot { padding:10px 16px 4px; }
         .side-tag { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.78rem; white-space:nowrap; }
         .side-tag .dot { width:8px; height:8px; border-radius:50%; background:#22c55e; flex:0 0 auto; box-shadow:0 0 0 3px rgba(34,197,94,.18); }
@@ -256,9 +263,27 @@ $logoUrl = match (true) {
                 <?= $icon('/admin') ?><span class="label">Tableau de bord</span>
             </a>
             <?php foreach ($menu as $entry): ?>
-                <?php $active = $curr === $entry['url'] || str_starts_with($curr, $entry['url'] . '/'); ?>
+                <?php
+                $active = $curr === $entry['url'] || str_starts_with($curr, $entry['url'] . '/');
+                // Pastille « non lus » : le libellé porte parfois un suffixe " (N)"
+                // posé par le module (cf. ContactModule/DevisModule::adminMenu()).
+                // On l'extrait pour l'afficher en bulle sur l'icône, visible même
+                // sidebar repliée (le libellé texte ne l'est qu'au survol).
+                $navCount = 0;
+                $navLabel = $entry['label'];
+                if (preg_match('/\s*\((\d+)\)$/', $navLabel, $navMatch)) {
+                    $navCount = (int) $navMatch[1];
+                    $navLabel = substr($navLabel, 0, -strlen($navMatch[0]));
+                }
+                ?>
                 <a class="nav-item<?= $active ? ' active' : '' ?>" href="<?= e($base . $entry['url']) ?>">
-                    <?= $icon($entry['url']) ?><span class="label"><?= e($entry['label']) ?></span>
+                    <span class="nav-ic">
+                        <?= $icon($entry['url']) ?>
+                        <?php if ($navCount > 0): ?>
+                            <span class="nav-badge"><?= $navCount > 99 ? '99+' : $navCount ?></span>
+                        <?php endif; ?>
+                    </span>
+                    <span class="label"><?= e($navLabel) ?></span>
                 </a>
             <?php endforeach; ?>
             <?php $tutoActive = $curr === '/admin/tutoriel'; ?>
