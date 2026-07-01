@@ -47,6 +47,10 @@ Media est actif), via le `BlockRegistry` partagé. Chaque bloc porte son libell�
 (`Block::label()`) : l'éditeur construit son catalogue depuis le registre, sans
 table de libellés ni référence à un autre module.
 
+Hérite donc aussi des effets/animation cross-cutting posés au niveau
+`BlockContent` (arrondi/ombre du bloc image, animation au scroll + délai) — voir
+[pages.md](pages.md#effets--animation-au-scroll-aos) pour le détail.
+
 ## Permissions
 
 | Permission | Détenue par |
@@ -82,6 +86,11 @@ gabarits `tpl-*`, modale `#media-modal`) que l'éditeur de pages.
 en-tête avec le titre, la date (« Publié le … »), la vignette en hero
 (`<picture>` srcset WebP responsive `mobile`/`tablet`/`desktop`, `sizes="100vw"`,
 repli original) puis le contenu rendu par `BlockContent::render()`.
+
+**Gabarit de repli propre au module**, séparé de celui de Pages : les classes CSS
+des effets de blocs et le chargement d'AOS y sont donc dupliqués (pas de thème
+`app.front_views` pour Actualités). Toute évolution du rendu des blocs doit être
+répercutée dans les trois `front_layout.php` (Pages, Agenda, Actualités).
 
 ## Intégrations transverses
 

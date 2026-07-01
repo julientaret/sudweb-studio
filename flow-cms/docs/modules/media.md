@@ -55,6 +55,16 @@ Comme il est fourni par Media, il n'apparaît dans les éditeurs (Pages, Actuali
 Agenda) **que lorsque Media est actif** — les autres modules ne dépendent donc pas
 de Media : le bloc disparaît simplement s'il est désactivé.
 
+**Effets visuels** : le bloc porte aussi `radius` (`none`/`sm`/`md`/`lg`/`full` —
+`md` = 8px, reproduit le rendu d'origine pour les images déjà en place) et `shadow`
+(`none`/`sm`/`md`/`lg`), rendus en classes CSS `img-radius-*`/`img-shadow-*` (jamais
+de style inline, échappement simple). Choisis dans l'éditeur via des **vignettes
+radio** avec aperçu visuel (`.effect-picker`, [`block-editor.css`](../../public/assets/css/block-editor.css))
+plutôt qu'un `<select>` texte. Ces classes sont définies à **deux endroits à garder
+en phase** : le thème `frontend/src/css/blocks.css` et les gabarits de repli
+`Modules/{Pages,Agenda,Actualites}/views/front_layout.php` (CSS inline, pas de
+bundler) — voir aussi la section AOS de [pages.md](pages.md).
+
 À venir : un bloc `gallery` référençant plusieurs `media.id`.
 
 ## Permissions

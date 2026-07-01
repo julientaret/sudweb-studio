@@ -27,6 +27,11 @@ $sections = [
             </div>
         </div>
 
+        <h3>Notifications non lues</h3>
+        <p>Les cartes <strong>Demandes de contact</strong> et <strong>Demandes de devis</strong> affichent
+        une <strong>bulle</strong> avec le nombre de demandes non lues, dès qu'il y en a. La même bulle
+        apparaît sur leur icône dans la barre latérale, y compris repliée.</p>
+
         <p class="muted">Astuce : le logo en haut de la barre latérale ramène toujours ici.</p>
 HTML],
 
@@ -84,7 +89,9 @@ HTML],
             <li><strong>Texte</strong> — un éditeur enrichi : gras, italique, souligné, listes, liens,
                 citation, titres, alignement et couleur. Pour les paragraphes.</li>
             <li><strong>Image</strong> — choisie dans la bibliothèque via une fenêtre de vignettes ;
-                un texte alternatif facultatif la décrit.</li>
+                un texte alternatif facultatif la décrit. Deux réglages d'aspect en vignettes cliquables :
+                <strong>coins arrondis</strong> (aucun à complet) et <strong>ombre portée</strong>
+                (aucune à marquée).</li>
             <li><strong>Déplacer</strong> : chaque bloc a une poignée (⠿) ; glissez-le dans sa colonne
                 ou vers une autre colonne, même d'une autre ligne.</li>
             <li><strong>Supprimer</strong> : le lien <em>Supprimer</em> en haut du bloc.</li>
@@ -99,7 +106,21 @@ HTML],
             </div>
         </div>
 
-        <p class="muted">N'oubliez pas d'<strong>Enregistrer</strong> en bas de l'éditeur.</p>
+        <h3>Animation au scroll</h3>
+        <p>Chaque bloc a, dans son en-tête, deux menus <strong>Animation</strong> et
+        <strong>Délai</strong> : un effet (fondu, zoom…) qui se joue quand le bloc apparaît à l'écran en
+        faisant défiler la page, avec un délai optionnel avant qu'il ne se déclenche.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — en-tête d'un bloc</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">Animation : Fondu (bas → haut) ▾</span>
+                <span class="demo-pill">Délai : 200 ms ▾</span>
+            </div>
+        </div>
+
+        <p class="muted">N'oubliez pas d'<strong>Enregistrer</strong> — en bas de l'éditeur, ou via le
+        bouton flottant qui reste visible en bas de l'écran sur les pages longues.</p>
 HTML],
 
     'agenda' => ['L\'agenda', <<<HTML

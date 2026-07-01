@@ -49,7 +49,35 @@ permet l'ajout dynamique et le réordonnancement.
 |------|------------|--------------------|--------|
 | `heading`  | Core | statique  | `text`, `level` (1\|2\|3) |
 | `richtext` | Core | statique  | `delta` (Delta Quill, voir §8) |
-| `image`    | Media | dynamique | `media_id`, `alt` (rend `<picture>` WebP + repli original) |
+| `image`    | Media | dynamique | `media_id`, `alt`, `radius`, `shadow` (rend `<picture>` WebP + repli original — voir [media.md](media.md)) |
+
+## Effets & animation au scroll (AOS)
+
+En plus de son `data` propre, chaque entrée de bloc (au niveau `BlockContent`, pas
+`Block`) porte deux champs **cross-cutting** : `aos` et `aos_delay`
+(`App\Core\BlockContent::AOS_OPTIONS`/`AOS_DELAY_OPTIONS`). Posés ici plutôt que
+dans chaque bloc pour s'appliquer **uniformément à tout type de bloc**, existant ou
+futur, sans dupliquer un sélecteur dans chaque `Block::form()`.
+
+- Dans l'éditeur, chaque carte de bloc affiche deux `<select>` compacts dans son
+  en-tête (`.block-head`) : **Animation** (Aucune, Fondu, 4 directions, Zoom) et
+  **Délai** (Aucun, 100 à 800 ms).
+- Au rendu (`BlockContent::render()`), si `aos !== 'none'`, le HTML du bloc est
+  enveloppé dans `<div data-aos="…" data-aos-delay="…">` — attributs natifs de la
+  librairie **AOS** (michalsnik/aos), vendorisée en fichiers statiques
+  (`public/assets/vendor/aos/`, comme Quill/Cropper) plutôt qu'un script maison.
+- **Durée par défaut réglable** : onglet Administration → carte « Animations »,
+  stockée dans `storage/aos.json` (`App\Core\AosSettings`). Comme la CSP
+  (`script-src` retombe sur `default-src 'self'`) interdit tout script inline, la
+  durée est transmise via un attribut `data-aos-duration` sur la balise
+  `<script src=".../aos-init.js">`, lu par ce script au chargement plutôt que par
+  un `AOS.init({...})` inline.
+
+**Piège à connaître** : Agenda et Actualités ont chacun leur **propre** gabarit de
+repli (`Modules/{Agenda,Actualites}/views/front_layout.php`), séparé de celui de
+Pages. Toute évolution du rendu front des blocs (classes CSS, script AOS…) doit
+être répercutée dans **les trois fichiers**, sinon le réglage ne s'applique qu'aux
+pages. Voir aussi `docs/modules/agenda.md` et `docs/modules/actualites.md`.
 
 ## Permissions
 
@@ -75,6 +103,9 @@ statut retombe en brouillon côté serveur).
 - L'éditeur ([`pages-editor.js`](../../public/assets/js/pages-editor.js)) gère
   ajout/suppression, **drag & drop** (poignée), init Quill, et sérialise l'ordre
   (`block_order`) + les Delta à la sauvegarde. JS externe (CSP `default-src 'self'`).
+- **Bouton « Enregistrer » flottant** (`.fab-save`, bas droite, en plus de celui de
+  la barre d'actions) : pratique sur les pages longues, sans redescendre. Même
+  soumission de formulaire, pas de logique JS dédiée.
 
 ## Mise en page (lignes & colonnes)
 
