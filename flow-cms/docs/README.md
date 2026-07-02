@@ -34,8 +34,9 @@ Fondations posées :
 | `App\Core\DashboardController` | Accueil admin (`/admin`) : accès rapide + dernières modifs de contenu (Pages + Agenda + Actualités, agrégées) + visionneuse galerie | [app/Core/DashboardController.php](../app/Core/DashboardController.php) |
 | `App\Core\TutorialController` | Page tutoriel (`/admin/tutoriel`) : prise en main du CMS (tableau de bord, pages, agenda, médias, utilisateurs) | [app/Core/TutorialController.php](../app/Core/TutorialController.php) |
 | `App\Core\ModuleSettings` | Activation des modules pilotée depuis l'admin : catalogue (`config/modules.php` → `available`) − désactivés (`storage/modules.json`), `Users` protégé. Modules **indépendants** (`DEPENDENCIES` vide) ; le mécanisme de cascade reste disponible | [app/Core/ModuleSettings.php](../app/Core/ModuleSettings.php) |
-| `App\Core\AdministrationController` | Onglet Administration (`/admin/administration`, permission `admin.modules`, rôle admin seul) : choix des modules disponibles pour les autres utilisateurs, et durée par défaut des animations au scroll (AOS) | [app/Core/AdministrationController.php](../app/Core/AdministrationController.php) |
+| `App\Core\AdministrationController` | Onglet Administration (`/admin/administration`, permission `admin.modules`, rôle admin seul) : choix des modules disponibles pour les autres utilisateurs, durée par défaut des animations au scroll (AOS), et mode démonstration — voir [demo.md](demo.md) | [app/Core/AdministrationController.php](../app/Core/AdministrationController.php) |
 | `App\Core\AosSettings` | Durée par défaut de l'animation au scroll (AOS) des blocs, réglable dans Administration (`storage/aos.json`) — transmise au front via un attribut `data-aos-duration` (la CSP interdit le script inline) | [app/Core/AosSettings.php](../app/Core/AosSettings.php) |
+| `App\Core\DemoSettings` / `App\Core\DemoSeeder` | Mode démonstration : état (`storage/demo.json`) et création/suppression du compte + des données factices (`is_demo`, jamais de photo) — voir [demo.md](demo.md) | [app/Core/DemoSettings.php](../app/Core/DemoSettings.php), [app/Core/DemoSeeder.php](../app/Core/DemoSeeder.php) |
 | `App\Core\MaintenanceController` | Onglet Maintenance (`/admin/maintenance`, permission `admin.maintenance`, rôle admin seul) : ferme le site public, gère l'URL de bypass et les IP autorisées — voir [maintenance.md](maintenance.md) | [app/Core/MaintenanceController.php](../app/Core/MaintenanceController.php) |
 | `App\Core\MaintenanceSettings` | État du mode maintenance (`storage/maintenance.json`) + garde-fou `enforce()` posé dans le front controller public | [app/Core/MaintenanceSettings.php](../app/Core/MaintenanceSettings.php) |
 | `App\Core\Mailer` | Envoi d'e-mails HTML via `mail()` (zéro dépendance) : en-têtes MIME, anti-injection d'en-têtes, From maîtrisé + Reply-To — utilisé par le module Contact | [app/Core/Mailer.php](../app/Core/Mailer.php) |
@@ -43,6 +44,7 @@ Fondations posées :
 Fonctions transverses (niveau Core, hors catalogue de modules) :
 
 - **Mode maintenance** — [maintenance.md](maintenance.md)
+- **Mode démonstration** — [demo.md](demo.md)
 
 Modules :
 

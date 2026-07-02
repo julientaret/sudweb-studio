@@ -2,6 +2,7 @@
 /** @var string $base */
 /** @var array<int, string> $enabledModules liste effective (Config 'modules.enabled') */
 /** @var bool $canMaintenance l'utilisateur détient-il admin.maintenance ? */
+/** @var bool $canAdmin l'utilisateur détient-il admin.modules ? */
 
 /**
  * Sections du tutoriel : id => [titre onglet, HTML du panneau].
@@ -545,6 +546,44 @@ HTML],
         page de fermeture.</p>
 HTML],
 
+    'demo' => ['Mode démonstration', <<<HTML
+        <h2>Le mode démonstration</h2>
+        <p>Carte <strong>Mode démonstration</strong> de l'onglet <strong>Administration</strong>
+        (réservé à l'administrateur) : crée en un clic un <strong>compte de démonstration</strong> et
+        quelques <strong>données factices</strong>, pratique pour faire visiter le CMS à un prospect ou
+        un client sans exposer le vrai contenu du site.</p>
+
+        <h3>Activer</h3>
+        <p>Le bouton <strong>Activer le mode démonstration</strong> crée le compte et sème des exemples
+        (pages, événements, actualités, réalisations, demandes de devis et de contact) dans les modules
+        actuellement actifs — <strong>jamais de photo factice</strong>. L'e-mail et le mot de passe du
+        compte s'affichent <strong>une seule fois, immédiatement après l'activation</strong> : notez-les
+        tout de suite, ils ne réapparaîtront plus ensuite.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — identifiants affichés à l'activation</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">demo@flow.local</span>
+                <span class="demo-pill">•••••••••••• (mot de passe)</span>
+            </div>
+        </div>
+
+        <h3>Ce que peut faire le compte démo</h3>
+        <p>Un rôle dédié, volontairement limité : il peut <strong>créer, modifier et publier</strong> du
+        contenu, et consulter les demandes de devis/contact ainsi que les statistiques. Il ne peut
+        <strong>rien supprimer</strong>, et n'a accès ni aux utilisateurs, ni à l'onglet Administration,
+        ni à la Maintenance — impossible de casser le site ou d'en changer les réglages.</p>
+
+        <h3>Désactiver</h3>
+        <p>Le bouton <strong>Désactiver le mode démonstration</strong> supprime intégralement le compte
+        <strong>et</strong> toutes les données factices créées à l'activation, en une seule fois. Vos
+        propres pages, événements, actualités, réalisations et demandes reçues ne sont
+        <strong>jamais concernés</strong> : seul ce qui a été semé par le mode démo est retiré.</p>
+
+        <p class="muted">Astuce : si vous réactivez le mode démo plus tard, un nouveau compte et de
+        nouvelles données factices sont créés, avec de nouveaux identifiants.</p>
+HTML],
+
     'stats' => ['Les statistiques', <<<HTML
         <h2>Les statistiques de visite</h2>
         <p>Menu <strong>Statistiques</strong> : un tableau de bord de la fréquentation de votre site
@@ -665,9 +704,12 @@ $sections = array_filter(
     ARRAY_FILTER_USE_KEY,
 );
 
-// Rubrique Maintenance : transverse (pas un module), réservée à l'admin.
+// Rubriques Maintenance et Mode démonstration : transverses (pas des modules), réservées à l'admin.
 if (!($canMaintenance ?? false)) {
     unset($sections['maintenance']);
+}
+if (!($canAdmin ?? false)) {
+    unset($sections['demo']);
 }
 
 $first = array_key_first($sections);
