@@ -37,6 +37,10 @@ a.block-button:hover { background:color-mix(in srgb, var(--accent) 85%, #000); }
 .block-accordion-item[open] summary::after { content:"\2212"; }
 .block-accordion-a { margin-top:.7rem; color:var(--muted); }
 
+/* Vidéo / embed (YouTube, Vimeo) — cadre 16:9 responsive. */
+.block-video { position:relative; margin:1.8rem 0; padding-top:56.25%; height:0; overflow:hidden; border-radius:8px; }
+.block-video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+
 /* Richtext : on coupe proprement les mots/URLs trop longs ; médias, blocs de
    code et tableaux restent contenus (scroll horizontal si besoin). */
 .rte { overflow-wrap:break-word; }

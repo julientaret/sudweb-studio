@@ -57,6 +57,7 @@ final class Kernel
         $this->blocks->register(new \App\Core\Blocks\QuoteBlock());
         $this->blocks->register(new \App\Core\Blocks\ButtonBlock());
         $this->blocks->register(new \App\Core\Blocks\AccordionBlock());
+        $this->blocks->register(new \App\Core\Blocks\VideoBlock());
 
         // Modules effectifs : catalogue (config/modules.php) filtré par l'état
         // choisi dans l'admin (storage/modules.json, onglet Administration). La
@@ -232,7 +233,9 @@ final class Kernel
         header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');
         header('Referrer-Policy: same-origin');
-        header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'");
+        // frame-src : YouTube (nocookie)/Vimeo pour le bloc Vidéo (App\Core\Blocks\VideoBlock)
+        // — sans cette autorisation explicite, l'iframe est bloquée silencieusement.
+        header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src https://www.youtube-nocookie.com https://player.vimeo.com");
 
         $https = (($_SERVER['HTTPS'] ?? '') !== '' && $_SERVER['HTTPS'] !== 'off');
         if ($https) {

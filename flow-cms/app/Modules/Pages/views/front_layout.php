@@ -48,6 +48,8 @@
         .block-accordion-item summary::after { content:"+"; flex:0 0 auto; font-size:1.3rem; line-height:1; color:var(--accent); }
         .block-accordion-item[open] summary::after { content:"\2212"; }
         .block-accordion-a { margin-top:.7rem; color:var(--muted); }
+        .block-video { position:relative; margin:1.8rem 0; padding-top:56.25%; height:0; overflow:hidden; border-radius:8px; }
+        .block-video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
         /* Lignes en colonnes (1 à 4), responsives. */
         .flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
         .flow-row.cols-1 { grid-template-columns:1fr; }
