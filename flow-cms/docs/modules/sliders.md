@@ -4,10 +4,14 @@
 
 Gère une **collection de diapositives** : chaque diapositive a un **titre**, une
 **description en texte riche** (éditeur Quill) et une **photo** issue de la
-bibliothèque Média. Le module n'expose **aucune URL front** : les diapositives
-publiées s'affichent via le **bloc dynamique `slider`**, insérable dans n'importe
-quelle page par le page-builder (même pattern que [Avis Google](google-reviews.md)).
-Calqué sur la base commune « contenu » (brief §3/§4).
+bibliothèque Média. Calqué sur la base commune « contenu » (brief §3/§4).
+
+> **Le bloc `slider` a été retiré du sélecteur de blocs.** Le module n'a donc
+> **plus aucun point d'affichage public** pour l'instant : les diapositives
+> restent créables/éditables en admin (back-office intact), mais n'apparaissent
+> plus sur le site tant qu'un nouveau point d'affichage n'est pas réintroduit.
+> Voir la section [Bloc fourni](#bloc-fourni-historique) ci-dessous pour le détail
+> technique (classe toujours présente, simplement non enregistrée).
 
 ## Données
 
@@ -35,12 +39,14 @@ Déclarées dans `SlidersModule::boot()`. Toutes en back-office (pas de front).
 | POST | `/admin/sliders/edit`   | `update`  | `content.edit` + CSRF |
 | POST | `/admin/sliders/delete` | `destroy` | `content.edit` + CSRF |
 
-## Bloc fourni
+## Bloc fourni (historique)
 
-**`slider`** (libellé « Slider »), enregistré au boot dans le `BlockRegistry`
-partagé. Son `render()` requête la base en live (brief §4) et rend les
-diapositives **publiées**, dans l'ordre des `position`, jusqu'à la limite choisie.
-Données du bloc : `{ title?: string, limit: int (1..30, défaut 8) }`.
+**`slider`** ([`Blocks/SliderBlock.php`](../../app/Modules/Sliders/Blocks/SliderBlock.php),
+libellé « Slider ») — **classe conservée mais plus enregistrée** dans
+`SlidersModule::boot()` (retirée du `BlockRegistry`, donc du sélecteur de blocs de
+tous les éditeurs). Son `render()` requêtait la base en live (brief §4) et rendait
+les diapositives **publiées**, dans l'ordre des `position`, jusqu'à la limite
+choisie. Données du bloc : `{ title?: string, limit: int (1..30, défaut 8) }`.
 
 Markup neutre : `<section class="slider" data-slider>` → `<ul class="slider__track">`
 → `<li class="slider__slide">` (photo `<picture>` WebP responsive + légende). **Le
@@ -83,3 +89,7 @@ de carrousel laissé au thème). Elle n'apparaît que si le module `Sliders` est
   récent d'abord.
 - **Carrousel** : le module ne fournit que la structure ; le défilement
   (autoplay, flèches, points) est à implémenter dans le thème.
+- **Aucun affichage public actuellement** : le bloc `slider` n'est plus enregistré
+  (voir [Bloc fourni](#bloc-fourni-historique)). Pour réafficher les diapositives,
+  soit ré-enregistrer `SliderBlock` dans `SlidersModule::boot()`, soit exposer une
+  route/partial front dédiée.

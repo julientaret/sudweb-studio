@@ -55,6 +55,11 @@ $fmt = static function (?string $date): string {
         .img-shadow-sm { box-shadow:0 2px 8px rgba(0,0,0,.12); }
         .img-shadow-md { box-shadow:0 8px 20px rgba(0,0,0,.16); }
         .img-shadow-lg { box-shadow:0 16px 36px rgba(0,0,0,.22); }
+        blockquote.block-quote { margin:2rem 0; padding:0 0 0 1.4rem; border-left:4px solid var(--accent); }
+        blockquote.block-quote p { margin:0; font-size:1.15rem; font-style:italic; }
+        blockquote.block-quote cite { display:block; margin-top:.6rem; font-style:normal; font-size:.9rem; color:var(--muted); }
+        a.block-button { display:inline-block; margin:.4rem 0; padding:.75rem 1.5rem; border-radius:9px; background:var(--accent); color:#fff; text-decoration:none; font-family:system-ui, sans-serif; font-weight:600; font-size:.95rem; }
+        a.block-button:hover { filter:brightness(.9); }
         .flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
         .flow-row.cols-1 { grid-template-columns:1fr; }
         .flow-row.cols-2 { grid-template-columns:repeat(2,1fr); }

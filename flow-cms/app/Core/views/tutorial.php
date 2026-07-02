@@ -278,14 +278,10 @@ HTML],
             </div>
         </div>
 
-        <h3>Afficher le carrousel sur le site</h3>
-        <p>Comme pour les réalisations, on pose les diapositives sur une page avec le
-        <strong>bloc « Slider »</strong> (titre de section et nombre de diapositives au choix). Voir la
-        rubrique <strong>Les pages</strong> pour l'usage des blocs.</p>
-
-        <p class="muted">Bon à savoir : l'<strong>effet de défilement</strong> (animation, flèches, points)
-        fait partie de l'habillage du site réglé par <strong>Sud Web Studio</strong> ; de votre côté, vous
-        gérez le contenu et l'ordre des diapositives.</p>
+        <p class="muted">Pour l'instant, les diapositives publiées ne s'affichent pas encore
+        automatiquement sur le site public : leur intégration (emplacement, effet de défilement) se règle
+        avec <strong>Sud Web Studio</strong>. De votre côté, vous gérez déjà le contenu et l'ordre des
+        diapositives, prêts à être affichés dès que l'intégration est branchée.</p>
 HTML],
 
     'legal_pages' => ['Les pages légales', <<<HTML
