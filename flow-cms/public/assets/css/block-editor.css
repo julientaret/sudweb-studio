@@ -127,6 +127,18 @@ button.ghost { background:#eef2ff; color:var(--accent); }
 .image-clear { padding:.35rem .7rem; background:#fdecec; color:#b91c1c; box-shadow:none; }
 .image-clear:hover { background:#f9d7d7; filter:none; box-shadow:none; }
 
+/* Champ galerie (bloc galerie) : grille de vignettes ajoutées une à une via la
+   modale média partagée, chacune retirable. */
+.gallery-grid { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:.6rem; }
+.gallery-thumb { position:relative; width:64px; height:64px; flex:0 0 auto; border-radius:8px;
+                 overflow:hidden; border:1px solid var(--line); background:#f5f6f8; }
+.gallery-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.gallery-remove { position:absolute; top:2px; right:2px; width:18px; height:18px; padding:0;
+                  display:grid; place-items:center; border-radius:50%; background:rgba(17,20,30,.65);
+                  color:#fff; font-size:.85rem; line-height:1; box-shadow:none; }
+.gallery-remove:hover { background:rgba(17,20,30,.85); filter:none; box-shadow:none; }
+.gallery-add { padding:.45rem .9rem; background:#eef2ff; color:var(--accent); }
+
 /* Modale de sélection d'image (vignettes de la bibliothèque). */
 .media-modal[hidden] { display:none; }
 .media-modal { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:1.5rem; }

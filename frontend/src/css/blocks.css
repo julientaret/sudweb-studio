@@ -41,6 +41,11 @@ a.block-button:hover { background:color-mix(in srgb, var(--accent) 85%, #000); }
 .block-video { position:relative; margin:1.8rem 0; padding-top:56.25%; height:0; overflow:hidden; border-radius:8px; }
 .block-video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
 
+/* Galerie : grille responsive, vignettes recadrées en carré. */
+.block-gallery { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:1rem; margin:1.8rem 0; }
+.block-gallery figure { margin:0; }
+.block-gallery img { width:100%; height:100%; aspect-ratio:4/3; object-fit:cover; border-radius:8px; display:block; }
+
 /* Richtext : on coupe proprement les mots/URLs trop longs ; médias, blocs de
    code et tableaux restent contenus (scroll horizontal si besoin). */
 .rte { overflow-wrap:break-word; }

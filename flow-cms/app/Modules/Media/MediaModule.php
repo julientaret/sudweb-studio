@@ -7,6 +7,7 @@ namespace App\Modules\Media;
 use App\Core\Kernel;
 use App\Core\Module;
 use App\Core\Router;
+use App\Modules\Media\Blocks\GalleryBlock;
 use App\Modules\Media\Blocks\ImageBlock;
 
 /**
@@ -26,8 +27,9 @@ final class MediaModule implements Module
 
     public function boot(Router $router): void
     {
-        // Bloc image du page-builder (brief §4 : enregistré dans boot()).
+        // Blocs image/galerie du page-builder (brief §4 : enregistrés dans boot()).
         Kernel::instance()->blocks()->register(new ImageBlock());
+        Kernel::instance()->blocks()->register(new GalleryBlock());
 
         $router->get('/admin/media', [MediaController::class, 'index']);
         $router->post('/admin/media/upload', [MediaController::class, 'upload']);

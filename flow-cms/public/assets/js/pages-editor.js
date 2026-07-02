@@ -101,6 +101,7 @@
     // par createElement/textContent (jamais d'innerHTML) : pas d'évasion possible.
     var mediaModal = document.getElementById('media-modal');
     var activeImageField = null;
+    var activeGalleryField = null;
 
     // Filtre par dossier : montre/cache les vignettes selon le dossier choisi.
     // 'all' = tout ; 'none' = images sans dossier ; sinon l'id du dossier.
@@ -119,7 +120,15 @@
     function openMediaModal(field) {
         if (!mediaModal) { return; }
         activeImageField = field;
+        activeGalleryField = null;
         // Repart sur « Tout » à chaque ouverture (s'il y a un filtre).
+        if (mediaModal.querySelector('.media-filter')) { applyMediaFilter('all'); }
+        mediaModal.hidden = false;
+    }
+    function openGalleryModal(field) {
+        if (!mediaModal) { return; }
+        activeGalleryField = field;
+        activeImageField = null;
         if (mediaModal.querySelector('.media-filter')) { applyMediaFilter('all'); }
         mediaModal.hidden = false;
     }
@@ -127,6 +136,7 @@
         if (!mediaModal) { return; }
         mediaModal.hidden = true;
         activeImageField = null;
+        activeGalleryField = null;
     }
     function setImage(field, id, thumb) {
         var input = document.getElementById(field.dataset.input);
@@ -159,13 +169,48 @@
         if (clear) { clear.hidden = true; }
     }
 
+    // --- Galerie : plusieurs images, ajoutées une à une via la même modale.
+    // Le champ caché porte la liste des ID séparés par des virgules.
+    function updateGalleryInput(field) {
+        var input = document.getElementById(field.dataset.input);
+        if (!input) { return; }
+        var ids = [];
+        field.querySelectorAll('.gallery-thumb').forEach(function (t) { ids.push(t.dataset.id); });
+        input.value = ids.join(',');
+    }
+    function addGalleryImage(field, id, thumb) {
+        var grid = field.querySelector('.gallery-grid');
+        if (!grid) { return; }
+        // Pas de doublon si la même image est choisie deux fois.
+        if (grid.querySelector('.gallery-thumb[data-id="' + id + '"]')) { return; }
+        var item = document.createElement('div');
+        item.className = 'gallery-thumb';
+        item.dataset.id = id;
+        var img = document.createElement('img');
+        img.src = thumb;
+        img.alt = '';
+        var remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'gallery-remove';
+        remove.setAttribute('aria-label', "Retirer cette image");
+        remove.textContent = '×';
+        item.appendChild(img);
+        item.appendChild(remove);
+        grid.appendChild(item);
+        updateGalleryInput(field);
+    }
+
     if (mediaModal) {
         mediaModal.addEventListener('click', function (e) {
             if (e.target.closest('[data-close]')) { closeMediaModal(); return; }
             var filter = e.target.closest('.media-filter');
             if (filter) { applyMediaFilter(filter.dataset.folder); return; }
             var pick = e.target.closest('.media-pick');
-            if (pick && activeImageField) {
+            if (!pick) { return; }
+            if (activeGalleryField) {
+                addGalleryImage(activeGalleryField, pick.dataset.id, pick.dataset.thumb);
+                closeMediaModal();
+            } else if (activeImageField) {
                 setImage(activeImageField, pick.dataset.id, pick.dataset.thumb);
                 closeMediaModal();
             }
@@ -175,9 +220,18 @@
         });
     }
 
-    // Champs image au niveau document : fonctionne pour les blocs image (dans
+    // Champs image/galerie au niveau document : fonctionne pour les blocs (dans
     // #rows) comme pour un champ hors blocs (ex. vignette d'un événement Agenda).
     document.addEventListener('click', function (e) {
+        var addGal = e.target.closest('.gallery-add');
+        if (addGal) { openGalleryModal(addGal.closest('.gallery-field')); return; }
+        var removeGal = e.target.closest('.gallery-remove');
+        if (removeGal) {
+            var field = removeGal.closest('.gallery-field');
+            removeGal.closest('.gallery-thumb').remove();
+            if (field) { updateGalleryInput(field); }
+            return;
+        }
         var chooseImg = e.target.closest('.image-choose');
         if (chooseImg) { openMediaModal(chooseImg.closest('.image-field')); return; }
         var clearImg = e.target.closest('.image-clear');
