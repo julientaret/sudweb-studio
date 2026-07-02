@@ -41,6 +41,13 @@
         blockquote.block-quote cite { display:block; margin-top:.6rem; font-style:normal; font-size:.9rem; color:var(--muted); }
         a.block-button { display:inline-block; margin:.4rem 0; padding:.75rem 1.5rem; border-radius:9px; background:var(--accent); color:#fff; text-decoration:none; font-family:system-ui, sans-serif; font-weight:600; font-size:.95rem; }
         a.block-button:hover { filter:brightness(.9); }
+        .block-accordion { margin:1.8rem 0; }
+        .block-accordion-item { border-bottom:1px solid var(--line); padding:.9rem 0; }
+        .block-accordion-item summary { cursor:pointer; font-weight:600; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+        .block-accordion-item summary::-webkit-details-marker { display:none; }
+        .block-accordion-item summary::after { content:"+"; flex:0 0 auto; font-size:1.3rem; line-height:1; color:var(--accent); }
+        .block-accordion-item[open] summary::after { content:"\2212"; }
+        .block-accordion-a { margin-top:.7rem; color:var(--muted); }
         /* Lignes en colonnes (1 à 4), responsives. */
         .flow-row { display:grid; gap:1.6rem; margin:1.6rem 0; }
         .flow-row.cols-1 { grid-template-columns:1fr; }

@@ -56,6 +56,7 @@ final class Kernel
         $this->blocks->register(new \App\Core\Blocks\RichtextBlock());
         $this->blocks->register(new \App\Core\Blocks\QuoteBlock());
         $this->blocks->register(new \App\Core\Blocks\ButtonBlock());
+        $this->blocks->register(new \App\Core\Blocks\AccordionBlock());
 
         // Modules effectifs : catalogue (config/modules.php) filtré par l'état
         // choisi dans l'admin (storage/modules.json, onglet Administration). La
