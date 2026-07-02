@@ -2,6 +2,9 @@
 /** @var array<int, array{name:string,label:string,description:string,enabled:bool,protected:bool,requires:array<int,string>,dependents:array<int,string>}> $modules */
 /** @var int $aosDuration */
 /** @var array<int, string> $aosDurationOpt */
+/** @var bool $demoEnabled */
+/** @var string $demoEmail */
+/** @var ?string $demoPassword */
 /** @var string $notice */
 /** @var string $base */
 ?>
@@ -78,6 +81,32 @@
     </form>
 </div>
 
+<div class="card" style="margin-top:1.4rem;">
+    <h2 style="margin:0 0 .3rem; font-size:1.1rem;">Mode démonstration</h2>
+    <p class="muted" style="margin:0 0 1rem;">
+        Crée un compte de démonstration limité (édite et publie du contenu, sans pouvoir rien
+        supprimer ni toucher aux utilisateurs ou aux réglages) et quelques données factices dans
+        les modules de contenu actifs — jamais de photo factice. Désactiver supprime intégralement
+        ce compte et ces données factices, sans jamais toucher au reste.
+    </p>
+
+    <?php if ($demoPassword !== null): ?>
+        <div class="notice demo-credentials">
+            <strong>Compte créé — notez ces identifiants, ils ne seront plus jamais affichés :</strong><br>
+            E-mail : <code><?= e($demoEmail) ?></code><br>
+            Mot de passe : <code><?= e($demoPassword) ?></code>
+        </div>
+    <?php endif; ?>
+
+    <form method="post" action="<?= e($base . '/admin/administration/demo') ?>" style="margin-top:1rem;">
+        <?= \App\Core\Csrf::field() ?>
+        <input type="hidden" name="enabled" value="<?= $demoEnabled ? '0' : '1' ?>">
+        <button type="submit" class="<?= $demoEnabled ? 'secondary' : '' ?>">
+            <?= $demoEnabled ? 'Désactiver le mode démonstration' : 'Activer le mode démonstration' ?>
+        </button>
+    </form>
+</div>
+
 <style>
     .module-list { list-style:none; margin:0; padding:0; }
     .module-row { display:flex; align-items:center; justify-content:space-between; gap:1.2rem;
@@ -101,4 +130,6 @@
     .switch input:checked + .slider { background:var(--accent); }
     .switch input:checked + .slider::before { transform:translateX(20px); }
     .switch input:focus-visible + .slider { box-shadow:0 0 0 4px rgba(43,139,255,.25); }
+
+    .demo-credentials code { background:#fff; padding:.15rem .45rem; border-radius:5px; font-size:.95em; }
 </style>

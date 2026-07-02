@@ -141,6 +141,7 @@ final class Kernel
         $this->router->get('/admin/administration', [AdministrationController::class, 'index']);
         $this->router->post('/admin/administration/modules', [AdministrationController::class, 'saveModules']);
         $this->router->post('/admin/administration/aos', [AdministrationController::class, 'saveAos']);
+        $this->router->post('/admin/administration/demo', [AdministrationController::class, 'toggleDemo']);
 
         // Maintenance (fermeture du site public + bypass) — niveau Core, réservé
         // à admin.maintenance. Voir App\Core\MaintenanceSettings.

@@ -63,6 +63,7 @@ final class ContactModule implements Module
     {
         return [
             __DIR__ . '/migrations/001_create_contact_submissions.sql',
+            __DIR__ . '/migrations/002_add_is_demo.sql',
         ];
     }
 

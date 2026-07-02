@@ -50,6 +50,7 @@ final class ActualitesModule implements Module
     {
         return [
             __DIR__ . '/migrations/001_create_articles.sql',
+            __DIR__ . '/migrations/002_add_is_demo.sql',
         ];
     }
 }

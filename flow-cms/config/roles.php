@@ -33,4 +33,12 @@ return [
 
     // Rédacteur : édite du contenu, téléverse médias et documents, ne publie pas.
     'editor' => ['content.edit', 'media.upload', 'documents.upload'],
+
+    // Démo : compte temporaire créé/supprimé par le mode démonstration
+    // (App\Core\DemoSettings, onglet Administration). Peut créer/éditer/publier
+    // du contenu et téléverser des médias, consulter devis/contacts/stats —
+    // volontairement SANS aucune permission de suppression ni d'accès à
+    // users.*/admin.*/googlereviews.* : un compte partagé avec un prospect ne
+    // doit jamais pouvoir casser de vraies données ou la configuration du site.
+    'demo' => ['content.edit', 'content.publish', 'media.upload', 'devis.view', 'contacts.view', 'stats.view'],
 ];

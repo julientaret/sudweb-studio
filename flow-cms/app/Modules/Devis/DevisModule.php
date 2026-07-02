@@ -73,6 +73,7 @@ final class DevisModule implements Module
         return [
             __DIR__ . '/migrations/001_create_quote_requests.sql',
             __DIR__ . '/migrations/002_dynamic_answers.sql',
+            __DIR__ . '/migrations/003_add_is_demo.sql',
         ];
     }
 

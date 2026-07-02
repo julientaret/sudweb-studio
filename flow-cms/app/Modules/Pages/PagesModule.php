@@ -47,6 +47,7 @@ final class PagesModule implements Module
     {
         return [
             __DIR__ . '/migrations/001_create_pages.sql',
+            __DIR__ . '/migrations/002_add_is_demo.sql',
         ];
     }
 }
