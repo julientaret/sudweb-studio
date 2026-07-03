@@ -55,6 +55,7 @@ Modules :
 - **Agenda** — [modules/agenda.md](modules/agenda.md)
 - **Actualités** — [modules/actualites.md](modules/actualites.md)
 - **Avis Google** — [modules/google-reviews.md](modules/google-reviews.md)
+- **Horaires d'ouverture** — [modules/horaires.md](modules/horaires.md)
 - **Contact** — [modules/contact.md](modules/contact.md)
 - **Devis** — [modules/devis.md](modules/devis.md)
 - **Pages légales** — [modules/legal-pages.md](modules/legal-pages.md)

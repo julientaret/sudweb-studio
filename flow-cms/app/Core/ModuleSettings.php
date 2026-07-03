@@ -49,6 +49,7 @@ final class ModuleSettings
         'Agenda'     => ['Agenda', 'Événements datés avec page publique /agenda/….'],
         'Actualites' => ['Actualités', 'Articles d\'actualité avec page publique /actualites/….'],
         'GoogleReviews' => ['Avis Google', 'Import des avis Google de l\'établissement et bloc d\'affichage.'],
+        'Horaires'   => ['Horaires d\'ouverture', 'Horaires hebdomadaires et fermetures exceptionnelles, avec bloc d\'affichage.'],
         'Contact'    => ['Contact', 'Formulaire public, demandes en base et notification e-mail au propriétaire.'],
         'Devis'      => ['Devis', 'Pop-up de demande de devis multi-étapes, demandes en base et notification e-mail.'],
         'LegalPages' => ['Pages légales', 'Mentions légales, politique de confidentialité et autres pages juridiques, éditées au texte riche.'],

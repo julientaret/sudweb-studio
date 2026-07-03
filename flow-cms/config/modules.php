@@ -24,6 +24,7 @@ return [
         'Realisations',
         'Sliders',
         'GoogleReviews',
+        'Horaires',
         'Contact',
         'Devis',
         'LegalPages',

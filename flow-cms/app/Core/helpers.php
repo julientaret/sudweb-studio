@@ -78,6 +78,8 @@ if (!function_exists('admin_icon')) {
             str_contains($url, 'sliders') => $svg('<rect x="6" y="5" width="12" height="14" rx="2"/><path d="M3 8v8"/><path d="M21 8v8"/>'),
             // Avis Google — étoile.
             str_contains($url, 'google-reviews') => $svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+            // Horaires d'ouverture — horloge.
+            str_contains($url, 'horaires') => $svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'),
             // Contact — enveloppe (demandes reçues).
             str_contains($url, 'contact') => $svg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'),
             // Devis — reçu / document chiffré.

@@ -356,6 +356,32 @@ HTML],
         les avis à mettre en avant.</p>
 HTML],
 
+    'horaires' => ['Les horaires d\'ouverture', <<<HTML
+        <h2>Les horaires d'ouverture</h2>
+        <p>Menu <strong>Horaires d'ouverture</strong> : réglez les horaires de votre établissement,
+        jour par jour, et affichez-les sur le site via un <strong>bloc « Horaires d'ouverture »</strong>
+        à poser dans le contenu d'une page (voir la rubrique <strong>Les pages</strong>).</p>
+
+        <h3>Horaires hebdomadaires</h3>
+        <p>Pour chaque jour de la semaine, indiquez l'heure d'<strong>ouverture</strong> et de
+        <strong>fermeture</strong>, ou cochez <strong>Fermé</strong> si l'établissement n'ouvre pas ce
+        jour-là. Sur le site, les jours consécutifs ayant les mêmes horaires s'affichent groupés
+        (ex. « Lundi – Vendredi »).</p>
+
+        <h3>Fermetures exceptionnelles</h3>
+        <p>Congés, jours fériés ou toute autre fermeture ponctuelle : ajoutez une ligne avec une date
+        de début, une date de fin et un motif facultatif (ex. « Congés d'été »). Elles s'affichent sur
+        le site tant qu'elles ne sont pas passées, puis disparaissent automatiquement.</p>
+
+        <div class="demo">
+            <span class="demo-tag">Aperçu — le bloc sur le site</span>
+            <div class="demo-bar" aria-hidden="true">
+                <span class="demo-pill">Lundi – Vendredi · 8h30 – 18h00</span>
+                <span class="demo-pill">Dimanche · Fermé</span>
+            </div>
+        </div>
+HTML],
+
     'media' => ['Les médias', <<<HTML
         <h2>Les médias</h2>
         <p>Menu <strong>Médias</strong> : la bibliothèque d'images partagée par tout le site. C'est ici
@@ -692,6 +718,7 @@ $sectionModule = [
     'sliders'        => 'Sliders',
     'legal_pages'    => 'LegalPages',
     'google_reviews' => 'GoogleReviews',
+    'horaires'       => 'Horaires',
     'devis'          => 'Devis',
     'media'          => 'Media',
     'documents'      => 'Documents',

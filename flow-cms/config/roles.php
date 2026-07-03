@@ -26,6 +26,7 @@ return [
     'manager' => [
         'content.*', 'media.*', 'documents.*', 'users.manage',
         'googlereviews.view', 'googlereviews.sync', 'googlereviews.manage',
+        'horaires.view', 'horaires.manage',
         'contacts.view', 'contacts.delete',
         'devis.view', 'devis.delete', 'devis.configure',
         'stats.view',
