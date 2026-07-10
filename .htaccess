@@ -8,8 +8,33 @@
 # Résultat : http://host/flow/        → site public
 #            http://host/flow/flow-cms → admin
 
+# Pas de listing de répertoire (le projet expose des dossiers réels : design/,
+# frontend/, flow-cms/ — leur contenu ne doit jamais être énuméré).
+Options -Indexes
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # --- Fichiers hors du web (à traiter AVANT toute règle de routage) --------
+    #
+    # Les règles de routage plus bas ne réécrivent pas les chemins qui existent
+    # sur le disque (RewriteCond !-f / !-d) : sans les refus ci-dessous, Apache
+    # servirait tels quels .env.local (identifiants de la base) et .git/ (dépôt
+    # complet). On répond 404 plutôt que 403 : ne pas confirmer leur existence.
+
+    # Exception : validation de certificat (Let's Encrypt) — segment caché légitime.
+    RewriteRule ^\.well-known/ - [L]
+
+    # Tout segment de chemin commençant par un point : .env.local, .git/config,
+    # .DS_Store, .gitignore… Couvre aussi les fichiers À L'INTÉRIEUR de .git/,
+    # dont les noms, eux, ne commencent pas par un point.
+    RewriteRule (^|/)\. - [R=404,L]
+
+    # Fichiers de projet jamais destinés au web, à quelque profondeur que ce soit.
+    RewriteRule \.(md|lock|sql|log|ini|example|dist|ya?ml)$ - [R=404,L]
+    RewriteRule (^|/)(composer|package(-lock)?)\.json$ - [R=404,L]
+
+    # --- Routage --------------------------------------------------------------
 
     # L'admin gère ses propres requêtes (flow-cms/.htaccess route vers public/).
     RewriteRule ^flow-cms($|/) - [L]
@@ -27,4 +52,20 @@
 # Filet si mod_rewrite est absent : la racine redirige vers le site public.
 <IfModule !mod_rewrite.c>
     DirectoryIndex index.php
+</IfModule>
+
+# Seconde barrière, indépendante de mod_rewrite : refus par nom de fichier.
+# Hérité par tous les sous-dossiers. Ne couvre PAS le contenu de .git/ (les noms
+# des fichiers qui s'y trouvent ne commencent pas par un point) — d'où la règle
+# mod_rewrite plus haut, et surtout : ne pas déployer .git/ sur le serveur.
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.|\.(md|lock|sql|log|ini|example|dist|ya?ml)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "^\.|\.(md|lock|sql|log|ini|example|dist|ya?ml)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
 </IfModule>
