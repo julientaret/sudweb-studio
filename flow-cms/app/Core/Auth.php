@@ -22,6 +22,15 @@ use PDO;
 final class Auth
 {
     private const SESSION_KEY = 'auth_user_id';
+    private const ACTIVITY_KEY = 'auth_last_activity';
+
+    /**
+     * Hashes factices (mot de passe aléatoire jeté) : vérifiés quand l'e-mail
+     * est inconnu, pour que le temps de réponse ne trahisse pas l'existence
+     * d'un compte. Mêmes paramètres que les vrais hashes.
+     */
+    private const DUMMY_HASH_ARGON2ID = '$argon2id$v=19$m=65536,t=4,p=1$U2Nadk9XdFJINUhPd09RRA$2KIHudUnsi09YWrWH6wrKP57TSjYOPl9V0cL8dF+b6Q';
+    private const DUMMY_HASH_BCRYPT = '$2y$10$sDyKBuzkv9I9oFLp0swY7.YsNNASgeSEiiPMCMIDr/6iOiMMoTYwO';
 
     private UserRepository $users;
 
@@ -47,7 +56,13 @@ final class Auth
 
         $user = $this->users->findByEmail($email);
 
-        if ($user === null || !password_verify($password, $user->passwordHash)) {
+        // Toujours un password_verify(), compte existant ou non (temps constant).
+        $valid = password_verify(
+            $password,
+            $user?->passwordHash ?? (self::hashAlgo() === PASSWORD_DEFAULT ? self::DUMMY_HASH_BCRYPT : self::DUMMY_HASH_ARGON2ID)
+        );
+
+        if ($user === null || !$valid) {
             $this->recordAttempt($email, $ip);
             // Si cette tentative atteint le seuil, le verrou vient de se poser :
             // les suivantes sont rejetées en amont (isLockedOut au début), donc
@@ -70,7 +85,9 @@ final class Auth
 
         $this->clearAttempts($email, $ip);
         session_regenerate_id(true);
+        Csrf::regenerate();
         $_SESSION[self::SESSION_KEY] = $user->id;
+        $_SESSION[self::ACTIVITY_KEY] = time();
 
         $this->guardLoginIp($user, $ip);
 
@@ -106,8 +123,31 @@ final class Auth
 
     public function logout(): void
     {
-        unset($_SESSION[self::SESSION_KEY]);
+        unset($_SESSION[self::SESSION_KEY], $_SESSION[self::ACTIVITY_KEY]);
         session_regenerate_id(true);
+        Csrf::regenerate();
+    }
+
+    /**
+     * Déconnexion automatique après inactivité (app.session_idle_timeout, en
+     * secondes ; 0 = désactivé). À appeler juste après session_start(), avant
+     * toute sortie (le Kernel s'en charge). Toute requête authentifiée
+     * rafraîchit l'horodatage d'activité.
+     */
+    public static function enforceIdleTimeout(): void
+    {
+        if (!isset($_SESSION[self::SESSION_KEY])) {
+            return;
+        }
+        $timeout = (int) Config::get('app.session_idle_timeout', 7200);
+        $last = (int) ($_SESSION[self::ACTIVITY_KEY] ?? 0);
+        if ($timeout > 0 && time() - $last > $timeout) {
+            unset($_SESSION[self::SESSION_KEY], $_SESSION[self::ACTIVITY_KEY]);
+            session_regenerate_id(true);
+            Csrf::regenerate();
+            return;
+        }
+        $_SESSION[self::ACTIVITY_KEY] = time();
     }
 
     /**

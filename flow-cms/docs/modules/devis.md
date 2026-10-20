@@ -89,7 +89,9 @@ défense cumulatives :
 2. **Délai minimum** — horodatage en session ; un envoi en moins de `min_seconds`
    est traité comme un bot (drop silencieux), seulement si l'horodatage est présent.
 3. **Rate-limit par IP hachée** — au plus `rate_limit_max` envois par
-   `rate_limit_window` (défaut : 5 / heure).
+   `rate_limit_window` (défaut : 5 / heure). S'y ajoute un **plafond global**
+   (toutes IP) de `rate_limit_global_max` envois sur la même fenêtre (défaut :
+   30 ; 0 = désactivé), contre les envois en masse via des IP tournantes.
 
 S'ajoutent un **jeton CSRF** (session) et une **validation serveur** pilotée par
 le schéma (champs obligatoires, format e-mail, appartenance aux options d'une

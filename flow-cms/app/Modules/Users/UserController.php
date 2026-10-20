@@ -68,7 +68,7 @@ final class UserController extends Controller
     {
         $this->requirePermission('users.manage');
         $user = $this->repo->find((int) $this->input('id', '0'));
-        if ($user === null) {
+        if ($user === null || !$this->canManage($user)) {
             $this->redirect('/admin/users');
         }
         $this->renderForm($user);
@@ -81,7 +81,9 @@ final class UserController extends Controller
 
         $id = (int) $this->input('id', '0');
         $user = $this->repo->find($id);
-        if ($user === null) {
+        // Anti-escalade : pas de modification (e-mail, mot de passe, rôle) d'un
+        // compte dont le rôle dépasse nos propres droits.
+        if ($user === null || !$this->canManage($user)) {
             $this->redirect('/admin/users');
         }
 
@@ -109,7 +111,8 @@ final class UserController extends Controller
         $id = (int) $this->input('id', '0');
         // Garde-fou : on ne supprime pas son propre compte.
         $current = $this->auth->user();
-        if ($current !== null && $current->id !== $id) {
+        $target = $this->repo->find($id);
+        if ($current !== null && $current->id !== $id && $target !== null && $this->canManage($target)) {
             $this->repo->delete($id);
         }
         $this->redirect('/admin/users');
@@ -124,8 +127,33 @@ final class UserController extends Controller
             'user'   => $user,
             'error'  => $error,
             'values' => $values,
-            'roles'  => array_keys((array) Config::get('roles', [])),
+            'roles'  => $this->grantableRoles(),
         ]);
+    }
+
+    /**
+     * Rôles que l'utilisateur courant peut attribuer (ceux dont il détient
+     * déjà toutes les permissions).
+     *
+     * @return array<int, string>
+     */
+    private function grantableRoles(): array
+    {
+        $current = $this->auth->user();
+        if ($current === null) {
+            return [];
+        }
+        return array_values(array_filter(
+            array_keys((array) Config::get('roles', [])),
+            static fn (string $role): bool => $current->canGrantRole($role),
+        ));
+    }
+
+    /** Le compte cible est-il à notre portée (rôle couvert par nos droits) ? */
+    private function canManage(User $target): bool
+    {
+        $current = $this->auth->user();
+        return $current !== null && $current->canGrantRole($target->role);
     }
 
     /**
@@ -138,6 +166,9 @@ final class UserController extends Controller
         }
         if (!array_key_exists($role, (array) Config::get('roles', []))) {
             return 'Rôle inconnu.';
+        }
+        if (!in_array($role, $this->grantableRoles(), true)) {
+            return 'Vous ne pouvez pas attribuer ce rôle.';
         }
         // Mot de passe obligatoire à la création ; facultatif en édition.
         if ($editingId === null && strlen($password) < 8) {

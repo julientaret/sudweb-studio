@@ -28,6 +28,15 @@ final class Csrf
     }
 
     /**
+     * Nouveau token : à appeler à chaque changement de privilège (connexion,
+     * déconnexion), pour qu'un token capturé avant ne serve plus.
+     */
+    public static function regenerate(): void
+    {
+        $_SESSION[self::SESSION_KEY] = bin2hex(random_bytes(32));
+    }
+
+    /**
      * Champ caché prêt à insérer dans un <form>.
      */
     public static function field(): string

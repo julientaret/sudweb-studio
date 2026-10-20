@@ -24,6 +24,9 @@ return [
     // Durée du cookie de session en secondes (0 = jusqu'à fermeture du navigateur).
     'session_lifetime' => 0,
 
+    // Déconnexion automatique après N secondes d'inactivité (0 = désactivé).
+    'session_idle_timeout' => 7200, // 2 heures
+
     // Préfixe d'URL de l'application.
     //   null  → auto-détecté (racine d'un vhost OU sous-dossier type /flow-cms) ;
     //   "..."  → forcé (ex. "/flow-cms") si l'auto-détection ne convient pas.

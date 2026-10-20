@@ -64,6 +64,40 @@ final class User
         return false;
     }
 
+    /**
+     * L'utilisateur détient-il TOUTES les permissions du rôle donné ?
+     *
+     * Garde-fou anti-escalade : on ne peut attribuer (ou modifier un compte
+     * portant) qu'un rôle dont on possède déjà l'intégralité des droits. Un
+     * wildcard du rôle cible exige le même wildcard (ou '*') chez l'appelant.
+     */
+    public function canGrantRole(string $role): bool
+    {
+        $granted = Config::get('roles.' . $role, null);
+        if (!is_array($granted)) {
+            return false;
+        }
+
+        $mine = Config::get('roles.' . $this->role, []);
+        $mine = is_array($mine) ? array_map('strval', $mine) : [];
+        if (in_array('*', $mine, true)) {
+            return true;
+        }
+
+        foreach ($granted as $rule) {
+            $rule = (string) $rule;
+            if ($rule === '*') {
+                return false;
+            }
+            // Wildcard de module : il faut le même wildcard, une permission
+            // isolée ne suffit pas à couvrir toutes les actions du module.
+            if (str_ends_with($rule, '.*') ? !in_array($rule, $mine, true) : !$this->can($rule)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private function matches(string $rule, string $permission): bool
     {
         if ($rule === '*' || $rule === $permission) {

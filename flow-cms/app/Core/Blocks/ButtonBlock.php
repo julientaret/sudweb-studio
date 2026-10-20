@@ -27,7 +27,7 @@ final class ButtonBlock implements Block
     public function render(array $data): string
     {
         $text = trim((string) ($data['text'] ?? ''));
-        $url = trim((string) ($data['url'] ?? ''));
+        $url = self::safeUrl((string) ($data['url'] ?? ''));
         if ($text === '' || $url === '') {
             return '';
         }
@@ -52,15 +52,37 @@ final class ButtonBlock implements Block
 
     public function sanitize(array $input): array
     {
-        $url = trim((string) ($input['url'] ?? ''));
-        if (stripos($url, 'javascript:') === 0) {
-            $url = '';
-        }
-
         return [
             'text'    => trim((string) ($input['text'] ?? '')),
-            'url'     => $url,
+            'url'     => self::safeUrl((string) ($input['url'] ?? '')),
             'new_tab' => !empty($input['new_tab']),
         ];
+    }
+
+    /**
+     * Liste blanche des liens : internes (/page, page, ?q), ancres (#id),
+     * http(s), mailto et tel. Tout le reste (javascript:, data:, vbscript:…,
+     * y compris obfusqué par des caractères de contrôle) devient ''.
+     * Appliqué aussi au rendu, pour les données enregistrées avant ce filtre.
+     */
+    private static function safeUrl(string $url): string
+    {
+        $url = trim($url);
+        if ($url === '') {
+            return '';
+        }
+        // Les navigateurs ignorent tabulations/retours ligne dans un schéma
+        // (« java\tscript: ») : on les refuse purement et simplement.
+        if (preg_match('/[\x00-\x1F\x7F]/', $url)) {
+            return '';
+        }
+        // Un « // » ou « /\ » initial désigne un autre domaine, pas un lien interne.
+        if (preg_match('#^[/\\\\]{2}#', $url)) {
+            return '';
+        }
+        if (preg_match('/^([a-z][a-z0-9+.\-]*):/i', $url, $m)) {
+            return in_array(strtolower($m[1]), ['http', 'https', 'mailto', 'tel'], true) ? $url : '';
+        }
+        return $url;
     }
 }

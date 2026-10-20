@@ -239,6 +239,12 @@ final class DevisController extends Controller
         if ($this->repo->countByIpSince($ipHash, date('Y-m-d H:i:s', time() - $window)) >= $max) {
             $this->json(['ok' => false, 'errors' => ['Trop de demandes envoyées récemment. Merci de réessayer plus tard.']]);
         }
+        // Plafond global, toutes IP confondues : la limite par IP ne suffit pas
+        // face à des IP tournantes (envois en masse via le formulaire).
+        $globalMax = (int) $this->config('rate_limit_global_max', 30);
+        if ($globalMax > 0 && $this->repo->countSince(date('Y-m-d H:i:s', time() - $window)) >= $globalMax) {
+            $this->json(['ok' => false, 'errors' => ['Trop de demandes envoyées récemment. Merci de réessayer plus tard.']]);
+        }
 
         // 6) Persistance (la demande est conservée même si l'e-mail échoue).
         $answersJson = (string) json_encode($answers, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

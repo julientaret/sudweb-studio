@@ -59,7 +59,9 @@ de défense, cumulatives :
    `min_seconds` est traité comme un bot (drop silencieux). Vérifié seulement si
    l'horodatage est présent (tolérant aux navigateurs sans cookie).
 3. **Rate-limit par IP hachée** — au plus `rate_limit_max` envois par
-   `rate_limit_window` (défaut : 5 / heure).
+   `rate_limit_window` (défaut : 5 / heure). S'y ajoute un **plafond global**
+   (toutes IP) de `rate_limit_global_max` envois sur la même fenêtre (défaut :
+   30 ; 0 = désactivé), contre les envois en masse via des IP tournantes.
 
 S'ajoutent un **jeton CSRF** (session) et une **validation serveur** stricte
 (nom, e-mail, sujet dans la liste, longueur du message, consentement obligatoire).

@@ -30,6 +30,9 @@ return [
     // Limitation par IP : au plus N envois dans la fenêtre (s).
     'rate_limit_max'    => 5,
     'rate_limit_window' => 3600, // 1 heure
+    // Plafond global (toutes IP) dans la même fenêtre, contre les IP tournantes.
+    // 0 = désactivé.
+    'rate_limit_global_max' => 30,
 
     // --- Champs du formulaire ----------------------------------------------
     // Sujets proposés (menu déroulant). Tableau vide → champ « sujet » libre.

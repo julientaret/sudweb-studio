@@ -56,6 +56,16 @@ final class ContactRepository
         return (int) $stmt->fetchColumn();
     }
 
+    /** Nombre total de demandes depuis $since, toutes IP confondues. */
+    public function countSince(string $since): int
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT COUNT(*) FROM contact_submissions WHERE created_at > :since'
+        );
+        $stmt->execute(['since' => $since]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public function create(
         string $name,
         string $email,

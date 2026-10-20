@@ -25,6 +25,14 @@ final class Kernel
         $this->basePath = rtrim($basePath, '/');
         Config::boot($this->basePath);
 
+        // Production : jamais d'erreur affichée (un message PDO peut révéler
+        // l'hôte et l'utilisateur de la base) ; elles partent dans le log PHP.
+        if (Config::envBool('PROD')) {
+            ini_set('display_errors', '0');
+            ini_set('display_startup_errors', '0');
+            ini_set('log_errors', '1');
+        }
+
         // Chemin de base URL : auto-détecté pour fonctionner aussi bien à la racine
         // d'un vhost que dans un sous-dossier (ex. /flow-cms). Surchargé si la config
         // le fixe explicitement.
@@ -224,8 +232,15 @@ final class Kernel
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
+        // Mode strict : un identifiant de session non émis par le serveur est
+        // refusé (anti-fixation) ; cookie uniquement, jamais dans l'URL.
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.use_trans_sid', '0');
         session_name((string) Config::get('app.session_name', 'flow_session'));
         session_start();
+
+        Auth::enforceIdleTimeout();
     }
 
     public function sendSecurityHeaders(): void

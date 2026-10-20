@@ -56,6 +56,16 @@ final class DevisRepository
         return (int) $stmt->fetchColumn();
     }
 
+    /** Nombre total de demandes depuis $since, toutes IP confondues. */
+    public function countSince(string $since): int
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT COUNT(*) FROM quote_requests WHERE created_at > :since'
+        );
+        $stmt->execute(['since' => $since]);
+        return (int) $stmt->fetchColumn();
+    }
+
     /**
      * Persiste une demande. `$answersJson` est la liste ordonnée [{label,value}]
      * des réponses aux questions dynamiques (hors nom/e-mail, qui ont leur colonne).
