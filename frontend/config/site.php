@@ -14,11 +14,12 @@ declare(strict_types=1);
 return [
 
     // Identité du site.
-    'name'    => 'Flow',
-    'tagline' => '',
+    'name'    => 'Sud Web Studio',
+    'tagline' => 'Studio de création web à Villeneuve-sur-Lot',
 
     // Méta description par défaut (surchargée par page via $description).
-    'description' => '',
+    'description' => 'Studio de création de sites web à Villeneuve-sur-Lot (47). '
+        . 'Sites vitrines, sites sur mesure, référencement et web design pour les PME du Lot-et-Garonne.',
 
     // Langue du document (<html lang="…">).
     'lang' => 'fr',
@@ -29,13 +30,29 @@ return [
      * sinon laissée telle quelle (lien externe).
      */
     'nav' => [
-        'Accueil' => '/',
-        'Contact' => '/contact',
+        'Accueil'      => '/',
+        'Services'     => '/#expertises',
+        'Réalisations' => '/#realisations',
+        'Contact'      => '/#contact',
+    ],
+
+    // Appel à l'action de l'en-tête et du menu mobile (bouton pêche).
+    'cta' => [
+        'label' => 'Discutons de votre projet',
+        'url'   => '/#contact',
+    ],
+
+    // Coordonnées affichées (pied de page, contact, données structurées).
+    'contact' => [
+        'city'    => 'Villeneuve-sur-Lot',
+        'region'  => 'Lot-et-Garonne',
+        'email'   => 'contact@sudwebstudio.fr',
+        'phone'   => '',
     ],
 
     // Pied de page.
     'footer' => [
-        'copyright' => 'Flow',   // affiché « © {année} {copyright} »
+        'copyright' => 'Sud Web Studio',   // affiché « © {année} {copyright} »
     ],
 
     /*
@@ -43,6 +60,7 @@ return [
      */
     'social' => [
         // 'Instagram' => 'https://instagram.com/...',
+        // 'LinkedIn'  => 'https://linkedin.com/company/...',
     ],
 
 ];

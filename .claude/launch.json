@@ -2,10 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "flow-cms",
-      "runtimeExecutable": "php",
-      "runtimeArgs": ["-S", "localhost:8000", "-t", "flow-cms/public"],
-      "port": 8000
+      "name": "site",
+      "url": "http://localhost/sud-web-studio"
+    },
+    {
+      "name": "admin",
+      "url": "http://localhost/sud-web-studio/flow-cms"
     }
   ]
 }

@@ -16,10 +16,10 @@ $appUrl = rtrim((string) Config::env('APP_URL', (string) Config::env('HTTP', '')
 
 return [
     // Nom du site, affiché sur le front public.
-    'site_name' => 'Flow',
+    'site_name' => 'Sud Web Studio',
 
     // Nom du cookie de session (brief §6 : nom custom).
-    'session_name' => 'flow_session',
+    'session_name' => 'sws_session',
 
     // Durée du cookie de session en secondes (0 = jusqu'à fermeture du navigateur).
     'session_lifetime' => 0,

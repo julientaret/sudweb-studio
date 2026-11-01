@@ -6,9 +6,12 @@ qui partagent un même noyau et une même base de données :
 
 | Partie | Dossier | Rôle | URL (dev) |
 |--------|---------|------|-----------|
-| **Site public** | `frontend/` | Le site visité par le public | `http://localhost/flow/` |
-| **Admin (CMS)** | `flow-cms/` | Le back-office de gestion | `http://localhost/flow/flow-cms/` |
+| **Site public** | `frontend/` | Le site visité par le public | `http://localhost/sud-web-studio/` |
+| **Admin (CMS)** | `flow-cms/` | Le back-office de gestion | `http://localhost/sud-web-studio/flow-cms/` |
 
+> **Intervenir seul·e sur le projet (architecture, recettes, déploiement,
+> dépannage)** : voir le [`MANUEL.md`](MANUEL.md).
+>
 > Pour les choix d'architecture du CMS et la doc par module, voir
 > [`flow-cms/flow-brief.md`](flow-cms/flow-brief.md) (document fondateur) et
 > [`flow-cms/docs/`](flow-cms/docs/).
@@ -18,10 +21,10 @@ qui partagent un même noyau et une même base de données :
 ## 1. Arborescence
 
 ```
-flow/
+sud-web-studio/
 ├── .env.local            # secrets du serveur (DB, APP_URL…) — JAMAIS versionné
 ├── .env.example          # modèle à copier en .env.local
-├── .htaccess             # sert le site public à la racine /flow/
+├── .htaccess             # sert le site public à la racine du projet
 │
 ├── frontend/             # SITE PUBLIC
 │   ├── public/           # seul dossier exposé : front controller + assets
@@ -139,7 +142,7 @@ renommer le projet ou déployer en prod.
 
 ```ini
 # dev
-APP_URL=http://localhost/flow
+APP_URL=http://localhost/sud-web-studio
 # prod
 APP_URL=https://www.monsite.com
 ```
@@ -186,12 +189,12 @@ php flow-cms/bin/flow migrate
 php flow-cms/bin/flow user:create admin@flow.test motdepasse8 admin "Admin"
 ```
 
-Servir le projet à la racine `flow/` (pour que `http://localhost/flow/`
+Servir le projet à la racine `sud-web-studio/` (pour que `http://localhost/sud-web-studio/`
 fonctionne et corresponde à `APP_URL`) :
 
-- **Apache / MAMP** : `DocumentRoot` sur le dossier **parent** de `flow/`
-  (les `.htaccess` font le reste). Site public → `http://localhost/flow/`,
-  admin → `http://localhost/flow/flow-cms/`.
+- **Apache / MAMP** : `DocumentRoot` sur le dossier **parent** de `sud-web-studio/`
+  (les `.htaccess` font le reste). Site public → `http://localhost/sud-web-studio/`,
+  admin → `http://localhost/sud-web-studio/flow-cms/`.
 - **Vérif rapide d'une seule app** avec le serveur PHP intégré :
   `php -S localhost:8000 -t frontend/public` (mais sans le préfixe `/flow` ;
   pensez à aligner `APP_URL=http://localhost:8000`).
@@ -212,8 +215,21 @@ npm run watch     # rebuild à chaque modification de src/
 | Source | Sortie | Outil |
 |--------|--------|-------|
 | `src/css/site.css` (+ `@import` de partials) | `public/assets/site.css` | Lightning CSS (bundle, autoprefix, minify) |
-| `src/js/site.js` | `public/assets/site.js` | esbuild (bundle, minify) |
-| `src/img/*.{png,jpg}` | `public/assets/img/*.webp` | sharp |
+| `src/js/site.js` (+ GSAP, bundlé depuis `node_modules`) | `public/assets/site.js` | esbuild (bundle, minify) |
+| `src/img/**/*.{png,jpg}` | `public/assets/img/*.webp` | sharp |
+
+Les partials CSS suivent le design system (`design/Sud Web Studio - Design
+System.html`) : `tokens.css` (couleurs, mesures, courbes) et `fonts.css`
+(Spectral + Spline Sans Mono **auto-hébergées** dans `public/assets/fonts/` —
+la CSP du noyau est en `default-src 'self'`, un lien Google Fonts serait bloqué)
+d'abord, puis `base.css`, `header.css`, `footer.css`, `hero.css`, `home.css`,
+`pages.css`, et enfin les feuilles des modules du CMS rendus sur le site public.
+
+Le JS se découpe de même : `nav.js` (barre fixe + menu mobile, sans dépendance)
+et `motion.js` (GSAP + ScrollTrigger). Le site doit rester entièrement lisible
+sans la couche motion : les états masqués ne s'appliquent que sous `html.js`
+(drapeau posé par `public/assets/js-flag.js`), et `prefers-reduced-motion`
+désactive toutes les animations.
 
 > Le CSS s'organise en partials (`base.css`, `header.css`, `footer.css`…) importés
 > par `site.css` ; ils sont fusionnés en un seul fichier servi. La conversion WebP
@@ -261,7 +277,7 @@ Le `base_path` (préfixe d'URL) est **auto-détecté** au démarrage depuis
 
 | Déploiement | Site public | Admin |
 |-------------|-------------|-------|
-| Sous-dossier `/flow` | `/flow/` | `/flow/flow-cms/` |
+| Sous-dossier `/sud-web-studio` | `/sud-web-studio/` | `/sud-web-studio/flow-cms/` |
 | Racine de vhost | `/` | `/flow-cms/` |
 
 Pour forcer une valeur, renseigner `base_path` dans

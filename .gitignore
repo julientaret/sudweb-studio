@@ -13,3 +13,9 @@
 node_modules/
 vendor/
 dist/
+
+# Matériaux source de la phase de design (vidéos d'inspiration, captures
+# d'écran de travail) : ~56 Mo qui n'ont pas à vivre dans l'historique Git.
+# Les maquettes elles-mêmes (design/*.html, design/assets, design/screenshots)
+# sont versionnées — ce sont elles qui font référence pour l'intégration.
+/design/uploads/
