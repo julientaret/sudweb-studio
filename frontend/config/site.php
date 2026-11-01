@@ -32,7 +32,7 @@ return [
     'nav' => [
         'Accueil'      => '/',
         'Services'     => '/#expertises',
-        'Réalisations' => '/#realisations',
+        'Réalisations' => '/realisations',
         'Contact'      => '/#contact',
     ],
 

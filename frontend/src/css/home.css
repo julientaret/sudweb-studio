@@ -198,40 +198,12 @@
 .work-card:hover .work-go { background: var(--peach); color: var(--peach-ink); border-color: var(--peach); transform: translate(2px,-2px); }
 .work-go svg { width: 17px; height: 17px; }
 
-/* ============================ CTA ============================ */
-/* La carte CTA porte déjà beaucoup de vide à l'intérieur : moins de marge
-   au-dessus que pour une section ordinaire. */
-.cta { position: relative; padding-top: clamp(32px, 3.2vw, 52px); }
-.cta-card {
-  position: relative; overflow: visible; border-radius: 22px;
-  background: linear-gradient(108deg, #26384d 0%, #1d2c3f 36%, #182739 72%, #131e2c 100%);
-  border: 1px solid var(--line-2);
-  box-shadow: 0 30px 70px rgba(0,0,0,.35);
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(20px,3vw,48px);
-  padding: 22px clamp(30px,3.5vw,52px);
-}
-.cta-logo { position: relative; align-self: center; display: flex; align-items: center; justify-content: center; }
-.cta-logo img {
-  width: clamp(250px,23vw,340px); max-width: none; margin-block: -90px;
-  filter: drop-shadow(0 30px 52px rgba(0,0,0,.6)); will-change: transform;
-}
-.cta-body .eyebrow { margin-bottom: 12px; }
-.cta-body h2 {
-  font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(28px,3.2vw,42px); line-height: 1.04; letter-spacing: -.02em;
-}
-.cta-body p { color: var(--ink-soft); margin-top: 12px; max-width: 420px; font-size: 15px; }
-.cta-action { display: flex; align-items: center; }
-
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 1080px) {
   .exp-wrap { grid-template-columns: 1fr; gap: 34px; }
   .local-grid { grid-template-columns: 1fr; gap: 30px; }
   .local-map { order: -1; max-width: 520px; margin-inline: auto; }
   .work-grid { grid-template-columns: repeat(2, 1fr); gap: 26px 22px; }
-  .cta-card { grid-template-columns: auto 1fr; row-gap: 24px; }
-  .cta-action { grid-column: 1 / -1; }
-  .cta-logo img { margin-block: -58px; }
 }
 @media (max-width: 900px) {
   .clients-grid { grid-template-columns: repeat(2, 1fr); }
@@ -240,15 +212,4 @@
   .exp-grid { grid-template-columns: 1fr; }
   .work-grid { grid-template-columns: 1fr; }
   .clients-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .cta-card {
-    grid-template-columns: 1fr; justify-items: center; text-align: center;
-    row-gap: 18px; padding: 24px clamp(20px, 5vw, 34px) 30px;
-  }
-  .cta-logo img { width: clamp(180px, 50vw, 230px); margin-block: -56px 0; }
-  .cta-body .eyebrow { justify-content: center; }
-  .cta-body p { margin-inline: auto; }
-  .cta-action { grid-column: auto; justify-content: center; }
-  .cta-action .btn { width: 100%; max-width: 360px; justify-content: center; }
 }

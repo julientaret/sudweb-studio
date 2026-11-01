@@ -39,10 +39,15 @@ export function initMotion() {
     gsap.registerPlugin(ScrollTrigger);
     root.classList.add('js-ready');
 
+    // Exposé pour le filtre de la page Réalisations, qui doit recalculer les
+    // positions de déclenchement après avoir masqué des lignes.
+    window.ScrollTrigger = ScrollTrigger;
+
     cursor();
     smokeTrail();
     magnetic();
     hero();
+    pageHero();
     reveals();
     expertiseCards();
     workCards();
@@ -243,6 +248,18 @@ function hero() {
     });
 }
 
+/* ---------- titre des pages intérieures ---------- */
+/*
+ * Les pages intérieures ouvrent sur .work-hero, pas sur le .hero de l'accueil.
+ * Leur titre est au-dessus de la ligne de flottaison : il se révèle au
+ * chargement, pas au défilement comme les titres de section.
+ */
+function pageHero() {
+    const lines = document.querySelectorAll('.work-hero h1 .line-mask > *');
+    if (!lines.length) return;
+    gsap.to(lines, { y: '0%', duration: 1.05, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
+}
+
 /* ---------- fondus au défilement et titres masqués ligne par ligne ---------- */
 function reveals() {
     gsap.utils.toArray('.reveal').forEach((el) => {
@@ -347,7 +364,11 @@ function activeNavLink() {
     };
 
     document.querySelectorAll('main section[id]').forEach((sec) => {
-        const link = links.find((a) => a.hash === '#' + sec.id) || pageLink;
+        // L'ancre doit viser la page courante : sur une page intérieure,
+        // « /#contact » renvoie à l'accueil et ne doit pas voler l'état actif
+        // à l'entrée de la page où l'on se trouve.
+        const link = links.find((a) => a.hash === '#' + sec.id && a.pathname === location.pathname)
+            || pageLink;
         if (!link) return;
         ScrollTrigger.create({
             trigger: sec, start: 'top 40%', end: 'bottom 40%',

@@ -68,13 +68,12 @@ $clients = [
         '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'],
 ];
 
-/** Derniers projets livrés : titre, catégorie, URL, image (src/img/work/). */
-$projets = [
-    ['AppleMousse Studio', "Studio d'applications mobiles", 'https://applemousse-studio.fr', 'applemousse'],
-    ['Cuisines Lamy', "Cuisiniste près d'Artigues", 'https://www.cuisineslamy.com', 'cuisineslamy'],
-    ["Rad'o Lot", 'Événement caritatif — course de radeaux', 'https://radolot.fr', 'radolot'],
-    ["Cabinet d'Artagnan", "Cabinet d'affaires en fonds de commerce", 'https://www.cabinet-dartagnan.com', 'dartagnan'],
-];
+/*
+ * Derniers projets livrés : les premiers de la source partagée avec la page
+ * Réalisations (frontend/config/realisations.php). La grille tient quatre
+ * cartes sur une ligne — au-delà, la cinquième resterait seule en dessous.
+ */
+$projets = array_slice((array) ((array) require dirname(__DIR__) . '/config/realisations.php')['projets'], 0, 4);
 
 /** Mots du bandeau défilant (dupliqués côté rendu pour une boucle sans couture). */
 $marquee = ['Identité de marque', 'Web design', 'Développement', 'Avis Google', 'Référencement', 'Direction artistique'];
@@ -255,19 +254,22 @@ $icon = static function (string $paths, string $extra = ''): string {
                     <span class="eyebrow reveal">Réalisations</span>
                     <h2><span class="line-mask"><span>Nos derniers projets</span></span></h2>
                 </div>
+                <a class="btn btn-ghost reveal" href="<?= e(site_url('/realisations')) ?>" data-magnetic="0.3">
+                    Voir toutes nos réalisations <span class="ico" aria-hidden="true">↗</span>
+                </a>
             </div>
 
             <div class="work-grid">
-                <?php foreach ($projets as [$nom, $categorie, $url, $image]): ?>
-                <a class="work-card" href="<?= e($url) ?>" target="_blank" rel="noopener">
+                <?php foreach ($projets as $projet): ?>
+                <a class="work-card" href="<?= e($projet['url']) ?>" target="_blank" rel="noopener">
                     <div class="work-media">
-                        <img class="shot" src="<?= e(asset_url('/assets/img/' . $image . '.webp')) ?>"
-                             alt="Aperçu du site <?= e($nom) ?>" loading="lazy">
+                        <img class="shot" src="<?= e(asset_url('/assets/img/' . $projet['image'] . '.webp')) ?>"
+                             alt="Aperçu du site <?= e($projet['title']) ?>" loading="lazy">
                     </div>
                     <div class="work-meta">
                         <div class="l">
-                            <h3><?= e($nom) ?></h3>
-                            <p class="work-cat"><?= $categorie ?></p>
+                            <h3><?= e($projet['title']) ?></h3>
+                            <p class="work-cat"><?= e($projet['metier']) ?></p>
                         </div>
                         <span class="work-go"><?= $icon('<path d="M7 17 17 7M9 7h8v8"/>', '2') ?></span>
                     </div>
@@ -277,32 +279,9 @@ $icon = static function (string $paths, string $extra = ''): string {
         </div>
     </section>
 
-    <!-- ============================ CTA ============================ -->
-    <section class="section cta" id="contact">
-        <div class="shell">
-            <div class="cta-card">
-                <div class="cta-logo">
-                    <img src="<?= e(asset_url('/assets/img/logo3d-hero.webp')) ?>" alt="" aria-hidden="true" loading="lazy" width="1254" height="1254">
-                </div>
-                <div class="cta-body">
-                    <span class="eyebrow">Prêt à démarrer&nbsp;?</span>
-                    <h2><span class="line-mask"><span>Parlons de votre projet</span></span></h2>
-                    <p>Discutons de vos idées et construisons ensemble un site web à la hauteur de vos ambitions.</p>
-                </div>
-                <div class="cta-action">
-                    <?php if (module_enabled('Devis')): ?>
-                    <button type="button" class="btn btn-primary" data-devis-open data-magnetic="0.3">
-                        Discutons de votre projet <span class="ico" aria-hidden="true">↗</span>
-                    </button>
-                    <?php else: ?>
-                    <a class="btn btn-primary" href="<?= e(site_url('/contact')) ?>" data-magnetic="0.3">
-                        Discutons de votre projet <span class="ico" aria-hidden="true">↗</span>
-                    </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php /* Carte CTA commune à toutes les pages (includes/cta.php) : textes par
+             défaut, d'où l'absence de $ctaTitle / $ctaText ici. */ ?>
+    <?php require dirname(__DIR__) . '/includes/cta.php'; ?>
 
 </main>
 

@@ -49,6 +49,12 @@
   /* Dégagement sous l'en-tête fixe, en haut d'une page (nav ≈ 74px + marge). */
   --header-clear: 128px;
 
+  /* Hauteur de la barre de navigation une fois réduite au défilement (mesurée :
+     14px de padding de part et d'autre + 46px de contenu). Sert de point
+     d'accroche aux éléments collants, pour qu'ils s'arrêtent sous elle plutôt
+     que de passer derrière. */
+  --nav-h: 74px;
+
   /* Typographies */
   --font-display: "Spectral", Georgia, "Times New Roman", serif;
   --font-ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
