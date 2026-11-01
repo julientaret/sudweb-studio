@@ -12,9 +12,22 @@
  */
 
 require dirname(__DIR__) . '/includes/header.php';
+
+/*
+ * Les modules n'alimentent pas le titre de la même façon : les Pages le posent
+ * dans le corps (bloc Titre de l'éditeur), les Pages légales le passent à part.
+ * On n'ajoute donc le <h1> que si le corps n'en contient pas déjà un — sans
+ * quoi les pages du page-builder afficheraient leur titre en double.
+ */
+$hasHeading = (bool) preg_match('/<h1[\s>]/i', $body);
 ?>
-    <main class="wrap">
-        <?= $body ?>
+    <main class="page shell" id="contenu">
+        <div class="page-body rte">
+            <?php if (!$hasHeading && $title !== ''): ?>
+            <h1><?= e($title) ?></h1>
+            <?php endif; ?>
+            <?= $body ?>
+        </div>
     </main>
 <?php
 require dirname(__DIR__) . '/includes/footer.php';

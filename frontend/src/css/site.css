@@ -5,13 +5,25 @@
  * seul public/assets/site.css minifié (`npm run build` / `npm run watch`). Une
  * seule requête HTTP en prod, code organisé par zone en dev.
  *
- * L'ordre compte (cascade) : base d'abord, puis composants.
+ * L'ordre compte (cascade) : tokens d'abord, puis base, puis zones et pages.
  * Pour ajouter une zone : créez src/css/<zone>.css et ajoutez son @import ici.
  */
 
+/* Socle — design system (cf. design/Sud Web Studio - Design System.html). */
+@import "fonts.css";
+@import "tokens.css";
 @import "base.css";
+
+/* Gabarit commun à toutes les pages. */
 @import "header.css";
 @import "footer.css";
+
+/* Pages du site. */
+@import "hero.css";
+@import "home.css";
+@import "pages.css";
+
+/* Modules du CMS rendus sur le site public. */
 @import "blocks.css";
 @import "contact.css";
 @import "devis.css";

@@ -1,32 +1,25 @@
 <?php
-
-declare(strict_types=1);
-
 /**
- * GABARIT DE PAGE STATIQUE — copie-moi pour créer une nouvelle page.
+ * Gabarit d'une page statique du site public.
  *
- *   cp frontend/static/_template.php frontend/static/contact.php
- *   → la page est servie sur /contact (slug = nom de fichier).
+ *   cp frontend/static/_template.php frontend/static/mapage.php   → servie sur /mapage
  *
- * Ce fichier n'est pas servi tel quel : le préfixe « _ » le rend non routable.
- *
- * Renseigne $title et (optionnel) $description, écris ton contenu entre les
- * partials header/footer — qui apportent <head>, CSS, en-tête et pied de page
- * communs (paramétrés dans frontend/config/site.php).
+ * Le préfixe « _ » rend ce fichier non servable (cf. frontend/public/index.php).
+ * $title et $description alimentent <title> et la méta description ; le reste du
+ * squelette (en-tête, pied de page, CSS, JS) vient des partials.
  */
 
-$title = '';          // ex. 'Contact'
-$description = '';     // ex. 'Contactez notre équipe.' (méta description)
+$title = 'Titre de la page';
+$description = 'Phrase de description pour les moteurs de recherche (160 caractères max).';
 
 require dirname(__DIR__) . '/includes/header.php';
 ?>
 
-<main class="wrap">
-
-    <h1>Titre de la page</h1>
-    <p>Contenu…</p>
-
+<main class="page shell" id="contenu">
+    <div class="page-body">
+        <h1><?= e($title) ?></h1>
+        <p>Contenu de la page.</p>
+    </div>
 </main>
 
-<?php
-require dirname(__DIR__) . '/includes/footer.php';
+<?php require dirname(__DIR__) . '/includes/footer.php';

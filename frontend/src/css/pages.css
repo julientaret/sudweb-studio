@@ -1,0 +1,33 @@
+/*
+ * Pages dynamiques du CMS (éditeur de blocs) et pages de contenu statiques :
+ * colonne de lecture centrée, sous l'en-tête fixe.
+ */
+
+.page { padding-top: var(--header-clear); padding-bottom: var(--section-pad); }
+.page-body { max-width: 760px; margin-inline: auto; }
+
+.page-body h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(36px, 5vw, 64px); line-height: 1.02; letter-spacing: -.02em;
+  margin-bottom: 1.4rem;
+}
+.page-body h2 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(26px, 3vw, 36px); line-height: 1.1; letter-spacing: -.015em;
+  margin: 2.6rem 0 .9rem;
+}
+.page-body h3 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 21px; margin: 2rem 0 .6rem;
+}
+.page-body p, .page-body li { color: var(--ink-soft); line-height: 1.7; }
+.page-body p { margin: 0 0 1.1rem; }
+.page-body ul, .page-body ol { margin: 0 0 1.1rem 1.4rem; }
+.page-body a:not(.btn):not(.block-button) {
+  color: var(--peach); text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-color: rgba(233,165,120,.4); transition: text-decoration-color .3s var(--ease);
+}
+.page-body a:not(.btn):not(.block-button):hover { text-decoration-color: var(--peach); }
+.page-body strong, .page-body b { color: var(--ink); font-weight: 600; }
+.page-body hr { border: 0; border-top: 1px solid var(--line); margin: 2.4rem 0; }
+.page-body :last-child { margin-bottom: 0; }

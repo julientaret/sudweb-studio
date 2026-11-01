@@ -1,11 +1,46 @@
-/* Pied de page du site (includes/footer.php). */
+/*
+ * Pied de page : barre unique (marque · navigation · réseaux) puis mentions.
+ */
 
-.site-footer { border-top:1px solid var(--line); color:var(--muted); font-family:system-ui, sans-serif; font-size:.9rem; }
-.site-footer .wrap { padding-top:1.5rem; padding-bottom:2rem; }
-.site-social { display:flex; gap:1rem; }
-.site-social a { color:var(--muted); }
+.foot {
+  border-top: 1px solid var(--line);
+  margin-top: clamp(56px, 6vw, 88px);
+  padding-block: 44px 28px;
+}
+/* Quand le module Devis est actif, son bouton flottant occupe le coin bas
+   droit : on dégage la dernière ligne du pied de page pour ne pas la recouvrir. */
+.foot--fab { padding-bottom: 104px; }
+.foot-bar { display: flex; align-items: center; justify-content: space-between; gap: 26px 38px; flex-wrap: wrap; }
 
-/* Liens vers les pages légales publiées (module LegalPages). */
-.site-legal { display:flex; flex-wrap:wrap; gap:.4rem 1rem; margin:.6rem 0 0; }
-.site-legal a { color:var(--muted); text-decoration:underline; }
-.site-legal a:hover { color:var(--txt); }
+.foot-nav { display: flex; gap: 30px; flex-wrap: wrap; }
+.foot-nav a { font-size: 14px; color: var(--ink-soft); position: relative; padding: 4px 0; transition: color .3s var(--ease); }
+.foot-nav a::after {
+  content: ""; position: absolute; left: 0; bottom: -1px; height: 1px; width: 0;
+  background: var(--peach); transition: width .4s var(--ease);
+}
+.foot-nav a:hover { color: var(--ink); }
+.foot-nav a:hover::after { width: 100%; }
+
+.foot-social { display: flex; gap: 12px; }
+.foot-social a {
+  width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid var(--line-2); color: var(--ink-soft);
+  transition: background .3s var(--ease), color .3s var(--ease),
+              border-color .3s var(--ease), transform .3s var(--ease-out);
+}
+.foot-social a:hover { background: var(--peach); color: var(--peach-ink); border-color: var(--peach); transform: translateY(-3px); }
+.foot-social svg { width: 18px; height: 18px; }
+
+.foot-base {
+  margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.foot-base span { color: var(--faint); font-size: 13px; }
+.foot-base .links { display: flex; gap: 22px; flex-wrap: wrap; }
+.foot-base .links a { color: var(--muted); font-size: 13px; transition: color .3s var(--ease); }
+.foot-base .links a:hover { color: var(--peach); }
+
+@media (max-width: 760px) {
+  .foot-bar { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .foot-nav { gap: 18px 26px; }
+}

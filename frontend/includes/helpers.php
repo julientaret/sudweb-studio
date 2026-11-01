@@ -61,3 +61,43 @@ if (!function_exists('asset_url')) {
         return $version !== '' ? $url . '?v=' . $version : $url;
     }
 }
+
+if (!function_exists('current_path')) {
+    /**
+     * Chemin de la page courante, relatif à la racine du site et normalisé :
+     * '/' pour l'accueil, '/realisations' sinon. Sert à marquer l'entrée de
+     * navigation active (cf. nav_is_active()).
+     */
+    function current_path(): string
+    {
+        $base = rtrim((string) Config::get('app.base_path', ''), '/');
+        $path = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
+        if ($base !== '' && str_starts_with($path, $base)) {
+            $path = substr($path, strlen($base)) ?: '/';
+        }
+        return '/' . trim($path, '/');
+    }
+}
+
+if (!function_exists('nav_is_active')) {
+    /**
+     * L'entrée de navigation $url correspond-elle à la page courante $current ?
+     *
+     * Seules les entrées qui désignent une PAGE sont comparées, sur leur chemin.
+     * Une entrée vers une ancre ('/#expertises') n'est jamais active au rendu :
+     * elle ne vaut que pour une portion de page, et c'est le scroll-spy de la
+     * couche motion (motion.js) qui l'allume quand la section passe à l'écran.
+     */
+    function nav_is_active(string $url, string $current): bool
+    {
+        // Ancre : traitée au défilement, pas au rendu.
+        if (str_contains($url, '#')) {
+            return false;
+        }
+        // Lien externe : jamais actif.
+        if (!str_starts_with($url, '/')) {
+            return false;
+        }
+        return '/' . trim($url, '/') === $current;
+    }
+}

@@ -1,0 +1,69 @@
+/*
+ * Design tokens — Sud Web Studio.
+ *
+ * Source de vérité des couleurs, mesures et courbes du site. Reprend à
+ * l'identique les valeurs du design system (design/Sud Web Studio - Design
+ * System.html, §01 Couleurs et §03 Tokens).
+ *
+ * Règle d'usage : la pêche est le SEUL accent (CTA, surtitres, mots-clés en
+ * italique, états actifs). Pas de second accent, pas de fond clair.
+ */
+
+:root {
+  /* Fonds */
+  --bg:        #121b27;   /* fond principal */
+  --bg-2:      #16212f;   /* sections alternées */
+  --surface:   #1b2837;   /* cartes, champs */
+  --surface-2: #1f2e40;   /* survol, barres */
+
+  /* Textes */
+  --ink:       #ece7de;   /* texte principal, titres */
+  --ink-soft:  #c2cdda;   /* paragraphes */
+  --muted:     #8093a8;   /* labels, méta */
+  --faint:     #566a7f;   /* détails discrets */
+
+  /* Traits */
+  --line:      rgba(255,255,255,0.08);  /* séparateurs */
+  --line-2:    rgba(255,255,255,0.15);  /* bordures de boutons */
+
+  /* Accent */
+  --peach:     #e9a578;   /* accent unique */
+  --peach-2:   #de8e5a;   /* dégradés, reflets */
+  --peach-ink: #2a1a10;   /* texte sur pêche */
+  --copper:    #c07a3e;   /* ombres internes des bulles */
+
+  /* Statuts (formulaires uniquement) */
+  --ok:    #5fae7a;
+  --warn:  #e3b155;
+  --error: #e6795f;
+
+  /* Layout */
+  --maxw: 1550px;
+  --pad: 32px;
+  --r: 14px;
+
+  /* Rythme vertical : respiration au-dessus et au-dessous de chaque section.
+     Un seul endroit pour resserrer ou aérer tout le site. */
+  --section-pad: clamp(64px, 7vw, 104px);
+
+  /* Dégagement sous l'en-tête fixe, en haut d'une page (nav ≈ 74px + marge). */
+  --header-clear: 128px;
+
+  /* Typographies */
+  --font-display: "Spectral", Georgia, "Times New Roman", serif;
+  --font-ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Alias de compatibilité : les partials hérités du CMS (blocs de page,
+     formulaire de contact, modale de devis) nomment encore --accent / --txt. */
+  --accent: var(--peach);
+  --txt: var(--ink);
+
+  /* Courbes */
+  --ease: cubic-bezier(.22,.61,.36,1);        /* couleurs, opacité, bordures */
+  --ease-out: cubic-bezier(.16,1,.3,1);       /* déplacements, entrées */
+}
+
+@media (max-width: 620px) {
+  :root { --pad: 20px; }
+}

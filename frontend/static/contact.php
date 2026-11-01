@@ -45,12 +45,14 @@ $appUrl     = rtrim((string) Config::get('app.url', ''), '/');
 $formAction = $appUrl !== '' ? $appUrl . '/contact/envoyer' : site_url('/contact/envoyer');
 
 $title = 'Contact';
-$description = 'Contactez-nous via le formulaire ci-dessous.';
+$description = 'Contactez Sud Web Studio, studio de création de sites web à '
+    . 'Villeneuve-sur-Lot (47) : parlons de votre projet.';
 
 require dirname(__DIR__) . '/includes/header.php';
 ?>
 
-<main class="wrap" id="formulaire">
+<main class="page shell" id="contenu">
+<div class="page-body" id="formulaire">
 
     <h1>Contact</h1>
     <p>Une question, une demande ? Écrivez-nous, nous vous répondrons rapidement.</p>
@@ -123,6 +125,7 @@ require dirname(__DIR__) . '/includes/header.php';
         </p>
     </form>
 
+</div>
 </main>
 
 <?php

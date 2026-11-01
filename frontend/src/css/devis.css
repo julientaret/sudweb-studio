@@ -9,7 +9,7 @@
   font-family: system-ui, sans-serif;
   font-weight: 600;
   font-size: .92rem;
-  color: #fff;
+  color: var(--peach-ink);
   background: var(--accent);
   border: 0;
   border-radius: 9px;
@@ -19,7 +19,7 @@
   display: inline-block;
   line-height: 1.2;
 }
-.devis-trigger:hover { background: color-mix(in srgb, var(--accent) 85%, #000); }
+.devis-trigger:hover { background: #f0b48d; }
 
 /* Bouton flottant (toutes pages). */
 .devis-fab {
@@ -39,7 +39,14 @@
 /* --- Modale --------------------------------------------------------------- */
 .devis-modal { position: fixed; inset: 0; z-index: 1000; display: none; }
 .devis-modal.is-open { display: block; }
-.devis-overlay { position: absolute; inset: 0; background: rgba(15, 20, 30, .55); }
+/* Voile sombre + flou : sur un site entièrement sombre, un simple calque à 55 %
+   ne détache pas assez la modale de la page. */
+.devis-overlay {
+  position: absolute; inset: 0;
+  background: rgba(9, 14, 21, .72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
 
 .devis-dialog {
   position: absolute;
@@ -48,7 +55,7 @@
   width: min(540px, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  background: #fff;
+  background: var(--surface);
   border-radius: 16px;
   padding: 1.8rem 1.8rem 1.6rem;
   box-shadow: 0 24px 60px rgba(15, 20, 30, .35);
@@ -60,7 +67,11 @@
   font-size: 1.7rem; line-height: 1; cursor: pointer; padding: .2rem .4rem;
 }
 .devis-x:hover { color: var(--txt); }
-.devis-dialog h2 { margin: 0 0 1rem; font-size: 1.4rem; }
+.devis-dialog h2 {
+  margin: 0 0 1rem;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 1.7rem; letter-spacing: -.015em;
+}
 
 /* Indicateur d'étapes. */
 .devis-steps { display: flex; gap: .5rem; margin-bottom: 1.4rem; }
@@ -83,7 +94,7 @@
   color: var(--txt);
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fff;
+  background: var(--surface);
 }
 .devis-field textarea { resize: vertical; min-height: 90px; }
 .devis-field input:focus,
@@ -103,7 +114,7 @@
 .devis-error {
   margin: 0 0 1rem;
   padding: .8rem 1rem;
-  background: #fdecec; border: 1px solid #f1c4c4; color: #a3271f;
+  background: rgba(230,121,95,.12); border: 1px solid rgba(230,121,95,.4); color: var(--error);
   border-radius: 9px; font-size: .9rem;
 }
 .devis-error ul { margin: .3rem 0 0; padding-left: 1.2rem; }
@@ -115,17 +126,17 @@
   font-family: system-ui, sans-serif; font-weight: 600; font-size: .95rem;
   padding: .7rem 1.3rem; border-radius: 10px; cursor: pointer; border: 0;
 }
-.devis-btn-primary { color: #fff; background: var(--accent); }
-.devis-btn-primary:hover { background: color-mix(in srgb, var(--accent) 85%, #000); }
+.devis-btn-primary { color: var(--peach-ink); background: var(--peach); }
+.devis-btn-primary:hover { background: #f0b48d; }
 .devis-btn-primary[disabled] { opacity: .6; cursor: default; }
-.devis-btn-ghost { background: #fff; color: var(--txt); border: 1px solid var(--line); }
+.devis-btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-2); }
 .devis-btn-ghost:hover { border-color: var(--muted); }
 
 /* Succès. */
 .devis-success { text-align: center; padding: 1.5rem 0 .5rem; }
 .devis-success .check {
   width: 56px; height: 56px; margin: 0 auto 1rem; border-radius: 50%;
-  background: #e7f6ec; color: #1c6b3a; display: grid; place-items: center; font-size: 1.8rem;
+  background: rgba(95,174,122,.14); color: var(--ok); display: grid; place-items: center; font-size: 1.8rem;
 }
 .devis-success p { font-size: 1.05rem; }
 
