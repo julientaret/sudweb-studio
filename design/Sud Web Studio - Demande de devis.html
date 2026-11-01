@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sud Web Studio — Demande de devis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/alt-styles.css" />
+<link rel="stylesheet" href="assets/quote-styles.css" />
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#121b27">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#121b27"/>
+    <g transform="translate(510,200) scale(0.4)">
+      <path fill="#ece7de" d="m112.4 51.8h131.7l-49.7 51.5 31.2 32.3 124.1-128.6h-343l140.4 145.3-96.3 99.7v-166.2l-44.8-46.4v323.6l203.4-210.7z"/>
+      <path fill="#e9a578" d="m492 7h-15.8l-425.4 440.4v-33.2l393.3-407.2h-62.3l-375.8 389.2v96.9h157.4l328.6-340.3v-64.3l-347.6 359.7h-32l379.6-393.1z"/>
+      <path fill="#ece7de" d="m432.9 448.2h-131.8l49.8-51.6-31.1-32.3-124.3 128.8h296.5v-48.1l-93.9-97.3 49.1-50.8v68.5l44.8 46.4v-225.8l-156.2 161.7z"/>
+    </g>
+    <text x="600" y="640" font-family="serif" font-size="50" fill="#ece7de" text-anchor="middle" opacity="0.75">Demande de devis</text>
+  </svg>
+</template>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sws-mark" viewBox="0 0 500 500">
+    <path fill="currentColor" d="m112.4 51.8h131.7l-49.7 51.5 31.2 32.3 124.1-128.6h-343l140.4 145.3-96.3 99.7v-166.2l-44.8-46.4v323.6l203.4-210.7z"/>
+    <path fill="currentColor" d="m492 7h-15.8l-425.4 440.4v-33.2l393.3-407.2h-62.3l-375.8 389.2v96.9h157.4l328.6-340.3v-64.3l-347.6 359.7h-32l379.6-393.1z"/>
+    <path fill="currentColor" d="m432.9 448.2h-131.8l49.8-51.6-31.1-32.3-124.3 128.8h296.5v-48.1l-93.9-97.3 49.1-50.8v68.5l44.8 46.4v-225.8l-156.2 161.7z"/>
+  </symbol>
+</svg>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" data-screen-label="Navigation">
+  <div class="nav-inner">
+    <a class="brand" href="Sud Web Studio - Tarifs.html" aria-label="Sud Web Studio — accueil">
+      <span class="mk"><svg><use href="#sws-mark"></use></svg></span>
+      <span class="wm">Sud Web Studio</span>
+    </a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="Sud Web Studio - Tarifs.html#tarifs">Tarifs</a>
+      <a href="Sud Web Studio - Tarifs.html#loa">Le principe LOA</a>
+      <a href="Sud Web Studio - Tarifs.html#modules">Options autonomes</a>
+      <a href="#devis" class="active">Devis</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#devis" data-magnetic="0.25">Démarrer ma demande <span class="ico">↗</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===================== HEADER ===================== -->
+  <section class="quote-hero" id="devis" data-screen-label="Devis — en-tête">
+    <div class="shell">
+      <div>
+        <span class="eyebrow reveal">Demande de devis</span>
+        <h1>
+          <span class="line-mask"><span>Parlez-nous de</span></span>
+          <span class="line-mask"><span>votre <em>projet</em></span></span>
+        </h1>
+      </div>
+      <div>
+        <p class="lead reveal">Décrivez votre activité et vos besoins&nbsp;: on revient vers vous avec un <b>devis personnalisé</b> et l'échéancier précis, en paiement unique ou en LOA. Aucun engagement à ce stade.</p>
+        <div class="quote-steps-meta reveal">
+          <span><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg></span>5 min à remplir</span>
+          <span><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg></span>Réponse sous 48h</span>
+          <span><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Sans engagement</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FORM ===================== -->
+  <section class="quote-wrap" data-screen-label="Formulaire">
+    <div class="shell">
+      <div class="quote-grid">
+
+        <!-- ===== FORM COLUMN ===== -->
+        <form class="qform" id="quoteForm" novalidate>
+
+          <!-- 01 · PROJET -->
+          <div class="qblock reveal">
+            <div class="qblock-head">
+              <span class="qblock-n">1</span>
+              <div>
+                <h2>Votre projet</h2>
+                <p>De quel type de site avez-vous besoin&nbsp;?</p>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <span class="qlabel">Type de projet</span>
+              <div class="qchoices cols-2" data-sum="type">
+                <label class="qchoice radio">
+                  <input type="radio" name="type" value="Site vitrine" data-label="Site vitrine" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Site vitrine</b><span>Présenter mon activité</span></span>
+                </label>
+                <label class="qchoice radio">
+                  <input type="radio" name="type" value="Site + blog/actus" data-label="Site + blog/actus" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Site + actualités</b><span>Avec blog ou agenda</span></span>
+                </label>
+                <label class="qchoice radio">
+                  <input type="radio" name="type" value="Site + réservation" data-label="Site + réservation" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Site + réservation</b><span>Prise de rendez-vous</span></span>
+                </label>
+                <label class="qchoice radio">
+                  <input type="radio" name="type" value="Refonte / sur-mesure" data-label="Refonte / sur-mesure" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Refonte / sur-mesure</b><span>Refaire ou cas spécifique</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <label class="qlabel" for="desc">Décrivez votre projet en quelques mots</label>
+              <textarea class="qtextarea" id="desc" name="description" placeholder="Votre activité, vos objectifs, ce qui vous plaît, des exemples de sites que vous aimez…"></textarea>
+              <span class="qhint">Plus c'est précis, plus le devis sera juste — mais l'essentiel suffit pour démarrer.</span>
+            </div>
+          </div>
+
+          <!-- 02 · FORMULE + PAIEMENT -->
+          <div class="qblock reveal">
+            <div class="qblock-head">
+              <span class="qblock-n">2</span>
+              <div>
+                <h2>Formule &amp; paiement</h2>
+                <p>Une idée de départ — rien n'est figé.</p>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <span class="qlabel">Formule envisagée <span class="opt">· optionnel</span></span>
+              <div class="qchoices cols-3" data-sum="formule">
+                <label class="qchoice radio">
+                  <input type="radio" name="formule" value="Starter One Page" data-label="Starter One Page" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Starter One Page</b><span>dès 599€ / 29€·mois</span></span>
+                </label>
+                <label class="qchoice radio">
+                  <input type="radio" name="formule" value="Essentiel" data-label="Essentiel" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Essentiel</b><span>dès 1 299€ / 59€·mois</span></span>
+                </label>
+                <label class="qchoice radio">
+                  <input type="radio" name="formule" value="Sur Mesure" data-label="Sur Mesure" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Sur Mesure</b><span>sur devis</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <span class="qlabel">Mode de paiement préféré</span>
+              <div class="qchoices cols-2" data-sum="paiement">
+                <label class="qchoice radio">
+                  <input type="radio" name="paiement" value="Paiement unique" data-label="Paiement unique" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Paiement unique</b><span>Propriétaire à la livraison</span></span>
+                </label>
+                <label class="qchoice radio">
+                  <input type="radio" name="paiement" value="Abonnement LOA" data-label="Abonnement LOA" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Abonnement LOA</b><span>Loyer mensuel tout inclus</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <span class="qlabel">Maintenance mensuelle <span class="opt">· pour un achat en une fois</span></span>
+              <div class="qchoices" data-sum="maintenance">
+                <label class="qchoice">
+                  <input type="checkbox" name="maintenance" value="Maintenance mensuelle" data-label="Incluse" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Ajouter la maintenance mensuelle</b><span>Gestion du nom de domaine, hébergement &amp; dépannage en cas de panne, modifications mineures incluses</span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03 · OPTIONS GA -->
+          <div class="qblock reveal">
+            <div class="qblock-head">
+              <span class="qblock-n">3</span>
+              <div>
+                <h2>Options de gestion autonome</h2>
+                <p>Cochez les modules que vous aimeriez pouvoir gérer vous-même. On affine ensemble au devis.</p>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <div class="qchoices qmodules" data-sum="modules">
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Médias" data-label="Médias" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Médias</b><span>Bibliothèque d'images</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Documents" data-label="Documents" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Documents</b><span>PDF téléchargeables</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Pages" data-label="Pages" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Pages</b><span>Builder par blocs</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Agenda" data-label="Agenda" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Agenda</b><span>Événements datés</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Actualités" data-label="Actualités" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Actualités</b><span>Articles &amp; blog</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Avis Google" data-label="Avis Google" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Avis Google</b><span>Import &amp; affichage</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Contact" data-label="Contact" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Contact</b><span>Formulaire &amp; demandes</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Demande de devis" data-label="Demande de devis" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Demande de devis</b><span>Formulaire personnalisable</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Réalisations" data-label="Réalisations" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Réalisations</b><span>Galerie de vos travaux</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Pages légales" data-label="Pages légales" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Pages légales</b><span>Mentions &amp; RGPD</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Statistiques" data-label="Statistiques" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Statistiques</b><span>Audience sans cookie</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Boîtes mail pro" data-label="Boîtes mail pro" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Boîtes mail pro</b><span>nom@votre-domaine.fr</span></span>
+                </label>
+                <label class="qchoice">
+                  <input type="checkbox" name="modules" value="Module sur-mesure" data-label="Sur-mesure" />
+                  <span class="qmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span class="qchoice-body"><b>Autre / sur-mesure</b><span>Décrit ci-dessus</span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 04 · CONTEXTE -->
+          <div class="qblock reveal">
+            <div class="qblock-head">
+              <span class="qblock-n">4</span>
+              <div>
+                <h2>Contexte</h2>
+                <p>Pour calibrer le devis et le planning.</p>
+              </div>
+            </div>
+
+            <div class="qrow">
+              <div class="qfield">
+                <label class="qlabel" for="budget">Budget envisagé <span class="opt">· optionnel</span></label>
+                <select class="qselect" id="budget" name="budget" data-sum="budget">
+                  <option value="">Je ne sais pas encore</option>
+                  <option>Moins de 2 000€</option>
+                  <option>2 000€ – 4 000€</option>
+                  <option>4 000€ – 8 000€</option>
+                  <option>Plus de 8 000€</option>
+                  <option>Plutôt en mensualités (LOA)</option>
+                </select>
+              </div>
+              <div class="qfield">
+                <label class="qlabel" for="delai">Délai souhaité</label>
+                <select class="qselect" id="delai" name="delai" data-sum="delai">
+                  <option value="">À définir ensemble</option>
+                  <option>Dès que possible</option>
+                  <option>Sous 1 à 2 mois</option>
+                  <option>Sous 3 à 6 mois</option>
+                  <option>Pas pressé</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="qfield">
+              <label class="qlabel" for="domaine">Nom de domaine souhaité <span class="opt">· optionnel</span></label>
+              <input class="qinput" id="domaine" name="domaine" type="text" placeholder="ex. mon-entreprise.fr" data-sum="domaine" />
+              <span class="qhint">Pour votre site et vos boîtes mail pro (nom@votre-domaine.fr). Pas encore d'idée&nbsp;? On vous conseille.</span>
+            </div>
+          </div>
+
+          <!-- 05 · COORDONNÉES -->
+          <div class="qblock reveal">
+            <div class="qblock-head">
+              <span class="qblock-n">5</span>
+              <div>
+                <h2>Vos coordonnées</h2>
+                <p>Pour vous envoyer le devis et en discuter.</p>
+              </div>
+            </div>
+
+            <div class="qrow">
+              <div class="qfield">
+                <label class="qlabel" for="nom">Nom complet</label>
+                <input class="qinput" id="nom" name="nom" type="text" placeholder="Camille Durand" autocomplete="name" />
+              </div>
+              <div class="qfield">
+                <label class="qlabel" for="entreprise">Entreprise <span class="opt">· optionnel</span></label>
+                <input class="qinput" id="entreprise" name="entreprise" type="text" placeholder="Nom de votre activité" autocomplete="organization" />
+              </div>
+            </div>
+            <div class="qrow">
+              <div class="qfield">
+                <label class="qlabel" for="email">E-mail</label>
+                <input class="qinput" id="email" name="email" type="email" placeholder="camille@exemple.fr" autocomplete="email" />
+              </div>
+              <div class="qfield">
+                <label class="qlabel" for="tel">Téléphone <span class="opt">· optionnel</span></label>
+                <input class="qinput" id="tel" name="tel" type="tel" placeholder="06 12 34 56 78" autocomplete="tel" />
+              </div>
+            </div>
+
+            <div class="qsubmit-row" style="margin-top:26px;">
+              <button type="submit" class="btn btn-primary" data-magnetic="0.25">Envoyer ma demande <span class="ico">↗</span></button>
+              <p class="qconsent">En envoyant ce formulaire, vous acceptez d'être recontacté au sujet de votre projet. Vos données restent confidentielles — voir notre <a href="#">politique de confidentialité</a>.</p>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- success -->
+        <div class="qdone" id="quoteDone">
+          <div class="qdone-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h2>Demande envoyée&nbsp;!</h2>
+          <p>Merci, on a bien reçu votre projet. On revient vers vous sous 48h avec un devis personnalisé et l'échéancier précis.</p>
+        </div>
+
+        <!-- ===== ASIDE SUMMARY ===== -->
+        <aside class="qaside">
+          <div class="qsummary reveal">
+            <h3>Récapitulatif</h3>
+            <p class="sub">Mis à jour en temps réel</p>
+            <ul class="qsum-list">
+              <li><span class="k">Type</span><span class="v empty" data-out="type">À renseigner</span></li>
+              <li><span class="k">Formule</span><span class="v empty" data-out="formule">—</span></li>
+              <li><span class="k">Paiement</span><span class="v empty" data-out="paiement">—</span></li>
+              <li><span class="k">Maintenance</span><span class="v empty" data-out="maintenance">—</span></li>
+              <li><span class="k">Budget</span><span class="v empty" data-out="budget">—</span></li>
+              <li><span class="k">Délai</span><span class="v empty" data-out="delai">—</span></li>
+              <li><span class="k">Nom de domaine</span><span class="v empty" data-out="domaine">—</span></li>
+              <li style="flex-direction:column;align-items:stretch;gap:10px;">
+                <span class="k">Options autonomes</span>
+                <span class="qsum-mods" data-out="modules"><span class="v empty" style="text-align:left;">Aucune sélectionnée</span></span>
+              </li>
+            </ul>
+          </div>
+          <div class="qnote reveal">
+            <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+            <p><b>Pas sûr de vos choix&nbsp;?</b> Remplissez seulement ce que vous savez. On affine tout ensemble lors de l'échange.</p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="foot">
+  <div class="shell">
+    <div class="foot-bar">
+      <a class="brand" href="Sud Web Studio - Landing Alt.html#top">
+        <span class="mk"><svg><use href="#sws-mark"></use></svg></span>
+        <span class="wm">Sud Web Studio</span>
+      </a>
+      <nav class="foot-nav" aria-label="Pied de page">
+        <a href="Sud Web Studio - Landing Alt.html#top">Accueil</a>
+        <a href="Sud Web Studio - Landing Alt.html#realisations">Réalisations</a>
+        <a href="Sud Web Studio - Tarifs.html#tarifs">Tarifs</a>
+        <a href="Sud Web Studio - Demande de devis.html">Demande de devis</a>
+        <a href="Sud Web Studio - Landing Alt.html#contact">Contact</a>
+      </nav>
+      <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="#" aria-label="Dribbble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M19.13 5.09C15.22 9.14 10 10.44 2.25 10.94M21.75 12.84c-6.62-1.41-12.14 1-16.38 6.32M8.56 2.75c4.37 6 6 9.42 8 17.72"/></svg></a>
+          <a href="#" aria-label="Behance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h5.5a2.5 2.5 0 0 1 0 5H2zM2 12h6a2.5 2.5 0 0 1 0 5H2zM15 9h6M14.5 14h7a3.5 3.5 0 0 0-7 0 3.5 3.5 0 0 0 6 2.5"/></svg></a>
+        </div>
+      </div>
+    <div class="foot-base">
+      <span>© <span data-year>2026</span> Sud Web Studio — Tous droits réservés</span>
+      <div class="links">
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="assets/alt-main.js"></script>
+<script src="assets/quote.js"></script>
+</body>
+</html>

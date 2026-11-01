@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sud Web Studio — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/alt-styles.css" />
+<style>
+a{color:var(--peach)}a:hover{color:#f0b48d}
+.ds{padding-block:120px 100px}
+.ds-head h1{font-family:"Spectral",serif;font-weight:700;font-size:clamp(44px,6vw,84px);line-height:1;letter-spacing:-.02em;margin-top:22px}
+.ds-head h1 em{color:var(--peach);font-style:italic}
+.ds-head p{margin-top:22px;max-width:640px;color:var(--ink-soft);font-size:17px;line-height:1.66;text-wrap:pretty}
+.ds-toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+.ds-toc a{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--ink-soft);padding:8px 15px;border:1px solid var(--line-2);border-radius:999px}
+.ds-toc a:hover{color:var(--ink);border-color:var(--peach)}
+.ds-sec{margin-top:96px;padding-top:40px;border-top:1px solid var(--line)}
+.ds-sec>h2{font-family:"Spectral",serif;font-weight:600;font-size:clamp(30px,3.4vw,44px);letter-spacing:-.015em;margin-top:14px;line-height:1.05}
+.ds-sec>.intro{margin-top:14px;color:var(--ink-soft);max-width:640px;line-height:1.66;text-wrap:pretty}
+.ds-grid{display:grid;gap:16px;margin-top:34px}
+.g-sw{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.g-2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g-3{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.sw{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.sw .chip{height:96px;border-bottom:1px solid var(--line)}
+.sw .meta{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.sw .meta b{font-size:14px;font-weight:600}
+.sw .meta code,.code{font-family:"Spline Sans Mono",monospace;font-size:11.5px;color:var(--muted)}
+.sw .meta span{font-size:12.5px;color:var(--ink-soft);line-height:1.45}
+.card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:28px}
+.card h3{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:20px}
+.type-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+.type-row:last-child{border-bottom:none}
+.type-row .lab{display:flex;flex-direction:column;gap:4px}
+.type-row .lab b{font-size:13px;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.tok{width:100%;border-collapse:collapse;font-size:14px}
+.tok td{padding:12px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tok td:first-child{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--peach);width:42%}
+.tok td:last-child{color:var(--ink-soft)}
+.tok tr:last-child td{border-bottom:none}
+.demo-bubbles{position:relative;height:200px;display:flex;align-items:center;justify-content:center;gap:22px}
+.demo-bubbles .bubble{position:relative;opacity:1}
+.do-list{display:flex;flex-direction:column;gap:12px;color:var(--ink-soft);line-height:1.55;font-size:14.5px}
+.do-list li{list-style:none;display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.do-list li::before{content:"✓";color:var(--peach);font-weight:700}
+.dont li::before{content:"✕";color:#e6795f}
+.file-list{display:flex;flex-direction:column;gap:10px}
+.file-list div{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:18px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-soft)}
+.file-list div:last-child{border-bottom:none}
+.file-list code{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--ink)}
+.logo-demo{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.logo-demo .mk-big{width:96px;height:96px;color:var(--ink)}
+.logo-demo .mk-big svg{width:100%;height:100%}
+.motion-box{height:64px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);position:relative;overflow:hidden}
+.motion-box i{position:absolute;top:50%;left:12px;width:40px;height:40px;margin-top:-20px;border-radius:50%;background:var(--peach);animation:slide 2.4s var(--ease-out) infinite alternate}
+.motion-box.b i{animation-timing-function:var(--ease)}
+@keyframes slide{to{left:calc(100% - 52px)}}
+@media (max-width:700px){.type-row,.file-list div{grid-template-columns:1fr;gap:8px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="sws-mark" viewBox="0 0 500 500">
+<path fill="currentColor" d="m112.4 51.8h131.7l-49.7 51.5 31.2 32.3 124.1-128.6h-343l140.4 145.3-96.3 99.7v-166.2l-44.8-46.4v323.6l203.4-210.7z"/>
+<path fill="var(--peach)" d="m492 7h-15.8l-425.4 440.4v-33.2l393.3-407.2h-62.3l-375.8 389.2v96.9h157.4l328.6-340.3v-64.3l-347.6 359.7h-32l379.6-393.1z"/>
+<path fill="currentColor" d="m432.9 448.2h-131.8l49.8-51.6-31.1-32.3-124.3 128.8h296.5v-48.1l-93.9-97.3 49.1-50.8v68.5l44.8 46.4v-225.8l-156.2 161.7z"/>
+</symbol>
+</svg>
+<main class="ds shell">
+<header class="ds-head" data-screen-label="Design System — intro">
+<span class="eyebrow">Design System · v1</span>
+<h1>Sud Web Studio, <em>le système</em></h1>
+<p>Référence unique des choix visuels du site : couleurs, typographies, composants, motion et règles d'usage. Toutes les valeurs proviennent de <code class="code">assets/alt-styles.css</code> — c'est la source de vérité à réutiliser pour l'intégration.</p>
+<nav class="ds-toc">
+<a href="#couleurs">Couleurs</a><a href="#typo">Typographie</a><a href="#tokens">Tokens</a><a href="#composants">Composants</a><a href="#motion">Motion</a><a href="#marque">Marque</a><a href="#contenu">Contenu &amp; SEO</a><a href="#fichiers">Fichiers</a>
+</nav>
+</header>
+
+<section class="ds-sec" id="couleurs" data-screen-label="Couleurs">
+<span class="eyebrow">01 — Couleurs</span>
+<h2>Navy profond, accent pêche</h2>
+<p class="intro">Fond sombre unique sur tout le site. La pêche est le seul accent : CTA, surtitres, mots-clés en italique, états actifs. Jamais de second accent.</p>
+<div class="ds-grid g-sw">
+<div class="sw"><div class="chip" style="background:#121b27"></div><div class="meta"><b>Background</b><code>--bg · #121b27</code><span>Fond principal</span></div></div>
+<div class="sw"><div class="chip" style="background:#16212f"></div><div class="meta"><b>Background 2</b><code>--bg-2 · #16212f</code><span>Sections alternées</span></div></div>
+<div class="sw"><div class="chip" style="background:#1b2837"></div><div class="meta"><b>Surface</b><code>--surface · #1b2837</code><span>Cartes, champs</span></div></div>
+<div class="sw"><div class="chip" style="background:#1f2e40"></div><div class="meta"><b>Surface 2</b><code>--surface-2 · #1f2e40</code><span>Survol, barres</span></div></div>
+<div class="sw"><div class="chip" style="background:#ece7de"></div><div class="meta"><b>Ink</b><code>--ink · #ece7de</code><span>Texte principal, titres</span></div></div>
+<div class="sw"><div class="chip" style="background:#c2cdda"></div><div class="meta"><b>Ink soft</b><code>--ink-soft · #c2cdda</code><span>Paragraphes</span></div></div>
+<div class="sw"><div class="chip" style="background:#8093a8"></div><div class="meta"><b>Muted</b><code>--muted · #8093a8</code><span>Labels, méta</span></div></div>
+<div class="sw"><div class="chip" style="background:#566a7f"></div><div class="meta"><b>Faint</b><code>--faint · #566a7f</code><span>Détails discrets</span></div></div>
+<div class="sw"><div class="chip" style="background:#e9a578"></div><div class="meta"><b>Peach</b><code>--peach · #e9a578</code><span>Accent unique</span></div></div>
+<div class="sw"><div class="chip" style="background:#de8e5a"></div><div class="meta"><b>Peach 2</b><code>--peach-2 · #de8e5a</code><span>Dégradés, reflets</span></div></div>
+<div class="sw"><div class="chip" style="background:#2a1a10"></div><div class="meta"><b>Peach ink</b><code>--peach-ink · #2a1a10</code><span>Texte sur pêche</span></div></div>
+<div class="sw"><div class="chip" style="background:#c07a3e"></div><div class="meta"><b>Copper</b><code>--copper · #c07a3e</code><span>Ombres internes des bulles</span></div></div>
+<div class="sw"><div class="chip" style="background:rgba(255,255,255,.08)"></div><div class="meta"><b>Line</b><code>--line · rgba(255,255,255,.08)</code><span>Séparateurs</span></div></div>
+<div class="sw"><div class="chip" style="background:rgba(255,255,255,.15)"></div><div class="meta"><b>Line 2</b><code>--line-2 · rgba(255,255,255,.15)</code><span>Bordures de boutons</span></div></div>
+</div>
+</section>
+
+<section class="ds-sec" id="typo" data-screen-label="Typographie">
+<span class="eyebrow">02 — Typographie</span>
+<h2>Trois familles, trois rôles</h2>
+<p class="intro">Spectral (serif) pour l'émotion et les titres, Helvetica Neue pour la lecture et l'UI, Spline Sans Mono pour les surtitres et métadonnées en capitales espacées.</p>
+<div class="card" style="margin-top:34px">
+<div class="type-row"><div class="lab"><b>Display / H1</b><code class="code">Spectral 700 · clamp(48–92px) · lh .98 · ls -.02em</code></div><div style="font-family:Spectral,serif;font-weight:700;font-size:clamp(40px,5vw,72px);line-height:.98;letter-spacing:-.02em">Création de sites web à <span style="color:var(--peach)">Villeneuve-sur-Lot</span></div></div>
+<div class="type-row"><div class="lab"><b>H2</b><code class="code">Spectral 600 · clamp(30–56px) · ls -.015em</code></div><div style="font-family:Spectral,serif;font-weight:600;font-size:clamp(30px,3.6vw,48px);line-height:1.04;letter-spacing:-.015em">Votre studio web en <em style="color:var(--peach)">Lot-et-Garonne</em></div></div>
+<div class="type-row"><div class="lab"><b>H3</b><code class="code">Spectral 600 · 20–26px</code></div><div style="font-family:Spectral,serif;font-weight:600;font-size:24px">Sites vitrines</div></div>
+<div class="type-row"><div class="lab"><b>Lead</b><code class="code">Helvetica Neue · 16–19px · lh 1.66 · --ink-soft</code></div><p style="font-size:18px;line-height:1.66;color:var(--ink-soft);max-width:560px">Nous concevons des sites internet sur mesure, alliant design, performance et stratégie.</p></div>
+<div class="type-row"><div class="lab"><b>Body</b><code class="code">Helvetica Neue · 15–16px · lh 1.6</code></div><p style="font-size:15.5px;line-height:1.6;color:var(--ink-soft);max-width:560px">Chaque projet est unique. Nous mettons notre savoir-faire au service de vos objectifs.</p></div>
+<div class="type-row"><div class="lab"><b>Eyebrow</b><code class="code">Spline Sans Mono 500 · 11px · ls .24em · uppercase</code></div><div><span class="eyebrow">Nos expertises</span></div></div>
+<div class="type-row"><div class="lab"><b>Mono méta</b><code class="code">Spline Sans Mono · 11–12px</code></div><div class="mono" style="color:var(--muted)">+50 projets livrés</div></div>
+</div>
+<p class="intro" style="margin-top:20px">Règle : dans un titre, un seul segment mis en avant — en <em>italique</em> et/ou <span style="color:var(--peach)">pêche</span>. Titres animés découpés en lignes via <code class="code">.line-mask</code>.</p>
+</section>
+
+<section class="ds-sec" id="tokens" data-screen-label="Tokens">
+<span class="eyebrow">03 — Tokens</span>
+<h2>Espacements, rayons, easing</h2>
+<div class="ds-grid g-2">
+<div class="card"><h3>Layout</h3><table class="tok">
+<tr><td>--maxw: 1550px</td><td>Largeur max du contenu (.shell)</td></tr>
+<tr><td>--pad: 32px</td><td>Marges latérales</td></tr>
+<tr><td>section padding</td><td>clamp(80px, 10vw, 140px) vertical</td></tr>
+<tr><td>gap grilles</td><td>16–40px, toujours en gap flex/grid</td></tr>
+</table></div>
+<div class="card"><h3>Formes &amp; courbes</h3><table class="tok">
+<tr><td>--r: 14px</td><td>Cartes, champs</td></tr>
+<tr><td>16–22px</td><td>Grandes cartes, frames navigateur</td></tr>
+<tr><td>999px</td><td>Boutons, chips, filtres</td></tr>
+<tr><td>--ease</td><td>cubic-bezier(.22,.61,.36,1) — couleurs, opacité</td></tr>
+<tr><td>--ease-out</td><td>cubic-bezier(.16,1,.3,1) — déplacements</td></tr>
+</table></div>
+</div>
+</section>
+
+<section class="ds-sec" id="composants" data-screen-label="Composants">
+<span class="eyebrow">04 — Composants</span>
+<h2>Briques réutilisables</h2>
+<div class="ds-grid g-2">
+<div class="card"><h3>Boutons</h3><div class="row">
+<a class="btn btn-primary" href="#composants" style="color:var(--peach-ink)">Discutons de votre projet <span class="ico">↗</span></a>
+<a class="btn btn-ghost" href="#composants" style="color:var(--ink)">Voir les réalisations <span class="ico">↗</span></a>
+<a class="btn btn-primary btn-sm" href="#composants" style="color:var(--peach-ink)">Petit <span class="ico">↗</span></a>
+</div><p class="code" style="margin-top:18px">.btn + .btn-primary | .btn-ghost | .btn-sm · pill · flèche ↗ qui glisse au survol · data-magnetic</p></div>
+<div class="card"><h3>Filtres / chips</h3><div class="row" style="gap:10px">
+<span class="btn-sm" style="font-family:'Spline Sans Mono',monospace;font-size:12px;padding:9px 17px;border-radius:999px;background:var(--peach);color:var(--peach-ink)">Tous</span>
+<span style="font-family:'Spline Sans Mono',monospace;font-size:12px;padding:9px 17px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-soft)">Sites vitrines</span>
+<span style="font-family:'Spline Sans Mono',monospace;font-size:11px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft)">Web design</span>
+</div><p class="code" style="margin-top:18px">Mono 11–12px · actif = fond pêche · tag = surface + line</p></div>
+<div class="card"><h3>Bulles glassmorphiques (hero)</h3><div class="demo-bubbles">
+<span class="bubble" style="--sz:110px">Site internet</span>
+<span class="bubble" style="--sz:124px">Villeneuve-sur-Lot</span>
+</div><p class="code">.bubble · cercle · backdrop-blur 12px · reflet blanc haut-gauche + reflet pêche bas-droite · opacité .4 → 1 au survol · flottement GSAP</p></div>
+<div class="card"><h3>Surtitre + titre de section</h3>
+<span class="eyebrow">Ancrage local</span>
+<div style="font-family:Spectral,serif;font-weight:600;font-size:38px;line-height:1.04;letter-spacing:-.015em;margin-top:14px">Au service des <em style="color:var(--peach)">PME locales</em></div>
+<p style="color:var(--ink-soft);margin-top:14px;font-size:15px">Paragraphe d'intro en --ink-soft, max ~560px.</p>
+<p class="code" style="margin-top:18px">Pattern systématique : .eyebrow → h2 → p</p></div>
+<div class="card"><h3>Frame navigateur (réalisations)</h3>
+<div style="border-radius:16px;overflow:hidden;border:1px solid var(--line-2);background:var(--surface)">
+<div style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:linear-gradient(180deg,var(--surface-2),var(--surface));border-bottom:1px solid var(--line)"><span style="width:11px;height:11px;border-radius:50%;background:#e6795f"></span><span style="width:11px;height:11px;border-radius:50%;background:#e3b155"></span><span style="width:11px;height:11px;border-radius:50%;background:#5fae7a"></span><span class="code" style="margin-left:12px;padding:5px 14px;border-radius:999px;background:rgba(0,0,0,.22);border:1px solid var(--line)">cuisineslamy.com</span></div>
+<img src="assets/work/cuisineslamy.jpg" alt="" style="width:100%;aspect-ratio:1000/520;object-fit:cover;object-position:top"></div>
+<p class="code" style="margin-top:18px">Capture en object-fit:cover, zoom 1.04 + lift -6px au survol</p></div>
+<div class="card"><h3>Champs de formulaire (devis)</h3>
+<div style="display:flex;flex-direction:column;gap:12px">
+<input type="text" placeholder="Votre nom" style="font:inherit;color:var(--ink);background:var(--surface-2);border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px">
+<label style="display:flex;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--peach);border-radius:var(--r);background:rgba(233,165,120,.08);font-size:14px"><span style="width:18px;height:18px;border-radius:5px;background:var(--peach)"></span>Maintenance mensuelle</label>
+</div><p class="code" style="margin-top:18px">Surface 2 + line-2 · sélection = bordure pêche + fond pêche 8%</p></div>
+</div>
+</section>
+
+<section class="ds-sec" id="motion" data-screen-label="Motion">
+<span class="eyebrow">05 — Motion</span>
+<h2>Fluide, jamais tape-à-l'œil</h2>
+<p class="intro">Animations pilotées par GSAP 3.12 + ScrollTrigger (<code class="code">assets/alt-main.js</code>). Fallback complet si <code class="code">prefers-reduced-motion</code> ou GSAP absent.</p>
+<div class="ds-grid g-2">
+<div class="card"><h3>Courbes</h3>
+<div style="display:flex;flex-direction:column;gap:12px"><div class="motion-box"><i></i></div><span class="code">--ease-out · déplacements, entrées</span><div class="motion-box b"><i></i></div><span class="code">--ease · couleurs, opacité, bordures</span></div></div>
+<div class="card"><h3>Patterns</h3><table class="tok">
+<tr><td>.line-mask</td><td>Titres révélés ligne par ligne (y 110% → 0, power4.out, stagger .12)</td></tr>
+<tr><td>.reveal</td><td>Fade + translateY 26px au scroll</td></tr>
+<tr><td>Logo 3D hero</td><td>Flottement, parallaxe souris, rotation au scroll</td></tr>
+<tr><td>Bulles</td><td>Dérive x/y/rotation sinusoïdale, durées décalées</td></tr>
+<tr><td>data-magnetic</td><td>Boutons attirés par le curseur</td></tr>
+<tr><td>Curseur custom</td><td>Point + anneau (desktop uniquement)</td></tr>
+<tr><td>Grain</td><td>body::after, bruit SVG, opacité .04</td></tr>
+</table></div>
+</div>
+</section>
+
+<section class="ds-sec" id="marque" data-screen-label="Marque">
+<span class="eyebrow">06 — Marque</span>
+<h2>Logo &amp; nom</h2>
+<div class="ds-grid g-2">
+<div class="card"><h3>Monogramme</h3><div class="logo-demo"><span class="mk-big"><svg><use href="#sws-mark"></use></svg></span><div style="display:flex;flex-direction:column;gap:6px"><span style="font-weight:700;letter-spacing:.14em;font-size:18px;text-transform:uppercase">Sud Web Studio</span><span class="code">Symbole SVG #sws-mark · wordmark Helvetica 700, ls .14em, uppercase</span></div></div></div>
+<div class="card"><h3>Logo 3D</h3><div style="display:flex;gap:20px;align-items:center"><img src="assets/logo3d-hero.png" alt="" style="width:120px"><span class="code">assets/logo3d-hero.png · hero + CTA, avec halo pêche et anneaux</span></div></div>
+</div>
+</section>
+
+<section class="ds-sec" id="contenu" data-screen-label="Contenu & SEO">
+<span class="eyebrow">07 — Contenu &amp; SEO</span>
+<h2>Ton et règles éditoriales</h2>
+<div class="ds-grid g-2">
+<div class="card"><h3>À faire</h3><ul class="do-list">
+<li>Positionnement : studio de développement web à Villeneuve-sur-Lot, Lot-et-Garonne (47).</li>
+<li>Un seul H1 par page, contenant service + localisation.</li>
+<li>Title &lt; 65 caractères et meta description sur chaque page.</li>
+<li>Ton chaleureux, direct, vouvoiement. Phrases courtes.</li>
+<li>Espaces insécables avant ? ! : ; (&amp;nbsp;).</li>
+<li>Services : Site internet, Site sur mesure, Référencement, Hébergement, Web Design, Apps mobiles.</li>
+<li>Maintenance mensuelle : gestion du nom de domaine, hébergement &amp; dépannage, modifications mineures incluses.</li>
+</ul></div>
+<div class="card"><h3>À éviter</h3><ul class="do-list dont">
+<li>Second couleur d'accent ou dégradés criards.</li>
+<li>Fond clair — le site est intégralement sombre.</li>
+<li>Emoji, icônes décoratives superflues, chiffres inventés.</li>
+<li>Texte pêche sur fond pêche ; texte en dessous de --muted sur contenu important.</li>
+<li>Plusieurs segments mis en avant dans un même titre.</li>
+</ul></div>
+</div>
+</section>
+
+<section class="ds-sec" id="fichiers" data-screen-label="Fichiers">
+<span class="eyebrow">08 — Fichiers</span>
+<h2>Carte du projet</h2>
+<div class="card" style="margin-top:34px"><div class="file-list">
+<div><code>Sud Web Studio - Landing Alt.html</code><span>Accueil — hero, expertises, ancrage local, clients, réalisations, CTA</span></div>
+<div><code>Sud Web Studio - Realisations.html</code><span>Portfolio filtrable</span></div>
+<div><code>Sud Web Studio - Tarifs.html</code><span>Formules, toggle achat / LOA, FAQ</span></div>
+<div><code>Sud Web Studio - Demande de devis.html</code><span>Formulaire de devis multi-étapes</span></div>
+<div><code>Sud Web Studio - Bientot de retour.html</code><span>Page maintenance</span></div>
+<div><code>assets/alt-styles.css</code><span>Tokens + styles globaux (source de vérité)</span></div>
+<div><code>assets/alt-main.js</code><span>Motion GSAP, curseur, nav, bulles</span></div>
+<div><code>assets/realisations-styles.css · pricing-styles.css · quote-styles.css</code><span>Styles spécifiques par page</span></div>
+<div><code>assets/work/*.jpg · logo3d-*.png</code><span>Captures projets et logo 3D</span></div>
+</div></div>
+</section>
+</main>
+</body>
+</html>
