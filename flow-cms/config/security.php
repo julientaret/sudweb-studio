@@ -27,6 +27,22 @@ return [
     //   false → on bloque (à n'activer qu'une fois une source de pays confirmée).
     'geo_fail_open' => true,
 
+    /*
+     * Domaines tiers autorisés en plus de l'origine du site, par directive de
+     * la politique de sécurité du contenu (voir App\Core\Kernel). Seules des
+     * origines https explicites sont acceptées ; une directive inconnue est
+     * ignorée.
+     *
+     * Ici : Simple Analytics — le script est servi par scripts.*, les mesures
+     * partent vers queue.* par sendBeacon/fetch/XHR (connect-src) avec une
+     * image en dernier recours (img-src).
+     */
+    'csp_extra' => [
+        'script-src'  => ['https://scripts.simpleanalyticscdn.com'],
+        'connect-src' => ['https://queue.simpleanalyticscdn.com'],
+        'img-src'     => ['https://queue.simpleanalyticscdn.com'],
+    ],
+
     // Chemin disque absolu d'une base MaxMind GeoLite2-Country (.mmdb), optionnelle.
     // Utilisée seulement si le fichier existe ET qu'un lecteur MaxMind\Db\Reader
     // est disponible. Laisser null pour s'appuyer uniquement sur l'infra/extension.

@@ -80,6 +80,12 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
         </div>
     </footer>
 
+    <?php /* Mesure d'audience Simple Analytics — sans cookie ni donnée
+             personnelle. Le domaine est autorisé dans la CSP du noyau via
+             'csp_extra' (flow-cms/config/security.php), sans quoi le
+             navigateur bloquerait le script sans rien dire. */ ?>
+    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
     <script src="<?= e(asset_url('/assets/vendor/aos/aos.js')) ?>" defer></script>
     <script src="<?= e(asset_url('/assets/site.js')) ?>" defer data-aos-duration="<?= e((string) ($aosDuration ?? 800)) ?>"></script>
 </body>
