@@ -289,17 +289,21 @@ function reveals() {
 
 function expertiseCards() {
     if (!document.querySelector('.exp-grid')) return;
-    gsap.from('.exp-card', {
-        opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', stagger: 0.1,
-        scrollTrigger: { trigger: '.exp-grid', start: 'top 82%' },
+    // fromTo plutôt que from : un ScrollTrigger.refresh() (images chargées,
+    // fenêtre redimensionnée) relit les valeurs de départ d'un from sur l'état
+    // courant et fige les cartes au milieu de leur course, donc décalées entre
+    // elles. Les valeurs explicites + once évitent ce rejeu.
+    gsap.fromTo('.exp-card', { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1, overwrite: 'auto',
+        scrollTrigger: { trigger: '.exp-grid', start: 'top 82%', once: true },
     });
 }
 
 function workCards() {
     gsap.utils.toArray('.work-card').forEach((card) => {
-        gsap.from(card, {
-            opacity: 0, y: 60, scale: 0.97, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: card, start: 'top 88%' },
+        gsap.fromTo(card, { opacity: 0, y: 60, scale: 0.97 }, {
+            opacity: 1, y: 0, scale: 1, duration: 1, ease: 'power3.out', overwrite: 'auto',
+            scrollTrigger: { trigger: card, start: 'top 88%', once: true },
         });
         const shot = card.querySelector('.shot');
         if (shot) {
