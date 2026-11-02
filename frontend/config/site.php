@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Core\Config;
+
 /**
  * Paramètres du site public (frontend) — source unique pour l'en-tête, le pied
  * de page et les pages statiques. Lu via l'accesseur site() (frontend/includes/
@@ -43,11 +45,19 @@ return [
         'url'   => '/devis',
     ],
 
-    // Coordonnées affichées (pied de page, contact, données structurées).
+    /*
+     * Coordonnées affichées (pied de page, page de maintenance).
+     *
+     * L'adresse vient de EMAIL_CONTACT (.env.local), qui est déjà le
+     * destinataire des formulaires de contact et de devis : une seule adresse à
+     * tenir, et jamais d'écart entre celle qu'on affiche et celle qui reçoit.
+     * Propre au serveur, elle peut donc différer entre le poste de dev et la
+     * production. Vide → rien n'est affiché.
+     */
     'contact' => [
         'city'    => 'Villeneuve-sur-Lot',
         'region'  => 'Lot-et-Garonne',
-        'email'   => 'contact@sudwebstudio.fr',
+        'email'   => (string) Config::env('EMAIL_CONTACT', ''),
         'phone'   => '',
     ],
 
