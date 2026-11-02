@@ -129,10 +129,17 @@ async function buildFavicons() {
 
   mkdirSync(OUT, { recursive: true });
 
-  // Le SVG lui-même : c'est lui que servent les navigateurs modernes.
-  writeFileSync(join(OUT, 'icon.svg'), readFileSync(source));
+  /*
+   * Le SVG est passé à sharp en mémoire, et non par son chemin : libvips
+   * reconnaît un fichier à ses tout premiers octets, et l'en-tête de
+   * commentaires d'icon.svg repousse la balise <svg> hors de cette fenêtre — le
+   * fichier serait refusé comme « format non supporté ». Lu une fois, il sert
+   * aussi de copie servie aux navigateurs modernes.
+   */
+  const svg = readFileSync(source);
+  writeFileSync(join(OUT, 'icon.svg'), svg);
 
-  const png = (size) => sharp(source, { density: DENSITY })
+  const png = (size) => sharp(svg, { density: DENSITY })
     .resize(size, size)
     .png({ compressionLevel: 9 })
     .toBuffer();

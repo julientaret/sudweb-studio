@@ -3,23 +3,28 @@
   Icone de marque Sud Web Studio : source unique des favicons.
   Rasterisee en PNG et ICO par frontend/scripts/build-brand.mjs.
 
-  Deux ecarts assumes avec le monogramme du site (symbole sws-mark,
-  frontend/includes/brand.php) :
+  Le monogramme complet du site (symbole sws-mark, frontend/includes/brand.php) :
+  les trois lettres S-W-S, d'une seule couleur. Les diagonales centrales SONT le
+  W ; les retirer donnerait un trace plus propre en petit, mais la marque se
+  lirait SS.
 
-  1. Les fines diagonales centrales du monogramme sont retirees. A 16 ou 32 px,
-     taille reelle d'une icone d'onglet, elles se melangent en un aplat moire et
-     la marque devient illisible. Restent les deux chevrons, qui portent la
-     meme forme et tiennent a toutes les tailles.
-  2. Le trace est pose sur un carre arrondi sombre, au lieu d'epouser la couleur
-     du texte : une icone de favori doit s'afficher aussi bien sur un onglet
-     clair que sombre.
+  Seul ecart avec le site : le trace est pose sur un carre arrondi sombre au lieu
+  d'epouser la couleur du texte, pour s'afficher aussi bien sur un onglet clair
+  que sombre.
+
+  A 16 px (favicon.ico sur ecran non retina) les diagonales se melangent en un
+  aplat : c'est la limite du dessin, assumee. Des 32 px, soit un onglet retina ou
+  un favori, les trois lettres se detachent. D'ou le peu de marge autour du
+  trace : plus le monogramme occupe le carre, plus ses diagonales tiennent en
+  petit.
 
   Couleurs reprises des tokens (frontend/src/css/tokens.css) : fond et peche.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <rect width="512" height="512" rx="112" fill="#121b27"/>
-  <g transform="translate(49 48) scale(0.831)" fill="#e9a578">
+  <g transform="translate(38.8 37.9) scale(0.8724)" fill="#e9a578">
     <path d="m112.4 51.8h131.7l-49.7 51.5 31.2 32.3 124.1-128.6h-343l140.4 145.3-96.3 99.7v-166.2l-44.8-46.4v323.6l203.4-210.7z"/>
+    <path d="m492 7h-15.8l-425.4 440.4v-33.2l393.3-407.2h-62.3l-375.8 389.2v96.9h157.4l328.6-340.3v-64.3l-347.6 359.7h-32l379.6-393.1z"/>
     <path d="m432.9 448.2h-131.8l49.8-51.6-31.1-32.3-124.3 128.8h296.5v-48.1l-93.9-97.3 49.1-50.8v68.5l44.8 46.4v-225.8l-156.2 161.7z"/>
   </g>
 </svg>

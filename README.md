@@ -251,9 +251,12 @@ npm run build:brand     # favicons + image d'aperçu Open Graph
 | `src/brand/icon.svg` | `public/favicon.ico` (16/32/48), `public/assets/brand/icon.svg`, `apple-touch-icon.png` | sharp |
 | `src/brand/og-default.html` | `public/assets/brand/og-default.png` (1200 × 630) | Chrome sans interface + sharp |
 
-- **Favicon** : le monogramme du site sur carré arrondi sombre. Ses fines
-  diagonales centrales sont retirées — à 16 px, taille réelle d'un onglet, elles
-  se mélangent en un aplat illisible ; restent les deux chevrons.
+- **Favicon** : le monogramme complet du site (les trois lettres S-W-S, les
+  diagonales centrales étant le W) sur carré arrondi sombre, pour s'afficher
+  aussi bien sur un onglet clair que sombre. À 16 px — `favicon.ico` sur écran
+  non retina — les diagonales se mélangent en un aplat : c'est la limite du
+  dessin, assumée. Dès 32 px, soit un onglet retina ou un favori, les trois
+  lettres se détachent ; d'où le peu de marge autour du tracé.
 - **Carte de partage** : ce qu'affichent Messenger, WhatsApp, LinkedIn, Slack ou
   X quand on colle un lien. Elle récapitule prestations, tarifs d'entrée et
   contact. **On la modifie dans le HTML**, jamais sur l'image : `og-default.html`
