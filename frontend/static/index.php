@@ -34,8 +34,8 @@ $bubbles = [
 $expertises = [
     ['Sites vitrines', 'Des sites élégants et impactants pour présenter votre activité et convertir vos visiteurs.',
         '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>'],
-    ['Identité de marque', 'Logo, univers visuel et direction artistique pour une marque cohérente et mémorable.',
-        '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C21.965 6.012 17.461 2 12 2z"/>'],
+    ['Reprise de site existant', 'Refonte, correctifs ou nouvelles fonctionnalités sur un site déjà en ligne, même conçu par quelqu\'un d\'autre.',
+        '<path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l3.5 2"/>'],
     ['Web sur-mesure', 'Des solutions adaptées à vos besoins métiers pour des projets sans limite.',
         '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15 9 12a22 22 0 0 1 8-9 14 14 0 0 1 4 0 14 14 0 0 1 0 4 22 22 0 0 1-9 8z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>'],
     ['Référencement', 'Améliorez votre visibilité et attirez plus de trafic qualifié sur votre site.',
@@ -76,7 +76,7 @@ $clients = [
 $projets = array_slice((array) ((array) require dirname(__DIR__) . '/config/realisations.php')['projets'], 0, 4);
 
 /** Mots du bandeau défilant (dupliqués côté rendu pour une boucle sans couture). */
-$marquee = ['Identité de marque', 'Web design', 'Développement', 'Avis Google', 'Référencement', 'Direction artistique'];
+$marquee = ['Sites vitrines', 'Web design', 'Développement', 'Reprise de site', 'Avis Google', 'Référencement'];
 
 /** Pictogramme 24×24 au trait, dans le style du design system. */
 $icon = static function (string $paths, string $extra = ''): string {
