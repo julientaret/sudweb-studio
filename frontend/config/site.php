@@ -27,6 +27,28 @@ return [
     'lang' => 'fr',
 
     /*
+     * Aperçu des partages (Open Graph / Twitter Cards) : ce que montrent
+     * Messenger, WhatsApp, LinkedIn, Slack ou X quand on colle un lien du site.
+     *
+     * 'image' est un chemin du site, rendu absolu au rendu (asset_abs_url()).
+     * Le fichier est produit par `npm run build:brand` à partir de
+     * frontend/src/brand/og-default.html — c'est là qu'on modifie la carte, pas
+     * sur l'image. Ses dimensions sont déclarées pour que les robots affichent
+     * la grande carte sans attendre le téléchargement de l'image.
+     *
+     * Une page peut la remplacer en posant $ogImage avant l'en-tête (chemin du
+     * site ou URL absolue) — une réalisation peut ainsi partager son visuel.
+     */
+    'og' => [
+        'image'  => '/assets/brand/og-default.png',
+        'width'  => 1200,
+        'height' => 630,
+        'alt'    => 'Sud Web Studio — création de sites web à Villeneuve-sur-Lot, '
+            . 'à partir de 499 € ou 29 € par mois.',
+        'locale' => 'fr_FR',
+    ],
+
+    /*
      * Navigation principale : libellé => URL.
      * URL interne si elle commence par '/' (préfixée par la base du site),
      * sinon laissée telle quelle (lien externe).

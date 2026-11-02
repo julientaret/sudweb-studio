@@ -6,6 +6,7 @@
   "description": "Assets du site public Flow (CSS, JS, images WebP).",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "build:brand": "node scripts/build-brand.mjs",
     "watch": "node scripts/build.mjs --watch"
   },
   "devDependencies": {

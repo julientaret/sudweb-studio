@@ -62,6 +62,56 @@ if (!function_exists('asset_url')) {
     }
 }
 
+if (!function_exists('abs_url')) {
+    /**
+     * URL ABSOLUE d'un chemin du site ('/contact' => 'https://exemple.fr/contact').
+     *
+     * Les robots des réseaux sociaux ne résolvent pas les chemins relatifs : les
+     * métas d'aperçu (og:url, og:image) ont besoin d'une URL complète.
+     *
+     * Base : APP_URL (app.url), qui contient déjà le préfixe du site. À défaut,
+     * on la reconstitue depuis la requête — l'hôte venant du client, il est
+     * filtré sur les caractères d'un nom d'hôte avant d'être recopié.
+     */
+    function abs_url(string $path = '/'): string
+    {
+        if (preg_match('#^(https?:)?//#i', $path)) {
+            return $path;
+        }
+
+        $base = rtrim((string) Config::get('app.url', ''), '/');
+
+        if ($base === '') {
+            $host = (string) preg_replace('/[^A-Za-z0-9.\-:]/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+            if ($host === '') {
+                return site_url($path);   // faute de mieux : chemin relatif
+            }
+            $https  = ($_SERVER['HTTPS'] ?? 'off') !== 'off'
+                || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+            $base = ($https ? 'https://' : 'http://') . $host
+                . rtrim((string) Config::get('app.base_path', ''), '/');
+        }
+
+        return $base . $path;
+    }
+}
+
+if (!function_exists('asset_abs_url')) {
+    /**
+     * URL absolue d'un asset statique, versionnée comme asset_url().
+     *
+     * Sert aux images d'aperçu : changer l'image change l'URL, ce qui force les
+     * réseaux sociaux à la recharger au lieu de servir leur copie en cache.
+     */
+    function asset_abs_url(string $path): string
+    {
+        $file = dirname(__DIR__) . '/public' . $path;
+        $version = is_file($file) ? (string) filemtime($file) : '';
+        $url = abs_url($path);
+        return $version !== '' ? $url . '?v=' . $version : $url;
+    }
+}
+
 if (!function_exists('current_path')) {
     /**
      * Chemin de la page courante, relatif à la racine du site et normalisé :

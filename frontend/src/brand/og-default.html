@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Sud Web Studio — carte de partage</title>
+<!--
+  Carte de partage (Open Graph / Twitter) du site public — 1200 x 630.
+
+  Source de l'image public/assets/brand/og-default.png : ce fichier est ouvert
+  dans un Chrome sans interface par frontend/scripts/build-brand.mjs, qui en
+  capture le rendu. Pour changer la carte, on modifie ce HTML puis on relance
+  `npm run build:brand`.
+
+  Deux marqueurs (celui des polices, juste en dessous, et la source de l'image
+  du logo) sont remplaces par le script : les woff2 de public/assets/fonts et le
+  logo 3D y sont injectes en base64, car Chrome refuse les requetes file://
+  croisees depuis une page file://. La page reste donc affichable telle quelle
+  dans un navigateur, sans les polices du site ni le logo.
+
+  Les valeurs (prestations, tarifs, contact) doublent volontairement celles des
+  pages : une image rendue ne peut pas lire la config PHP. Si les tarifs ou
+  l'adresse de contact changent dans frontend/config/site.php ou
+  frontend/static/tarifs.php, il faut les reporter ici et relancer le build.
+-->
+__FONTS__
+<style>
+  /* Tokens repris de frontend/src/css/tokens.css. */
+  :root {
+    --bg: #121b27;
+    --surface: #1b2837;
+    --ink: #ece7de;
+    --ink-soft: #c2cdda;
+    --muted: #8093a8;
+    --line: rgba(255, 255, 255, .08);
+    --line-2: rgba(255, 255, 255, .15);
+    --peach: #e9a578;
+    --peach-2: #de8e5a;
+    --font-display: "Spectral", Georgia, serif;
+    --font-ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-mono: "Spline Sans Mono", ui-monospace, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { width: 1200px; height: 630px; }
+
+  body {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Halo peche en haut a droite, comme la scene du hero. */
+  .glow {
+    position: absolute;
+    top: -340px;
+    right: -240px;
+    width: 900px;
+    height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(233, 165, 120, .28) 0%, rgba(233, 165, 120, .09) 42%, transparent 68%);
+  }
+
+  /* Trame fine, a peine lisible : donne de la matiere au fond uni. */
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, .028) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, .028) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Filet peche en bord bas : signe la carte sans peser sur la lecture. */
+  .rule {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--peach) 0%, var(--peach-2) 38%, rgba(222, 142, 90, 0) 100%);
+  }
+
+  /* Colonne de texte a gauche, logo a droite, bandeau de contact en bas. */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 52px 64px 48px;
+  }
+
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 312px;
+    align-items: center;
+    gap: 28px;
+    min-height: 0;
+  }
+
+  /* ---------------------------------------------------------- colonne texte */
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 26px;
+  }
+
+  .brand svg { width: 44px; height: 44px; color: var(--peach); }
+
+  .brand .wm {
+    font-family: var(--font-display);
+    font-size: 29px;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+
+  .brand .sep { width: 1px; height: 28px; background: var(--line-2); }
+
+  .brand .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 58px;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -.015em;
+  }
+
+  h1 em { font-style: italic; color: var(--peach); }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 24px;
+  }
+
+  .chip {
+    padding: 8px 16px;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  /* Les deux entrees tarifaires de la page Tarifs, sur une seule ligne. */
+  .price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 26px;
+    white-space: nowrap;
+    font-size: 20px;
+    color: var(--muted);
+  }
+
+  .price b {
+    font-family: var(--font-display);
+    font-size: 27px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .price .inc { color: var(--ink-soft); }
+
+  /* ------------------------------------------------------------ colonne logo */
+
+  .stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stage .ring {
+    position: absolute;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+  }
+
+  .stage .r1 { width: 300px; height: 300px; }
+  .stage .r2 { width: 392px; height: 392px; border-color: rgba(255, 255, 255, .05); }
+
+  .stage img {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, .45));
+  }
+
+  /* ---------------------------------------------------------- pied de carte */
+
+  .foot {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 21px;
+    color: var(--ink-soft);
+  }
+
+  .foot .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--peach); }
+
+  .foot .site { margin-left: auto; color: var(--peach); }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="grid"></div>
+
+  <div class="card">
+    <div class="main">
+      <div class="copy">
+        <div class="brand">
+          <svg viewBox="0 0 500 500" aria-hidden="true">
+            <path fill="currentColor" d="m112.4 51.8h131.7l-49.7 51.5 31.2 32.3 124.1-128.6h-343l140.4 145.3-96.3 99.7v-166.2l-44.8-46.4v323.6l203.4-210.7z"/>
+            <path fill="currentColor" d="m492 7h-15.8l-425.4 440.4v-33.2l393.3-407.2h-62.3l-375.8 389.2v96.9h157.4l328.6-340.3v-64.3l-347.6 359.7h-32l379.6-393.1z"/>
+            <path fill="currentColor" d="m432.9 448.2h-131.8l49.8-51.6-31.1-32.3-124.3 128.8h296.5v-48.1l-93.9-97.3 49.1-50.8v68.5l44.8 46.4v-225.8l-156.2 161.7z"/>
+          </svg>
+          <span class="wm">Sud Web Studio</span>
+          <span class="sep"></span>
+          <span class="eyebrow">Lot-et-Garonne</span>
+        </div>
+
+        <h1>Création de sites web<br>à <em>Villeneuve-sur-Lot</em></h1>
+
+        <div class="chips">
+          <span class="chip">Sites vitrines</span>
+          <span class="chip">Web sur-mesure</span>
+          <span class="chip">Reprise de site</span>
+          <span class="chip">Référencement</span>
+        </div>
+
+        <div class="price">
+          <b>Dès 499 €</b>
+          <span>ou</span>
+          <b>29 € / mois</b>
+          <span class="inc">— hébergement et maintenance inclus</span>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <img src="__LOGO__" alt="">
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="dot"></span>
+      <span>contact@sudwebstudio.fr</span>
+      <span class="dot"></span>
+      <span>Villeneuve-sur-Lot (47)</span>
+      <span class="site">sudwebstudio.fr</span>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+</body>
+</html>

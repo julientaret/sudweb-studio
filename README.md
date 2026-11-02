@@ -236,6 +236,40 @@ désactive toutes les animations.
 > ici ne concerne que les **images de design** committées ; les médias uploadés
 > sont déjà convertis par le CMS (module Media).
 
+#### Favicon et carte de partage
+
+Un second build, séparé parce qu'il a besoin de **Chrome** (un build d'assets
+ordinaire ne doit pas échouer sur une machine qui ne l'a pas) :
+
+```bash
+cd frontend
+npm run build:brand     # favicons + image d'aperçu Open Graph
+```
+
+| Source | Sortie | Outil |
+|--------|--------|-------|
+| `src/brand/icon.svg` | `public/favicon.ico` (16/32/48), `public/assets/brand/icon.svg`, `apple-touch-icon.png` | sharp |
+| `src/brand/og-default.html` | `public/assets/brand/og-default.png` (1200 × 630) | Chrome sans interface + sharp |
+
+- **Favicon** : le monogramme du site sur carré arrondi sombre. Ses fines
+  diagonales centrales sont retirées — à 16 px, taille réelle d'un onglet, elles
+  se mélangent en un aplat illisible ; restent les deux chevrons.
+- **Carte de partage** : ce qu'affichent Messenger, WhatsApp, LinkedIn, Slack ou
+  X quand on colle un lien. Elle récapitule prestations, tarifs d'entrée et
+  contact. **On la modifie dans le HTML**, jamais sur l'image : `og-default.html`
+  s'ouvre tel quel dans un navigateur, et le script y injecte les polices et le
+  logo en base64 avant la capture (Chrome refuse les requêtes `file://`
+  croisées). Les valeurs y doublent celles des pages : si les tarifs ou l'adresse
+  de contact changent, les reporter et relancer le build.
+- Cherche Chrome aux emplacements habituels de macOS et Linux, ou dans
+  `CHROME_PATH`. Sans Chrome, les favicons sont produits et l'image est laissée
+  telle quelle.
+
+Les balises sont posées une fois pour tout le site par `includes/header.php`
+(`og:*`, `twitter:card`, `rel="icon"`). Les réglages par défaut vivent dans
+`config/site.php`, clé `og` ; une page peut poser `$ogImage` (et `$ogType`) avant
+d'inclure l'en-tête pour partager son propre visuel.
+
 ---
 
 ## 6. Modules

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Icone de marque Sud Web Studio : source unique des favicons.
+  Rasterisee en PNG et ICO par frontend/scripts/build-brand.mjs.
+
+  Deux ecarts assumes avec le monogramme du site (symbole sws-mark,
+  frontend/includes/brand.php) :
+
+  1. Les fines diagonales centrales du monogramme sont retirees. A 16 ou 32 px,
+     taille reelle d'une icone d'onglet, elles se melangent en un aplat moire et
+     la marque devient illisible. Restent les deux chevrons, qui portent la
+     meme forme et tiennent a toutes les tailles.
+  2. Le trace est pose sur un carre arrondi sombre, au lieu d'epouser la couleur
+     du texte : une icone de favori doit s'afficher aussi bien sur un onglet
+     clair que sombre.
+
+  Couleurs reprises des tokens (frontend/src/css/tokens.css) : fond et peche.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#121b27"/>
+  <g transform="translate(49 48) scale(0.831)" fill="#e9a578">
+    <path d="m112.4 51.8h131.7l-49.7 51.5 31.2 32.3 124.1-128.6h-343l140.4 145.3-96.3 99.7v-166.2l-44.8-46.4v323.6l203.4-210.7z"/>
+    <path d="m432.9 448.2h-131.8l49.8-51.6-31.1-32.3-124.3 128.8h296.5v-48.1l-93.9-97.3 49.1-50.8v68.5l44.8 46.4v-225.8l-156.2 161.7z"/>
+  </g>
+</svg>
