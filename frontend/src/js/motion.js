@@ -39,8 +39,10 @@ export function initMotion() {
     gsap.registerPlugin(ScrollTrigger);
     root.classList.add('js-ready');
 
-    // Exposé pour le filtre de la page Réalisations, qui doit recalculer les
-    // positions de déclenchement après avoir masqué des lignes.
+    // Exposés aux scripts de page : le filtre des Réalisations doit recalculer
+    // les positions de déclenchement, le décompte des tarifs veut animer un
+    // nombre. Ils s'en passent si la couche motion ne tourne pas.
+    window.gsap = gsap;
     window.ScrollTrigger = ScrollTrigger;
 
     cursor();
@@ -255,7 +257,7 @@ function hero() {
  * chargement, pas au défilement comme les titres de section.
  */
 function pageHero() {
-    const lines = document.querySelectorAll('.work-hero h1 .line-mask > *');
+    const lines = document.querySelectorAll('.page-hero h1 .line-mask > *');
     if (!lines.length) return;
     gsap.to(lines, { y: '0%', duration: 1.05, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
 }
@@ -270,8 +272,14 @@ function reveals() {
         });
     });
 
-    const heads = '.sec-head h2, .work-head h2, .exp-intro h2, .local-copy h2, .clients-head h2, .cta-body h2';
-    gsap.utils.toArray(heads).forEach((h2) => {
+    // Tout h2 contenant des .line-mask se révèle ligne par ligne au défilement.
+    // Détecté par le contenu plutôt que par une liste de sélecteurs par section,
+    // qu'il faudrait rallonger à chaque nouvelle page.
+    const heads = new Set();
+    document.querySelectorAll('h2 .line-mask').forEach((m) => heads.add(m.closest('h2')));
+    heads.forEach((h2) => {
+        // Les titres de page, eux, s'animent au chargement (cf. pageHero).
+        if (h2.closest('.page-hero')) return;
         gsap.to(h2.querySelectorAll('.line-mask > *'), {
             y: '0%', duration: 1.1, ease: 'power4.out', stagger: 0.12,
             scrollTrigger: { trigger: h2, start: 'top 88%' },

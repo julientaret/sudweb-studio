@@ -33,6 +33,7 @@ return [
         'Accueil'      => '/',
         'Services'     => '/#expertises',
         'Réalisations' => '/realisations',
+        'Tarifs'       => '/tarifs',
         'Contact'      => '/#contact',
     ],
 

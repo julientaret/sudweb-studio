@@ -4,7 +4,7 @@
  */
 
 /* ---------- EN-TÊTE DE PAGE ---------- */
-.work-hero { position: relative; padding-top: var(--header-clear); padding-bottom: clamp(40px, 5vw, 66px); }
+.work-hero { padding-bottom: clamp(40px, 5vw, 66px); }
 .work-hero h1 {
   font-family: var(--font-display); font-weight: 700;
   font-size: clamp(44px, 6.6vw, 96px); line-height: .98; letter-spacing: -.022em;

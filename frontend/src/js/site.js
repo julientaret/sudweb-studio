@@ -11,6 +11,7 @@
 import { initDevis } from './devis.js';
 import { initNav } from './nav.js';
 import { initRealisations } from './realisations.js';
+import { initTarifs } from './tarifs.js';
 import { initMotion } from './motion.js';
 
 // Marque le document comme « JS actif » : le CSS n'applique les états de départ
@@ -25,6 +26,7 @@ document.querySelectorAll('[data-year]').forEach((el) => {
 initNav();
 initDevis();
 initRealisations();
+initTarifs();
 initMotion();
 
 if (window.AOS) {

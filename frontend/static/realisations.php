@@ -35,7 +35,7 @@ $pad = static fn (int $n): string => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
 <main id="contenu">
 
     <!-- ============================ EN-TÊTE ============================ -->
-    <section class="work-hero">
+    <section class="work-hero page-hero">
         <div class="shell">
             <span class="eyebrow reveal">Réalisations</span>
             <h1>
