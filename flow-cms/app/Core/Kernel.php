@@ -249,13 +249,58 @@ final class Kernel
         header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');
         header('Referrer-Policy: same-origin');
-        // frame-src : YouTube (nocookie)/Vimeo pour le bloc Vidéo (App\Core\Blocks\VideoBlock)
-        // — sans cette autorisation explicite, l'iframe est bloquée silencieusement.
-        header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src https://www.youtube-nocookie.com https://player.vimeo.com");
+        header('Content-Security-Policy: ' . $this->contentSecurityPolicy());
 
         $https = (($_SERVER['HTTPS'] ?? '') !== '' && $_SERVER['HTTPS'] !== 'off');
         if ($https) {
             header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
         }
+    }
+
+    /**
+     * Politique de sécurité du contenu.
+     *
+     * Tout est verrouillé sur l'origine du site. Un site qui doit charger une
+     * ressource tierce (mesure d'audience, police, lecteur vidéo) déclare ses
+     * domaines dans config/security.php sous 'csp_extra', plutôt que d'ouvrir
+     * la politique pour tout le monde :
+     *
+     *     'csp_extra' => ['script-src' => ['https://exemple.com']],
+     *
+     * frame-src autorise d'office YouTube (nocookie) et Vimeo, sans quoi
+     * l'iframe du bloc Vidéo (App\Core\Blocks\VideoBlock) serait bloquée
+     * silencieusement.
+     */
+    private function contentSecurityPolicy(): string
+    {
+        $directives = [
+            'default-src' => ["'self'"],
+            'img-src'     => ["'self'", 'data:'],
+            'style-src'   => ["'self'", "'unsafe-inline'"],
+            'script-src'  => ["'self'"],
+            'connect-src' => ["'self'"],
+            'frame-src'   => ['https://www.youtube-nocookie.com', 'https://player.vimeo.com'],
+        ];
+
+        foreach ((array) Config::get('security.csp_extra', []) as $directive => $sources) {
+            // Une directive inconnue est ignorée : la politique ne peut pas être
+            // élargie au-delà de ce que le noyau a prévu.
+            if (!isset($directives[(string) $directive])) {
+                continue;
+            }
+            foreach ((array) $sources as $source) {
+                $source = trim((string) $source);
+                // Seules des origines https explicites : ni jokers, ni 'unsafe-*'.
+                if ($source !== '' && preg_match('#^https://[a-z0-9.-]+(:\d+)?$#i', $source)) {
+                    $directives[(string) $directive][] = $source;
+                }
+            }
+        }
+
+        $parts = [];
+        foreach ($directives as $name => $sources) {
+            $parts[] = $name . ' ' . implode(' ', array_unique($sources));
+        }
+        return implode('; ', $parts);
     }
 }
