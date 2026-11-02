@@ -258,12 +258,13 @@ npm run build:brand     # favicons + image d'aperçu Open Graph
   dessin, assumée. Dès 32 px, soit un onglet retina ou un favori, les trois
   lettres se détachent ; d'où le peu de marge autour du tracé.
 - **Carte de partage** : ce qu'affichent Messenger, WhatsApp, LinkedIn, Slack ou
-  X quand on colle un lien. Elle récapitule prestations, tarifs d'entrée et
-  contact. **On la modifie dans le HTML**, jamais sur l'image : `og-default.html`
-  s'ouvre tel quel dans un navigateur, et le script y injecte les polices et le
-  logo en base64 avant la capture (Chrome refuse les requêtes `file://`
-  croisées). Les valeurs y doublent celles des pages : si les tarifs ou l'adresse
-  de contact changent, les reporter et relancer le build.
+  X quand on colle un lien. Elle récapitule prestations et contact — **pas de
+  tarifs** : une image est mise en cache par les réseaux sociaux et survivrait
+  des mois à un changement de prix. **On la modifie dans le HTML**, jamais sur
+  l'image : `og-default.html` s'ouvre tel quel dans un navigateur, et le script y
+  injecte les polices et le logo en base64 avant la capture (Chrome refuse les
+  requêtes `file://` croisées). Les valeurs y doublent celles des pages : si
+  l'adresse de contact ou le domaine changent, les reporter et relancer le build.
 - Cherche Chrome aux emplacements habituels de macOS et Linux, ou dans
   `CHROME_PATH`. Sans Chrome, les favicons sont produits et l'image est laissée
   telle quelle.

@@ -17,10 +17,13 @@
   croisees depuis une page file://. La page reste donc affichable telle quelle
   dans un navigateur, sans les polices du site ni le logo.
 
-  Les valeurs (prestations, tarifs, contact) doublent volontairement celles des
-  pages : une image rendue ne peut pas lire la config PHP. Si les tarifs ou
-  l'adresse de contact changent dans frontend/config/site.php ou
-  frontend/static/tarifs.php, il faut les reporter ici et relancer le build.
+  Les valeurs (prestations, contact) doublent volontairement celles des pages :
+  une image rendue ne peut pas lire la config PHP. Si l'adresse de contact ou le
+  domaine changent dans frontend/config/site.php ou .env.local, il faut les
+  reporter ici et relancer le build.
+
+  Pas de tarifs sur la carte : une image est mise en cache par les reseaux
+  sociaux et survit des mois a un changement de prix.
 -->
 __FONTS__
 <style>
@@ -133,7 +136,7 @@ __FONTS__
 
   h1 {
     font-family: var(--font-display);
-    font-size: 58px;
+    font-size: 64px;
     font-weight: 600;
     line-height: 1.08;
     letter-spacing: -.015em;
@@ -144,8 +147,9 @@ __FONTS__
   .chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 9px;
-    margin-top: 24px;
+    gap: 10px;
+    max-width: 600px;
+    margin-top: 28px;
   }
 
   .chip {
@@ -154,29 +158,9 @@ __FONTS__
     border-radius: 999px;
     background: var(--surface);
     color: var(--ink-soft);
-    font-size: 19px;
+    font-size: 21px;
     line-height: 1;
   }
-
-  /* Les deux entrees tarifaires de la page Tarifs, sur une seule ligne. */
-  .price {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-top: 26px;
-    white-space: nowrap;
-    font-size: 20px;
-    color: var(--muted);
-  }
-
-  .price b {
-    font-family: var(--font-display);
-    font-size: 27px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  .price .inc { color: var(--ink-soft); }
 
   /* ------------------------------------------------------------ colonne logo */
 
@@ -247,13 +231,7 @@ __FONTS__
           <span class="chip">Web sur-mesure</span>
           <span class="chip">Reprise de site</span>
           <span class="chip">Référencement</span>
-        </div>
-
-        <div class="price">
-          <b>Dès 499 €</b>
-          <span>ou</span>
-          <b>29 € / mois</b>
-          <span class="inc">— hébergement et maintenance inclus</span>
+          <span class="chip">Hébergement</span>
         </div>
       </div>
 
@@ -266,10 +244,10 @@ __FONTS__
 
     <div class="foot">
       <span class="dot"></span>
-      <span>contact@sudwebstudio.fr</span>
+      <span>contact@sudweb-studio.com</span>
       <span class="dot"></span>
       <span>Villeneuve-sur-Lot (47)</span>
-      <span class="site">sudwebstudio.fr</span>
+      <span class="site">sudweb-studio.com</span>
     </div>
   </div>
 

@@ -43,8 +43,8 @@ return [
         'image'  => '/assets/brand/og-default.png',
         'width'  => 1200,
         'height' => 630,
-        'alt'    => 'Sud Web Studio — création de sites web à Villeneuve-sur-Lot, '
-            . 'à partir de 499 € ou 29 € par mois.',
+        'alt'    => 'Sud Web Studio — création de sites web à Villeneuve-sur-Lot : '
+            . 'sites vitrines, web sur-mesure, reprise de site, référencement, hébergement.',
         'locale' => 'fr_FR',
     ],
 
