@@ -34,7 +34,7 @@ return [
         'Services'     => '/#expertises',
         'Réalisations' => '/realisations',
         'Tarifs'       => '/tarifs',
-        'Contact'      => '/#contact',
+        'Contact'      => '/contact',
     ],
 
     // Appel à l'action de l'en-tête et du menu mobile (bouton pêche).
