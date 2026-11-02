@@ -18,6 +18,17 @@
 .foot-nav a:hover { color: var(--ink); }
 .foot-nav a:hover::after { width: 100%; }
 
+/* Adresse de contact du bandeau : en mono, comme les autres métadonnées du
+   site. L'enveloppe la distingue des liens de navigation voisins. */
+.foot-mail {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .02em;
+  color: var(--ink-soft); transition: color .3s var(--ease);
+}
+.foot-mail .ic { flex: none; width: 16px; height: 16px; color: var(--peach); transition: color .3s var(--ease); }
+.foot-mail .ic svg { width: 100%; height: 100%; }
+.foot-mail:hover { color: var(--peach); }
+
 .foot-social { display: flex; gap: 12px; }
 .foot-social a {
   width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;

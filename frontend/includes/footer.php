@@ -13,6 +13,7 @@ $siteName  = site('name', 'Sud Web Studio');
 $copyright = (string) (site('footer', [])['copyright'] ?? $siteName);
 $nav       = (array) site('nav', []);
 $social    = (array) site('social', []);
+$email     = (string) (((array) site('contact', []))['email'] ?? '');
 
 // Pictogrammes des réseaux reconnus. Un libellé inconnu reste affiché en texte.
 $socialIcons = [
@@ -49,6 +50,15 @@ if (in_array('LegalPages', (array) \App\Core\Config::get('modules.enabled', []),
                     <a href="<?= e(site_url($url)) ?>"><?= e($label) ?></a>
                     <?php endforeach; ?>
                 </nav>
+                <?php endif; ?>
+
+                <?php if ($email !== ''): ?>
+                <a class="foot-mail" href="mailto:<?= e($email) ?>">
+                    <span class="ic" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 7-10 6L2 7"/></svg>
+                    </span>
+                    <?= e($email) ?>
+                </a>
                 <?php endif; ?>
 
                 <?php if ($social): ?>
