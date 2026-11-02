@@ -125,14 +125,50 @@ try {
     //    Le nom vient de la config (pas d'une entrée utilisateur) : on le protège
     //    tout de même par des backticks échappés, MySQL n'acceptant pas de bind ici.
     $quotedName = '`' . str_replace('`', '``', $name) . '`';
+
+    // SHOW DATABASES compare en LIKE : _ et % y sont des jokers. Sans échappement,
+    // « client_site » dirait « déjà présente » en voyant « clientXsite ». Les noms
+    // des hébergements mutualisés (préfixe + underscore) sont justement de cette
+    // forme.
     $existed = (bool) $server
-        ->query('SHOW DATABASES LIKE ' . $server->quote($name))
+        ->query('SHOW DATABASES LIKE ' . $server->quote(addcslashes($name, '%_')))
         ->fetchColumn();
 
-    $server->exec(
-        "CREATE DATABASE IF NOT EXISTS {$quotedName} "
-        . 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
-    );
+    if (!$existed) {
+        try {
+            $server->exec(
+                "CREATE DATABASE IF NOT EXISTS {$quotedName} "
+                . 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
+            );
+        } catch (PDOException $e) {
+            /*
+             * Création refusée (typiquement 1044 sur un hébergement mutualisé, où
+             * seul le panneau de l'hébergeur crée les bases). La base existe
+             * peut-être déjà sans être visible : SHOW DATABASES ne montre que
+             * celles sur lesquelles le compte a des droits. On essaie donc de s'y
+             * connecter directement avant de conclure.
+             */
+            try {
+                new PDO(
+                    sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $host, $name),
+                    $user,
+                    $pass,
+                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                );
+                $existed = true;
+            } catch (PDOException $unreachable) {
+                throw new RuntimeException(
+                    "La base « {$name} » est injoignable et le compte « {$user} » n'a pas le droit "
+                    . "de la créer. Sur un hébergement mutualisé, créez-la depuis le panneau de "
+                    . "l'hébergeur, puis rattachez-lui cet utilisateur avec tous les privilèges — "
+                    . "le nom et l'utilisateur doivent correspondre exactement à DB_NAME et DB_USER "
+                    . "de .env.local. Détail : " . $e->getMessage(),
+                    0,
+                    $e
+                );
+            }
+        }
+    }
 
     $report(
         $existed ? 'info' : 'ok',
