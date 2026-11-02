@@ -26,6 +26,7 @@
 @import "devis-page.css";
 @import "cta.css";
 @import "pages.css";
+@import "maintenance.css";
 
 /* Modules du CMS rendus sur le site public. */
 @import "blocks.css";
