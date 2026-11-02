@@ -40,7 +40,7 @@ return [
     // Appel à l'action de l'en-tête et du menu mobile (bouton pêche).
     'cta' => [
         'label' => 'Discutons de votre projet',
-        'url'   => '/#contact',
+        'url'   => '/devis',
     ],
 
     // Coordonnées affichées (pied de page, contact, données structurées).

@@ -252,17 +252,14 @@ $cross = static fn (): string => $icon('<path d="M18 6 6 18M6 6l12 12"/>', '3');
                     </div>
                     <?php endif; ?>
 
-                    <?php if (module_enabled('Devis')): ?>
-                    <button type="button" class="btn <?= !empty($f['featured']) ? 'btn-primary' : 'btn-ghost' ?>"
-                            data-devis-open data-magnetic="0.2">
-                        <?= e($f['cta']) ?> <span class="ico" aria-hidden="true">↗</span>
-                    </button>
-                    <?php else: ?>
+                    <?php /* La formule choisie voyage en paramètre : la page de devis la
+                             coche d'avance (elle n'accepte que ses propres options). */ ?>
                     <a class="btn <?= !empty($f['featured']) ? 'btn-primary' : 'btn-ghost' ?>"
-                       href="<?= e(site_url('/contact')) ?>" data-magnetic="0.2">
+                       href="<?= e(module_enabled('Devis')
+                           ? site_url('/devis') . '?formule=' . rawurlencode($f['name'])
+                           : site_url('/contact')) ?>" data-magnetic="0.2">
                         <?= e($f['cta']) ?> <span class="ico" aria-hidden="true">↗</span>
                     </a>
-                    <?php endif; ?>
 
                     <ul class="tier-feats">
                         <?php foreach ($f['feats'] as [$label, $inclus]): ?>
@@ -410,15 +407,10 @@ $cross = static fn (): string => $icon('<path d="M18 6 6 18M6 6l12 12"/>', '3');
                             catalogue, connexion à vos outils métier… on développe le module dont <b>vous</b>
                             avez besoin, pensé exactement pour votre activité.</p>
                     </div>
-                    <?php if (module_enabled('Devis')): ?>
-                    <button type="button" class="btn btn-primary mc-cta" data-devis-open data-magnetic="0.25">
-                        Décrire mon besoin <span class="ico" aria-hidden="true">↗</span>
-                    </button>
-                    <?php else: ?>
-                    <a class="btn btn-primary mc-cta" href="<?= e(site_url('/contact')) ?>" data-magnetic="0.25">
+                    <a class="btn btn-primary mc-cta"
+                       href="<?= e(site_url(module_enabled('Devis') ? '/devis' : '/contact')) ?>" data-magnetic="0.25">
                         Décrire mon besoin <span class="ico" aria-hidden="true">↗</span>
                     </a>
-                    <?php endif; ?>
                 </article>
             </div>
 

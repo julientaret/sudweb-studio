@@ -4,24 +4,121 @@
             "title": "Votre projet",
             "fields": [
                 {
-                    "key": "name",
-                    "label": "Nom",
-                    "type": "text",
-                    "required": true,
-                    "options": [],
-                    "minlength": 0,
-                    "core": true
-                },
-                {
                     "key": "project_type",
-                    "label": "Type de prestation",
+                    "label": "Type de projet",
                     "type": "select",
                     "required": true,
                     "options": [
                         "Site vitrine",
-                        "Site e-commerce",
-                        "Foire a la saucisse"
+                        "Site + actualités",
+                        "Site + réservation",
+                        "Refonte / sur-mesure"
                     ],
+                    "minlength": 0,
+                    "core": false
+                },
+                {
+                    "key": "description",
+                    "label": "Décrivez votre projet en quelques mots",
+                    "type": "textarea",
+                    "required": false,
+                    "options": [],
+                    "minlength": 0,
+                    "core": false
+                }
+            ]
+        },
+        {
+            "title": "Formule & paiement",
+            "fields": [
+                {
+                    "key": "formule",
+                    "label": "Formule envisagée",
+                    "type": "select",
+                    "required": false,
+                    "options": [
+                        "Starter One Page",
+                        "Essentiel",
+                        "Sur Mesure"
+                    ],
+                    "minlength": 0,
+                    "core": false
+                },
+                {
+                    "key": "paiement",
+                    "label": "Mode de paiement préféré",
+                    "type": "select",
+                    "required": false,
+                    "options": [
+                        "Paiement unique",
+                        "Abonnement LOA"
+                    ],
+                    "minlength": 0,
+                    "core": false
+                },
+                {
+                    "key": "maintenance",
+                    "label": "Maintenance mensuelle",
+                    "type": "text",
+                    "required": false,
+                    "options": [],
+                    "minlength": 0,
+                    "core": false
+                }
+            ]
+        },
+        {
+            "title": "Options de gestion autonome",
+            "fields": [
+                {
+                    "key": "modules",
+                    "label": "Modules à gérer vous-même",
+                    "type": "textarea",
+                    "required": false,
+                    "options": [],
+                    "minlength": 0,
+                    "core": false
+                }
+            ]
+        },
+        {
+            "title": "Contexte",
+            "fields": [
+                {
+                    "key": "budget",
+                    "label": "Budget envisagé",
+                    "type": "select",
+                    "required": false,
+                    "options": [
+                        "Moins de 2 000 €",
+                        "2 000 € – 4 000 €",
+                        "4 000 € – 8 000 €",
+                        "Plus de 8 000 €",
+                        "Plutôt en mensualités (LOA)"
+                    ],
+                    "minlength": 0,
+                    "core": false
+                },
+                {
+                    "key": "deadline",
+                    "label": "Délai souhaité",
+                    "type": "select",
+                    "required": false,
+                    "options": [
+                        "Dès que possible",
+                        "Sous 1 à 2 mois",
+                        "Sous 3 à 6 mois",
+                        "Pas pressé"
+                    ],
+                    "minlength": 0,
+                    "core": false
+                },
+                {
+                    "key": "domaine",
+                    "label": "Nom de domaine souhaité",
+                    "type": "text",
+                    "required": false,
+                    "options": [],
                     "minlength": 0,
                     "core": false
                 }
@@ -31,6 +128,24 @@
             "title": "Vos coordonnées",
             "fields": [
                 {
+                    "key": "name",
+                    "label": "Nom complet",
+                    "type": "text",
+                    "required": true,
+                    "options": [],
+                    "minlength": 0,
+                    "core": true
+                },
+                {
+                    "key": "company",
+                    "label": "Entreprise",
+                    "type": "text",
+                    "required": false,
+                    "options": [],
+                    "minlength": 0,
+                    "core": false
+                },
+                {
                     "key": "email",
                     "label": "E-mail",
                     "type": "email",
@@ -38,6 +153,15 @@
                     "options": [],
                     "minlength": 0,
                     "core": true
+                },
+                {
+                    "key": "phone",
+                    "label": "Téléphone",
+                    "type": "tel",
+                    "required": false,
+                    "options": [],
+                    "minlength": 0,
+                    "core": false
                 }
             ]
         }

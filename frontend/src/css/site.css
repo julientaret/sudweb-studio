@@ -23,10 +23,10 @@
 @import "home.css";
 @import "realisations.css";
 @import "tarifs.css";
+@import "devis-page.css";
 @import "cta.css";
 @import "pages.css";
 
 /* Modules du CMS rendus sur le site public. */
 @import "blocks.css";
 @import "contact.css";
-@import "devis.css";

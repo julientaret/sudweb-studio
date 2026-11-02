@@ -2,9 +2,9 @@
 /**
  * Carte d'appel à l'action de fin de page, partagée par les pages du site.
  *
- * Le bouton ouvre la modale du module Devis quand il est actif, et retombe
- * sinon sur la page de contact : une seule définition de cette bascule pour
- * tout le site.
+ * Le bouton mène à la page de demande de devis quand le module est actif, et
+ * retombe sinon sur la page de contact : une seule définition de cette bascule
+ * pour tout le site.
  *
  * @var string $ctaEyebrow  surtitre (optionnel)
  * @var string $ctaTitle    titre de la carte (optionnel)
@@ -31,15 +31,9 @@ $ctaLabel   = (string) ((array) site('cta', []))['label'] ?? 'Discutons de votre
                 <p><?= $ctaText ?></p>
             </div>
             <div class="cta-action">
-                <?php if (module_enabled('Devis')): ?>
-                <button type="button" class="btn btn-primary" data-devis-open data-magnetic="0.3">
-                    <?= e($ctaLabel) ?> <span class="ico" aria-hidden="true">↗</span>
-                </button>
-                <?php else: ?>
-                <a class="btn btn-primary" href="<?= e(site_url('/contact')) ?>" data-magnetic="0.3">
+                <a class="btn btn-primary" href="<?= e(site_url(module_enabled('Devis') ? '/devis' : '/contact')) ?>" data-magnetic="0.3">
                     <?= e($ctaLabel) ?> <span class="ico" aria-hidden="true">↗</span>
                 </a>
-                <?php endif; ?>
             </div>
         </div>
     </div>

@@ -7,9 +7,6 @@
   margin-top: clamp(56px, 6vw, 88px);
   padding-block: 44px 28px;
 }
-/* Quand le module Devis est actif, son bouton flottant occupe le coin bas
-   droit : on dégage la dernière ligne du pied de page pour ne pas la recouvrir. */
-.foot--fab { padding-bottom: 104px; }
 .foot-bar { display: flex; align-items: center; justify-content: space-between; gap: 26px 38px; flex-wrap: wrap; }
 
 .foot-nav { display: flex; gap: 30px; flex-wrap: wrap; }

@@ -1,0 +1,204 @@
+/*
+ * Page Demande de devis : en-tête, formulaire en blocs numérotés et
+ * récapitulatif collant mis à jour en direct.
+ *
+ * Cette page est la seule porte d'entrée vers la demande de devis : la modale
+ * que le module posait sur chaque page a été retirée, les deux faisant double
+ * emploi (cf. includes/footer.php).
+ */
+
+/* ---------- en-tête ---------- */
+.quote-hero { padding-bottom: clamp(28px, 3.5vw, 48px); }
+.quote-hero .shell {
+  display: grid; grid-template-columns: 1.1fr .9fr;
+  gap: clamp(30px,5vw,80px); align-items: end;
+}
+.quote-hero h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(42px, 5.4vw, 78px); line-height: .98; letter-spacing: -.02em;
+}
+.quote-hero h1 em { font-style: italic; color: var(--peach); }
+.quote-hero .lead { color: var(--ink-soft); font-size: clamp(15px,1.2vw,18px); line-height: 1.66; max-width: 440px; }
+.quote-hero .lead b { color: var(--ink); font-weight: 600; }
+.quote-steps-meta { margin-top: 26px; display: flex; gap: 26px; flex-wrap: wrap; }
+.quote-steps-meta span {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.quote-steps-meta .qi { flex: none; color: var(--peach); width: 16px; height: 16px; }
+.quote-steps-meta .qi svg { width: 100%; height: 100%; }
+
+/* ---------- mise en page ---------- */
+.quote-wrap { padding-bottom: var(--section-pad); }
+.quote-grid { display: grid; grid-template-columns: 1fr 360px; gap: clamp(28px,3.5vw,54px); align-items: start; }
+
+/* ---------- formulaire ---------- */
+.qform { display: flex; flex-direction: column; gap: 18px; }
+.qblock {
+  position: relative; border-radius: 18px; border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  padding: 30px clamp(24px,3vw,38px) 34px;
+}
+.qblock-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+.qblock-n {
+  flex: none; font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+  color: var(--peach-ink); background: var(--peach); width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 600;
+}
+.qblock-head h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(20px,2vw,25px); letter-spacing: -.01em; }
+.qblock-head p { color: var(--muted); font-size: 13.5px; margin-top: 4px; }
+
+.qfield { display: flex; flex-direction: column; gap: 9px; }
+.qfield + .qfield { margin-top: 20px; }
+.qrow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+/* Dans une rangée à deux colonnes, les champs sont côte à côte : la marge
+   d'empilement n'a plus lieu d'être. */
+.qrow > .qfield + .qfield { margin-top: 0; }
+.qrow > .qfield { align-self: start; }
+.qrow + .qfield, .qfield + .qrow, .qrow + .qrow { margin-top: 20px; }
+.qlabel { font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
+.qlabel .opt { font-weight: 400; color: var(--faint); margin-left: 6px; font-size: 12.5px; }
+.qhint { font-size: 12.5px; color: var(--faint); }
+
+.qinput, .qselect, .qtextarea {
+  width: 100%; font: inherit; font-size: 15px; color: var(--ink);
+  background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 11px;
+  padding: 14px 16px;
+  transition: border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+}
+.qinput::placeholder, .qtextarea::placeholder { color: var(--faint); }
+.qinput:focus, .qselect:focus, .qtextarea:focus {
+  outline: none; border-color: var(--peach); background: #16222f;
+  box-shadow: 0 0 0 3px rgba(233,165,120,.14);
+}
+.qtextarea { resize: vertical; min-height: 130px; line-height: 1.55; }
+.qselect {
+  appearance: none; cursor: pointer; padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238093a8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 16px center;
+}
+.qselect option { background: var(--bg-2); color: var(--ink); }
+
+/* ---------- choix en cartes (radio / case à cocher) ---------- */
+.qchoices { display: grid; gap: 12px; }
+.qchoices.cols-2 { grid-template-columns: 1fr 1fr; }
+.qchoices.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.qchoice {
+  position: relative; display: flex; align-items: flex-start; gap: 13px; cursor: pointer;
+  padding: 16px 18px; border-radius: 13px; border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  transition: border-color .3s var(--ease), background .3s var(--ease), transform .4s var(--ease-out);
+}
+.qchoice:hover { border-color: rgba(233,165,120,.5); transform: translateY(-2px); }
+/* La commande native reste dans le flux (donc focusable au clavier) mais
+   invisible : c'est .qmark qui en donne l'état. */
+.qchoice input { position: absolute; opacity: 0; pointer-events: none; }
+.qmark {
+  flex: none; margin-top: 1px; width: 22px; height: 22px; border-radius: 6px;
+  border: 1.5px solid var(--line-2); display: grid; place-items: center;
+  color: transparent; background: transparent; transition: all .25s var(--ease);
+}
+.qchoice.radio .qmark { border-radius: 50%; }
+.qmark svg { width: 13px; height: 13px; }
+.qchoice-body { flex: 1 1 auto; min-width: 0; }
+.qchoice-body b { display: block; font-size: 14.5px; font-weight: 600; color: var(--ink); letter-spacing: -.005em; }
+.qchoice-body span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+.qchoice input:checked ~ .qmark { background: var(--peach); border-color: var(--peach); color: var(--peach-ink); }
+.qchoice:has(input:checked) {
+  border-color: var(--peach); background: rgba(233,165,120,.08);
+  box-shadow: inset 0 0 0 1px rgba(233,165,120,.3);
+}
+.qchoice input:focus-visible ~ .qmark { box-shadow: 0 0 0 3px rgba(233,165,120,.25); }
+
+/* modules de gestion autonome — plus dense */
+.qmodules { grid-template-columns: repeat(2, 1fr); }
+
+/* ---------- envoi ---------- */
+.qsubmit-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 26px; }
+.qsubmit-row .btn { padding: 17px 30px; }
+.qconsent { font-size: 12.5px; color: var(--faint); max-width: 380px; line-height: 1.5; }
+.qconsent a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.qconsent a:hover { color: var(--peach); }
+
+/* Case de consentement : le module enregistre le consentement et sa version,
+   la maquette se contentait d'une phrase — qui ne laisse aucune trace. */
+.qconsent-field { display: flex; align-items: flex-start; gap: 12px; margin-top: 22px; }
+.qconsent-field input { flex: none; margin-top: 3px; width: 18px; height: 18px; accent-color: var(--peach); }
+.qconsent-field label { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+.qconsent-field a { color: var(--peach); text-decoration: underline; text-underline-offset: 2px; }
+
+/* bandeau d'erreurs renvoyées par le serveur */
+.qerrors {
+  margin-top: 20px; padding: 16px 20px; border-radius: var(--r);
+  border: 1px solid rgba(230,121,95,.4); background: rgba(230,121,95,.12); color: var(--error);
+  font-size: 14px; line-height: 1.55;
+}
+.qerrors ul { margin: 0; padding-left: 1.2rem; }
+
+/* piège à robots : hors écran, jamais atteint au clavier */
+.qhp { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- récapitulatif collant ---------- */
+.qaside { position: sticky; top: calc(var(--nav-h) + 20px); display: flex; flex-direction: column; gap: 16px; }
+.qsummary {
+  border-radius: 18px; border: 1px solid var(--line-2);
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(233,165,120,.10), transparent 60%),
+    linear-gradient(180deg, #233448, #1a2838);
+  padding: 28px 26px 30px; box-shadow: 0 24px 56px rgba(0,0,0,.3);
+}
+.qsummary h3 { font-family: var(--font-display); font-weight: 600; font-size: 19px; letter-spacing: -.01em; }
+.qsummary .sub { color: var(--muted); font-size: 13px; margin-top: 5px; }
+.qsum-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; }
+.qsum-list li {
+  display: flex; justify-content: space-between; gap: 14px; align-items: baseline;
+  padding: 13px 0; border-top: 1px solid var(--line); font-size: 13.5px;
+}
+.qsum-list li:first-child { border-top: none; }
+.qsum-list .k { color: var(--muted); flex: none; }
+.qsum-list .v { color: var(--ink); text-align: right; font-weight: 500; }
+.qsum-list .v.empty { color: var(--faint); font-weight: 400; font-style: italic; }
+.qsum-list .stacked { flex-direction: column; align-items: stretch; gap: 10px; }
+.qsum-mods { display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }
+.qsum-mods .v.empty { text-align: left; }
+.qsum-chip {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--peach);
+  border: 1px solid rgba(233,165,120,.4); background: rgba(233,165,120,.07);
+  padding: 3px 8px; border-radius: 999px;
+}
+.qnote {
+  display: flex; gap: 12px; align-items: flex-start; padding: 18px 20px; border-radius: 14px;
+  border: 1px solid var(--line); background: rgba(255,255,255,.02);
+}
+.qnote .ni { flex: none; color: var(--peach); width: 20px; height: 20px; margin-top: 1px; }
+.qnote .ni svg { width: 100%; height: 100%; }
+.qnote p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+.qnote b { color: var(--ink); font-weight: 600; }
+
+/* ---------- confirmation ---------- */
+.qdone { text-align: center; padding: clamp(40px,6vw,80px) 20px; }
+.qdone-ic {
+  width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center;
+  margin: 0 auto 26px; color: var(--peach-ink); background: var(--peach);
+  box-shadow: 0 16px 40px rgba(233,165,120,.3);
+}
+.qdone-ic svg { width: 36px; height: 36px; }
+.qdone h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px,3.4vw,42px); letter-spacing: -.015em; }
+.qdone p { color: var(--ink-soft); margin: 16px auto 0; max-width: 440px; line-height: 1.6; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1080px) {
+  .quote-hero .shell { grid-template-columns: 1fr; align-items: start; gap: 24px; }
+  .quote-grid { grid-template-columns: 1fr; }
+  /* Le récapitulatif n'a plus de colonne où tenir : seule la note reste,
+     au-dessus du formulaire. */
+  .qaside { position: static; order: -1; }
+  .qsummary { display: none; }
+  .qmodules { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .qrow { grid-template-columns: 1fr; }
+  .qchoices.cols-2, .qchoices.cols-3 { grid-template-columns: 1fr; }
+}
