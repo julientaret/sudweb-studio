@@ -37,7 +37,7 @@ $formules = [
         'desc' => "Une page unique, soignée et efficace — idéale pour artisans et auto-entrepreneurs.",
         'cta'  => 'Choisir Starter',
         'price' => [
-            'once' => ['pre' => 'À partir de — unique', 'amount' => 499, 'per' => '€',
+            'once' => ['pre' => 'À partir de', 'amount' => 499, 'per' => '€',
                        'sub' => 'Livré clé en main · vous êtes propriétaire'],
             'loa'  => ['pre' => 'À partir de — loyer', 'amount' => 29, 'per' => '€ / mois',
                        'sub' => "24 mois · option d'achat <b>49&nbsp;€</b> en fin de contrat"],
@@ -55,9 +55,9 @@ $formules = [
         'desc' => "Le site vitrine idéal pour lancer votre activité et asseoir votre présence en ligne.",
         'cta'  => 'Choisir Essentiel',
         'price' => [
-            'once' => ['pre' => 'Paiement unique', 'amount' => 1299, 'per' => '€',
+            'once' => ['pre' => 'À partir de', 'amount' => 1499, 'per' => '€',
                        'sub' => 'Livré clé en main · vous êtes propriétaire'],
-            'loa'  => ['pre' => 'Loyer mensuel', 'amount' => 59, 'per' => '€ / mois',
+            'loa'  => ['pre' => 'À partir de — loyer', 'amount' => 59, 'per' => '€ / mois',
                        'sub' => "36 mois · option d'achat <b>149&nbsp;€</b> en fin de contrat"],
         ],
         'feats' => [

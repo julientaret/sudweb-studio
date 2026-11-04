@@ -51,7 +51,7 @@ $habillage = [
         'hint' => "Plus c'est précis, plus le devis sera juste — mais l'essentiel suffit pour démarrer."],
     'formule' => ['mode' => 'cards', 'cols' => 3, 'subs' => [
         'Starter One Page' => 'dès 499 € / 29 €·mois',
-        'Essentiel'        => 'dès 1 299 € / 59 €·mois',
+        'Essentiel'        => 'dès 1 499 € / 59 €·mois',
         'Sur Mesure'       => 'sur devis',
     ]],
     'paiement' => ['mode' => 'cards', 'cols' => 2, 'subs' => [
